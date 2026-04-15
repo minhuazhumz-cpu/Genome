@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VegSeed Intel — Canada Market Findings Dashboard</title>
+  <title>VegSeed Intel — Canada Field Vegetable Market Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -11,21 +11,21 @@
         extend: {
           colors: {
             ag: {
-              forest: '#0f3d2e',
-              pine: '#14532d',
-              moss: '#166534',
-              sage: '#22c55e',
+              deep: '#0f291e',
+              forest: '#14532d',
+              leaf: '#166534',
+              mint: '#22c55e',
               mist: '#ecfdf5',
               slate: '#1e293b',
-              fog: '#f1f5f9',
-            },
+              fog: '#f1f5f9'
+            }
           },
           fontFamily: {
-            sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
-            display: ['"Outfit"', 'system-ui', 'sans-serif'],
-          },
-        },
-      },
+            sans: ['DM Sans', 'system-ui', 'sans-serif'],
+            display: ['Outfit', 'system-ui', 'sans-serif']
+          }
+        }
+      }
     };
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -33,500 +33,607 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
-    html { scroll-behavior: smooth; }
-    .sidebar-link.active {
-      background: linear-gradient(90deg, rgba(34, 197, 94, 0.15) 0%, transparent 100%);
-      border-left: 3px solid #22c55e;
-      color: #ecfdf5;
-    }
-    details.strategy-card > summary {
-      list-style: none;
-    }
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    .font-display { font-family: 'Outfit', system-ui, sans-serif; }
+    details.strategy-card > summary { list-style: none; }
     details.strategy-card > summary::-webkit-details-marker { display: none; }
+    .sidebar-link.active { background: rgba(34, 197, 94, 0.15); border-left: 3px solid #22c55e; color: #ecfdf5; }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen">
+<body class="bg-ag-fog text-ag-slate antialiased min-h-screen">
+  <!-- Ensures Tailwind CDN includes classes toggled via JS -->
+  <span class="hidden bg-ag-deep text-white shadow-sm ring-2 ring-ag-leaf/30 bg-white border border-slate-200 text-ag-slate hover:bg-slate-50"></span>
   <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <aside class="w-64 shrink-0 bg-gradient-to-b from-ag-forest to-slate-900 text-slate-300 flex flex-col border-r border-emerald-900/40 shadow-xl">
-      <div class="p-5 border-b border-white/10">
-        <p class="font-display text-xs font-semibold uppercase tracking-widest text-emerald-400/90">VegSeed Intel</p>
-        <h1 class="font-display text-lg font-bold text-white leading-tight mt-1">Canada Market<br/>Dashboard</h1>
-        <p class="text-xs text-slate-400 mt-2">Findings summary · Ag-tech view</p>
+    <aside class="hidden lg:flex w-64 shrink-0 flex-col bg-ag-deep text-slate-300 border-r border-emerald-900/50 fixed inset-y-0 z-40">
+      <div class="p-6 border-b border-emerald-900/40">
+        <p class="text-xs uppercase tracking-widest text-emerald-500/90 font-semibold">VegSeed Intel</p>
+        <h1 class="font-display text-lg font-bold text-white mt-1 leading-tight">Canada Crop Analysis</h1>
+        <p class="text-xs text-slate-500 mt-2">Field vegetables · 2024</p>
       </div>
-      <nav class="flex-1 overflow-y-auto py-4 px-2 space-y-0.5" id="sidebar-nav">
-        <a href="#overview" class="sidebar-link block px-3 py-2.5 rounded-lg text-sm hover:bg-white/5 hover:text-white transition-colors">Overview</a>
-        <a href="#metrics" class="sidebar-link block px-3 py-2.5 rounded-lg text-sm hover:bg-white/5 hover:text-white transition-colors">Top 5 Crops</a>
-        <a href="#charts" class="sidebar-link block px-3 py-2.5 rounded-lg text-sm hover:bg-white/5 hover:text-white transition-colors">Production Charts</a>
-        <a href="#context" class="sidebar-link block px-3 py-2.5 rounded-lg text-sm hover:bg-white/5 hover:text-white transition-colors">Market Context</a>
-        <a href="#competition" class="sidebar-link block px-3 py-2.5 rounded-lg text-sm hover:bg-white/5 hover:text-white transition-colors">Competitors</a>
-        <a href="#regulation" class="sidebar-link block px-3 py-2.5 rounded-lg text-sm hover:bg-white/5 hover:text-white transition-colors">Regulation</a>
-        <a href="#agronomy" class="sidebar-link block px-3 py-2.5 rounded-lg text-sm hover:bg-white/5 hover:text-white transition-colors">Agronomy</a>
-        <a href="#trade" class="sidebar-link block px-3 py-2.5 rounded-lg text-sm hover:bg-white/5 hover:text-white transition-colors">Trade &amp; Data</a>
-        <a href="#strategy" class="sidebar-link block px-3 py-2.5 rounded-lg text-sm hover:bg-white/5 hover:text-white transition-colors">Strategy Insights</a>
-        <a href="#sources" class="sidebar-link block px-3 py-2.5 rounded-lg text-sm hover:bg-white/5 hover:text-white transition-colors">Sources</a>
+      <nav class="flex-1 overflow-y-auto p-4 space-y-1" id="sidebar-nav">
+        <a href="#bluf" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Executive summary</a>
+        <a href="#metrics" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Top 5 metric cards</a>
+        <a href="#charts" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Production charts</a>
+        <a href="#trade" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Trade &amp; demand</a>
+        <a href="#profit" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Profit pool</a>
+        <a href="#strategy" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Strategy insights</a>
+        <a href="#friction" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Friction points</a>
+        <a href="#whitespace" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">White space</a>
+        <a href="#gaps" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Strategy gap</a>
+        <a href="#citations" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Citations</a>
       </nav>
-      <div class="p-4 text-[10px] text-slate-500 border-t border-white/10">
-        StatCan 32-10-0365 / 32-10-0456 · VegSeed research pipeline
+      <div class="p-4 border-t border-emerald-900/40 text-xs text-slate-500">
+        StatCan 32-10-0365-01 · AAFC 2024
       </div>
     </aside>
 
-    <!-- Main -->
-    <main class="flex-1 overflow-x-hidden">
-      <!-- Hero -->
-      <section id="overview" class="bg-white border-b border-slate-200/80 shadow-sm scroll-mt-8">
-        <div class="max-w-6xl mx-auto px-6 py-10">
-          <div class="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold px-3 py-1 border border-emerald-200/80">Canada · Vegetable seed</span>
-              <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mt-4 tracking-tight">Market findings at a glance</h2>
-              <p class="text-slate-600 mt-3 max-w-2xl text-lg leading-relaxed">
-                Interactive synthesis of protected-cultivation and field vegetable context, competitive signals, registry realities, and strategic jobs-to-be-done from the VegSeed Intel Canada pass.
-              </p>
-            </div>
-            <div class="rounded-2xl bg-gradient-to-br from-ag-forest to-emerald-900 p-5 text-white shadow-lg min-w-[200px]">
-              <p class="text-emerald-200/80 text-xs font-medium uppercase tracking-wide">Portfolio lens</p>
-              <p class="font-display text-2xl font-bold mt-1">Top 5</p>
-              <p class="text-sm text-emerald-100/90 mt-1">Tomato · Cucumber · Pepper · Onion · Carrot</p>
-            </div>
-          </div>
-        </div>
-      </section>
+    <!-- Mobile header -->
+    <div class="lg:hidden fixed top-0 left-0 right-0 z-50 bg-ag-deep text-white px-4 py-3 flex items-center justify-between border-b border-emerald-900/50">
+      <span class="font-display font-semibold text-sm">Canada Crop Analysis</span>
+      <button type="button" id="mobile-menu-btn" class="p-2 rounded-lg bg-white/10 text-white" aria-label="Menu">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+    <div id="mobile-drawer" class="lg:hidden fixed inset-0 z-50 hidden">
+      <div class="absolute inset-0 bg-black/50" id="mobile-drawer-backdrop"></div>
+      <nav class="absolute top-0 right-0 w-72 h-full bg-ag-deep text-slate-300 p-6 pt-16 space-y-1 shadow-xl">
+        <a href="#bluf" class="mobile-nav-link block py-2 text-sm border-b border-emerald-900/30">Executive summary</a>
+        <a href="#metrics" class="mobile-nav-link block py-2 text-sm border-b border-emerald-900/30">Metric cards</a>
+        <a href="#charts" class="mobile-nav-link block py-2 text-sm border-b border-emerald-900/30">Charts</a>
+        <a href="#trade" class="mobile-nav-link block py-2 text-sm border-b border-emerald-900/30">Trade</a>
+        <a href="#strategy" class="mobile-nav-link block py-2 text-sm border-b border-emerald-900/30">Strategy insights</a>
+        <a href="#gaps" class="mobile-nav-link block py-2 text-sm border-b border-emerald-900/30">Strategy gap</a>
+        <a href="#citations" class="mobile-nav-link block py-2 text-sm">Citations</a>
+      </nav>
+    </div>
 
-      <div class="max-w-6xl mx-auto px-6 py-10 space-y-14">
+    <main class="flex-1 lg:ml-64 pt-14 lg:pt-0">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 lg:py-12">
+
+        <!-- Hero -->
+        <header class="mb-10">
+          <p class="text-emerald-700 text-sm font-semibold tracking-wide uppercase">Ag-Tech market intelligence</p>
+          <h2 class="font-display text-3xl sm:text-4xl font-bold text-ag-slate mt-2">Canadian field vegetable market · 2024</h2>
+          <p class="mt-3 text-slate-600 max-w-3xl">Interactive dashboard derived from AAFC <em>Statistical Overview of the Canadian Field Vegetable Industry, 2024</em> and Statistics Canada Table 32-10-0365-01.</p>
+        </header>
+
+        <!-- BLUF -->
+        <section id="bluf" class="mb-12 scroll-mt-24">
+          <div class="rounded-2xl bg-gradient-to-br from-ag-deep to-ag-forest text-white p-6 sm:p-8 shadow-lg border border-emerald-800/30">
+            <h3 class="font-display text-xl font-bold text-emerald-300 uppercase text-xs tracking-widest mb-3">Executive summary · BLUF</h3>
+            <p class="text-slate-200 leading-relaxed text-sm sm:text-base">
+              The five highest <strong class="text-white">farm gate value</strong> field crops are <strong class="text-emerald-300">dry onions, carrots, tomatoes, cabbage, and lettuce</strong>. Canada remains <strong class="text-white">import-dependent</strong>: 2024 field vegetable imports exceeded <strong class="text-emerald-300">$4.38B</strong> vs. exports ~<strong class="text-emerald-300">$1.06B</strong> (~<strong class="text-white">$3.32B</strong> deficit). Lettuce, onions/shallots, tomatoes, and cabbages rank among the largest import lines by value share. <strong class="text-white">Sweet corn</strong> is 4th by tonnes but 6th by FGV—outside the value-based top five.
+            </p>
+          </div>
+        </section>
 
         <!-- Metric cards -->
-        <section id="metrics">
-          <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
-            <h3 class="font-display text-xl font-bold text-slate-900">Top 5 crops — 2024 snapshot</h3>
-            <p class="text-sm text-slate-500">Combined field + greenhouse · <span class="text-emerald-700 font-medium">Production (t)</span> &amp; <span class="text-slate-600 font-medium">Farm gate value (C$M)</span></p>
+        <section id="metrics" class="mb-12 scroll-mt-24">
+          <h3 class="font-display text-2xl font-bold text-ag-slate mb-2">Top 5 crops · key metrics</h3>
+          <p class="text-slate-600 text-sm mb-6">2024 field vegetables · production, farm gate value, 3-year CAGR (2021→2024), primary region.</p>
+          <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            <!-- Dry onions -->
+            <article class="rounded-xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow overflow-hidden group">
+              <div class="h-1.5 bg-gradient-to-r from-amber-600 to-amber-500"></div>
+              <div class="p-5">
+                <h4 class="font-display font-bold text-ag-slate text-lg">Dry onions</h4>
+                <dl class="mt-4 space-y-3 text-sm">
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">Production</dt>
+                    <dd class="font-semibold text-ag-slate tabular-nums">298,564 t</dd>
+                  </div>
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">Farm gate value</dt>
+                    <dd class="font-semibold text-emerald-800 tabular-nums">$181.1M</dd>
+                  </div>
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">CAGR volume</dt>
+                    <dd class="font-semibold text-ag-leaf tabular-nums">~6.9%</dd>
+                  </div>
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">CAGR FGV</dt>
+                    <dd class="font-semibold text-ag-leaf tabular-nums">~15.0%</dd>
+                  </div>
+                  <div class="pt-1">
+                    <dt class="text-slate-500 text-xs uppercase tracking-wide">Primary provinces</dt>
+                    <dd class="font-medium text-ag-slate mt-1">QC 43% · ON 37% · AB 13%</dd>
+                  </div>
+                </dl>
+              </div>
+            </article>
+            <!-- Carrots -->
+            <article class="rounded-xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+              <div class="h-1.5 bg-gradient-to-r from-orange-500 to-orange-400"></div>
+              <div class="p-5">
+                <h4 class="font-display font-bold text-ag-slate text-lg">Carrots</h4>
+                <dl class="mt-4 space-y-3 text-sm">
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">Production</dt>
+                    <dd class="font-semibold text-ag-slate tabular-nums">351,568 t</dd>
+                  </div>
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">Farm gate value</dt>
+                    <dd class="font-semibold text-emerald-800 tabular-nums">$163.8M</dd>
+                  </div>
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">CAGR volume</dt>
+                    <dd class="font-semibold text-rose-600 tabular-nums">~-0.4%</dd>
+                  </div>
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">CAGR FGV</dt>
+                    <dd class="font-semibold text-ag-leaf tabular-nums">~5.6%</dd>
+                  </div>
+                  <div class="pt-1">
+                    <dt class="text-slate-500 text-xs uppercase tracking-wide">Primary provinces</dt>
+                    <dd class="font-medium text-ag-slate mt-1">ON 45% · QC 31% · NS 16%</dd>
+                  </div>
+                </dl>
+              </div>
+            </article>
+            <!-- Tomatoes -->
+            <article class="rounded-xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+              <div class="h-1.5 bg-gradient-to-r from-red-600 to-red-500"></div>
+              <div class="p-5">
+                <h4 class="font-display font-bold text-ag-slate text-lg">Tomatoes (field)</h4>
+                <dl class="mt-4 space-y-3 text-sm">
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">Production</dt>
+                    <dd class="font-semibold text-ag-slate tabular-nums">548,107 t</dd>
+                  </div>
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">Farm gate value</dt>
+                    <dd class="font-semibold text-emerald-800 tabular-nums">$159.3M</dd>
+                  </div>
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">CAGR volume</dt>
+                    <dd class="font-semibold text-ag-leaf tabular-nums">~2.1%</dd>
+                  </div>
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">CAGR FGV</dt>
+                    <dd class="font-semibold text-ag-leaf tabular-nums">~10.7%</dd>
+                  </div>
+                  <div class="pt-1">
+                    <dt class="text-slate-500 text-xs uppercase tracking-wide">Concentration</dt>
+                    <dd class="font-medium text-ag-slate mt-1">ON ~98% · ~93% processing</dd>
+                  </div>
+                </dl>
+              </div>
+            </article>
+            <!-- Cabbage -->
+            <article class="rounded-xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+              <div class="h-1.5 bg-gradient-to-r from-green-700 to-green-600"></div>
+              <div class="p-5">
+                <h4 class="font-display font-bold text-ag-slate text-lg">Cabbage</h4>
+                <p class="text-xs text-slate-500 mt-0.5">incl. kale &amp; Chinese cabbage</p>
+                <dl class="mt-3 space-y-3 text-sm">
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">Production</dt>
+                    <dd class="font-semibold text-ag-slate tabular-nums">171,765 t</dd>
+                  </div>
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">Farm gate value</dt>
+                    <dd class="font-semibold text-emerald-800 tabular-nums">$134.9M</dd>
+                  </div>
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">CAGR volume</dt>
+                    <dd class="font-semibold text-rose-600 tabular-nums">~-0.7%</dd>
+                  </div>
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">CAGR FGV</dt>
+                    <dd class="font-semibold text-ag-leaf tabular-nums">~7.7%</dd>
+                  </div>
+                  <div class="pt-1">
+                    <dt class="text-slate-500 text-xs uppercase tracking-wide">Hub</dt>
+                    <dd class="font-medium text-ag-slate mt-1">ON–QC (national field base)</dd>
+                  </div>
+                </dl>
+              </div>
+            </article>
+            <!-- Lettuce -->
+            <article class="rounded-xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow overflow-hidden sm:col-span-2 xl:col-span-1">
+              <div class="h-1.5 bg-gradient-to-r from-lime-600 to-emerald-500"></div>
+              <div class="p-5">
+                <h4 class="font-display font-bold text-ag-slate text-lg">Lettuce</h4>
+                <p class="text-xs text-slate-500 mt-0.5">leaf, head, mixed</p>
+                <dl class="mt-3 space-y-3 text-sm">
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">Production</dt>
+                    <dd class="font-semibold text-ag-slate tabular-nums">77,502 t</dd>
+                  </div>
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">Farm gate value</dt>
+                    <dd class="font-semibold text-emerald-800 tabular-nums">$106.0M</dd>
+                  </div>
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">CAGR volume</dt>
+                    <dd class="font-semibold text-ag-leaf tabular-nums">~0.8%</dd>
+                  </div>
+                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
+                    <dt class="text-slate-500">CAGR FGV</dt>
+                    <dd class="font-semibold text-ag-leaf tabular-nums">~7.6%</dd>
+                  </div>
+                  <div class="pt-1">
+                    <dt class="text-slate-500 text-xs uppercase tracking-wide">Hub</dt>
+                    <dd class="font-medium text-ag-slate mt-1">ON–QC · import-led demand</dd>
+                  </div>
+                </dl>
+              </div>
+            </article>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            <article class="metric-card group rounded-2xl bg-white p-5 shadow-md border border-slate-200/80 hover:border-emerald-300/60 hover:shadow-lg transition-all ring-1 ring-transparent hover:ring-emerald-500/10">
-              <div class="flex items-center justify-between">
-                <span class="text-2xl" aria-hidden="true">🍅</span>
-                <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">#1 Value</span>
-              </div>
-              <h4 class="font-display font-semibold text-slate-900 mt-3">Tomato</h4>
-              <p class="text-2xl font-bold text-ag-forest mt-2 tabular-nums">899k <span class="text-sm font-normal text-slate-500">t</span></p>
-              <p class="text-sm text-slate-600 mt-1">FGV <span class="font-semibold text-slate-800">C$1.10B</span></p>
-              <p class="text-xs text-slate-400 mt-3 border-t border-slate-100 pt-2">Anchor profit pool · CEA + field</p>
-            </article>
-            <article class="metric-card rounded-2xl bg-white p-5 shadow-md border border-slate-200/80 hover:border-emerald-300/60 hover:shadow-lg transition-all">
-              <div class="flex items-center justify-between">
-                <span class="text-2xl" aria-hidden="true">🥒</span>
-                <span class="text-xs font-bold uppercase text-slate-600 bg-slate-100 px-2 py-0.5 rounded">Premium / t</span>
-              </div>
-              <h4 class="font-display font-semibold text-slate-900 mt-3">Cucumber</h4>
-              <p class="text-2xl font-bold text-ag-forest mt-2 tabular-nums">370k <span class="text-sm font-normal text-slate-500">t</span></p>
-              <p class="text-sm text-slate-600 mt-1">FGV <span class="font-semibold text-slate-800">C$1.00B</span></p>
-              <p class="text-xs text-slate-400 mt-3 border-t border-slate-100 pt-2">Very high C$/t · greenhouse-led</p>
-            </article>
-            <article class="metric-card rounded-2xl bg-white p-5 shadow-md border border-slate-200/80 hover:border-emerald-300/60 hover:shadow-lg transition-all">
-              <div class="flex items-center justify-between">
-                <span class="text-2xl" aria-hidden="true">🫑</span>
-                <span class="text-xs font-bold uppercase text-amber-800 bg-amber-50 px-2 py-0.5 rounded">CEA triad</span>
-              </div>
-              <h4 class="font-display font-semibold text-slate-900 mt-3">Pepper</h4>
-              <p class="text-2xl font-bold text-ag-forest mt-2 tabular-nums">258k <span class="text-sm font-normal text-slate-500">t</span></p>
-              <p class="text-sm text-slate-600 mt-1">FGV <span class="font-semibold text-slate-800">C$716M</span></p>
-              <p class="text-xs text-slate-400 mt-3 border-t border-slate-100 pt-2">Highest value density in portfolio</p>
-            </article>
-            <article class="metric-card rounded-2xl bg-white p-5 shadow-md border border-slate-200/80 hover:border-emerald-300/60 hover:shadow-lg transition-all">
-              <div class="flex items-center justify-between">
-                <span class="text-2xl" aria-hidden="true">🧅</span>
-                <span class="text-xs font-bold uppercase text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">Field wedge</span>
-              </div>
-              <h4 class="font-display font-semibold text-slate-900 mt-3">Dry onion</h4>
-              <p class="text-2xl font-bold text-ag-forest mt-2 tabular-nums">299k <span class="text-sm font-normal text-slate-500">t</span></p>
-              <p class="text-sm text-slate-600 mt-1">FGV <span class="font-semibold text-slate-800">C$181M</span></p>
-              <p class="text-xs text-slate-400 mt-3 border-t border-slate-100 pt-2">Strong FGV growth story · storage</p>
-            </article>
-            <article class="metric-card rounded-2xl bg-white p-5 shadow-md border border-slate-200/80 hover:border-emerald-300/60 hover:shadow-lg transition-all">
-              <div class="flex items-center justify-between">
-                <span class="text-2xl" aria-hidden="true">🥕</span>
-                <span class="text-xs font-bold uppercase text-slate-500 bg-slate-100 px-2 py-0.5 rounded">Volume</span>
-              </div>
-              <h4 class="font-display font-semibold text-slate-900 mt-3">Carrot</h4>
-              <p class="text-2xl font-bold text-ag-forest mt-2 tabular-nums">352k <span class="text-sm font-normal text-slate-500">t</span></p>
-              <p class="text-sm text-slate-600 mt-1">FGV <span class="font-semibold text-slate-800">C$164M</span></p>
-              <p class="text-xs text-slate-400 mt-3 border-t border-slate-100 pt-2">National staple · thinner C$/t</p>
-            </article>
-          </div>
-          <p class="text-xs text-slate-500 mt-4 max-w-4xl">2024 production and farm-gate values align with internal Canada Top-5 vegetable portfolio analysis (StatCan 32-10-0365 + AAFC greenhouse overview). Figures shown rounded for display.</p>
         </section>
 
         <!-- Charts -->
-        <section id="charts" class="scroll-mt-8">
-          <h3 class="font-display text-xl font-bold text-slate-900 mb-2">Production data — interactive charts</h3>
-          <p class="text-slate-600 text-sm mb-8 max-w-3xl">Toggle chart type for the 2024 portfolio mix. The second chart tracks national <strong>greenhouse fresh</strong> tomato and cucumber output (kt) from StatCan table 32-10-0456 (research digest sample years).</p>
-
-          <div class="grid lg:grid-cols-2 gap-8">
-            <div class="rounded-2xl bg-white p-6 shadow-md border border-slate-200/80">
-              <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
-                <h4 class="font-display font-semibold text-slate-800">2024 production mix — Top 5</h4>
-                <div class="flex rounded-lg bg-slate-100 p-1 text-xs font-semibold">
-                  <button type="button" id="btn-bar" class="chart-toggle px-3 py-1.5 rounded-md bg-white text-ag-forest shadow-sm">Bar</button>
-                  <button type="button" id="btn-pie" class="chart-toggle px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900">Pie</button>
-                </div>
-              </div>
-              <div class="h-72 relative">
-                <canvas id="chartPortfolio"></canvas>
-              </div>
-              <p class="text-xs text-slate-500 mt-3">Thousands of tonnes (kt) on bar chart for readability.</p>
+        <section id="charts" class="mb-12 scroll-mt-24">
+          <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+            <div>
+              <h3 class="font-display text-2xl font-bold text-ag-slate">Production &amp; value · interactive</h3>
+              <p class="text-slate-600 text-sm mt-1">Toggle chart type. Data: AAFC / StatCan 2024.</p>
             </div>
-
-            <div class="rounded-2xl bg-white p-6 shadow-md border border-slate-200/80">
-              <h4 class="font-display font-semibold text-slate-800 mb-4">Greenhouse fresh output (Canada, kt)</h4>
-              <div class="h-72">
-                <canvas id="chartGreenhouse"></canvas>
-              </div>
-              <p class="text-xs text-slate-500 mt-3">Tomato vs cucumber — StatCan SDMX DF_32100456 (v22 digest). Not seed trade.</p>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" id="btn-bar-volume" class="px-4 py-2 rounded-lg text-sm font-semibold bg-ag-deep text-white shadow-sm ring-2 ring-ag-leaf/30">Bar · tonnes</button>
+              <button type="button" id="btn-bar-fgv" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white border border-slate-200 text-ag-slate hover:bg-slate-50">Bar · FGV ($M)</button>
+              <button type="button" id="btn-pie-volume" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white border border-slate-200 text-ag-slate hover:bg-slate-50">Pie · tonnes</button>
+              <button type="button" id="btn-pie-fgv" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white border border-slate-200 text-ag-slate hover:bg-slate-50">Pie · FGV</button>
             </div>
           </div>
-        </section>
-
-        <!-- Market context -->
-        <section id="context" class="scroll-mt-8">
-          <h3 class="font-display text-xl font-bold text-slate-900 mb-4">Market &amp; production context</h3>
-          <div class="prose prose-slate max-w-none">
-            <ul class="space-y-3 text-slate-700 not-prose">
-              <li class="flex gap-3 rounded-xl bg-white p-4 border border-slate-200/80 shadow-sm">
-                <span class="shrink-0 w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center text-sm font-bold">ON</span>
-                <span><strong class="text-slate-900">Southern Ontario</strong> protected vegetables (Leamington cluster) anchor greenhouse tomato and cucumber. Infrastructure (water, power, land) shows up as scaling constraints and policy topics.</span>
-              </li>
-              <li class="flex gap-3 rounded-xl bg-white p-4 border border-slate-200/80 shadow-sm">
-                <span class="shrink-0 w-8 h-8 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center text-xs font-bold">SC</span>
-                <span><strong class="text-slate-900">Field tonnes:</strong> FAOSTAT can fail (HTTP 521); tooling falls back to <a class="text-emerald-700 underline hover:text-emerald-900" href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210036501" target="_blank" rel="noopener">StatCan 32-10-0365</a> for mapped Canadian vegetables.</span>
-              </li>
-              <li class="flex gap-3 rounded-xl bg-white p-4 border border-slate-200/80 shadow-sm">
-                <span class="shrink-0 w-8 h-8 rounded-lg bg-emerald-800 text-white flex items-center justify-center text-xs font-bold">GH</span>
-                <span><strong class="text-slate-900">Greenhouse fresh</strong> tomato and cucumber sit in the <strong>hundred-thousand tonne</strong> band nationally — use as <em>protected output</em> context, not seed import/export.</span>
-              </li>
-            </ul>
-          </div>
-        </section>
-
-        <!-- Competitors -->
-        <section id="competition" class="scroll-mt-8">
-          <h3 class="font-display text-xl font-bold text-slate-900 mb-4">Competitors &amp; channels</h3>
-          <div class="rounded-2xl bg-gradient-to-br from-slate-800 to-ag-forest text-slate-100 p-6 md:p-8 shadow-lg border border-emerald-900/30">
-            <p class="text-emerald-100/90 leading-relaxed">Global vegetable majors (Syngenta, Bayer / Seminis–De Ruiter, BASF Nunhems, Rijk Zwaan, Enza) show <strong class="text-white">Canada-relevant</strong> touchpoints: Ontario R&amp;D, Leamington-area distribution, North American demos, and <code class="text-emerald-300 bg-black/20 px-1 rounded text-sm">.ca</code> trial and product pages.</p>
-            <div class="mt-6 grid sm:grid-cols-2 gap-4 text-sm">
-              <div class="rounded-xl bg-white/5 border border-white/10 p-4">
-                <p class="font-display font-semibold text-emerald-300 text-xs uppercase tracking-wide">Signal quality</p>
-                <p class="mt-2 text-slate-200">Broad Exa queries still pull Bayer Canada <strong class="text-white">canola</strong> PR and syndicated market PDFs — useful for sector mood, weak for SKU-level greenhouse share.</p>
-              </div>
-              <div class="rounded-xl bg-white/5 border border-white/10 p-4">
-                <p class="font-display font-semibold text-emerald-300 text-xs uppercase tracking-wide">Discovery</p>
-                <p class="mt-2 text-slate-200">Longer stakeholder strings (hybrid carrot, rootstock tomato, long English cucumber + Leamington) outperform generic <strong class="text-white">“Carrot”</strong> (cosmetic oil noise).</p>
-              </div>
+          <div class="rounded-2xl bg-white border border-slate-200/80 shadow-sm p-4 sm:p-6">
+            <div class="relative h-72 sm:h-80 w-full max-w-3xl mx-auto">
+              <canvas id="cropChart" aria-label="Crop production chart"></canvas>
             </div>
           </div>
-        </section>
-
-        <!-- Regulation -->
-        <section id="regulation" class="scroll-mt-8">
-          <h3 class="font-display text-xl font-bold text-slate-900 mb-4">Regulation, registry &amp; transparency</h3>
-          <div class="grid md:grid-cols-3 gap-4">
-            <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-              <h5 class="font-semibold text-slate-900 text-sm">CFIA HTML</h5>
-              <p class="text-sm text-slate-600 mt-2">Hub and policy pages are not tabular exports — expect zero structured parses until CSV or bulk download.</p>
-            </div>
-            <div class="rounded-xl border border-emerald-200 bg-emerald-50/50 p-4 shadow-sm">
-              <h5 class="font-semibold text-emerald-900 text-sm">Seeds Canada CSV</h5>
-              <p class="text-sm text-emerald-900/80 mt-2">Variety Transparency Database supports variety name, Canadian representative, gene-editing columns — filter by crop kind for vegetables.</p>
-            </div>
-            <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-              <h5 class="font-semibold text-slate-900 text-sm">Local authority tool</h5>
-              <p class="text-sm text-slate-600 mt-2">Strict ranker often returns zero Exa hits — keep manual CFIA, Seeds Canada, CSGA shortlists.</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- Agronomy -->
-        <section id="agronomy" class="scroll-mt-8">
-          <h3 class="font-display text-xl font-bold text-slate-900 mb-4">Agronomy, pests &amp; product</h3>
-          <ul class="space-y-2 text-slate-700 text-sm md:text-base">
-            <li class="border-l-4 border-emerald-600 pl-4 py-1"><strong>ToBRFV</strong> and virus hygiene dominate Canadian greenhouse tomato discourse; pair international Exa hits with Canadian academic and trade sources.</li>
-            <li class="border-l-4 border-amber-500 pl-4 py-1">Heuristic pain tool may surface <strong>TYLCV</strong> ahead of <strong>ToBRFV</strong> — treat as a review prompt, not a spec.</li>
-            <li class="border-l-4 border-slate-400 pl-4 py-1"><strong>Carrot (field):</strong> drought / water stress themes fit Prairies and BC; refine search strings for news same as stakeholders.</li>
-          </ul>
         </section>
 
         <!-- Trade -->
-        <section id="trade" class="scroll-mt-8">
-          <h3 class="font-display text-xl font-bold text-slate-900 mb-4">Trade data &amp; tooling</h3>
-          <div class="rounded-xl bg-amber-50 border border-amber-200/80 p-5 text-amber-950 text-sm">
-            <p><strong>Comtrade / get_trade_dynamics:</strong> Seed (e.g. HS 120991) and produce flows require a reachable UN Comtrade API. Some environments report DNS failure — re-run when the host resolves.</p>
-            <p class="mt-2"><strong>FAOSTAT:</strong> Direct fetch unreliable (521); <strong>StatCan SDMX</strong> is the practical Canada production backfill in tooling today.</p>
+        <section id="trade" class="mb-12 scroll-mt-24">
+          <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">Trade &amp; domestic demand</h3>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="rounded-xl bg-ag-deep text-white p-5 border border-emerald-800/40">
+              <p class="text-emerald-400/90 text-xs font-semibold uppercase tracking-wide">Imports 2024</p>
+              <p class="font-display text-2xl font-bold mt-2 tabular-nums">&gt;$4.38B</p>
+              <p class="text-slate-400 text-xs mt-2">Field vegetables</p>
+            </div>
+            <div class="rounded-xl bg-white border border-slate-200 p-5">
+              <p class="text-slate-500 text-xs font-semibold uppercase tracking-wide">Exports 2024</p>
+              <p class="font-display text-2xl font-bold text-ag-slate mt-2 tabular-nums">~$1.06B</p>
+            </div>
+            <div class="rounded-xl bg-white border border-slate-200 p-5">
+              <p class="text-slate-500 text-xs font-semibold uppercase tracking-wide">Trade deficit</p>
+              <p class="font-display text-2xl font-bold text-rose-700 mt-2 tabular-nums">~$3.32B</p>
+            </div>
+            <div class="rounded-xl bg-emerald-50 border border-emerald-200/80 p-5">
+              <p class="text-emerald-800 text-xs font-semibold uppercase tracking-wide">Import share · lettuce</p>
+              <p class="font-display text-2xl font-bold text-ag-forest mt-2 tabular-nums">16.3%</p>
+              <p class="text-emerald-700/80 text-xs mt-2">Of field veg import value</p>
+            </div>
           </div>
+          <p class="text-sm text-slate-600 mt-4">Top import lines by value also include onions/shallots (9.1%), tomatoes (6.7%), cabbages (6.3%). Canada ranks 5th worldwide by fresh vegetable import value (~5.9% share).</p>
         </section>
 
-        <!-- Strategy JTBD expandable -->
-        <section id="strategy" class="scroll-mt-8">
-          <h3 class="font-display text-xl font-bold text-slate-900 mb-2">Strategy insights — JTBD view</h3>
-          <p class="text-slate-600 text-sm mb-6 max-w-3xl">Expand each card for the underlying job-to-be-done, evidence hook, and action implied by the Canada findings summary.</p>
-
-          <div class="space-y-3">
-            <details class="strategy-card group rounded-2xl bg-white border border-slate-200/80 shadow-sm open:shadow-md open:border-emerald-200/60 transition-shadow">
-              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-slate-900 hover:bg-slate-50/80 rounded-2xl">
-                <span class="flex items-center gap-3">
-                  <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-100 text-emerald-800 text-sm font-bold">1</span>
-                  Anchor on defensible evidence
-                </span>
-                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-              </summary>
-              <div class="px-5 pb-5 pt-0 text-slate-600 text-sm leading-relaxed border-t border-slate-100">
-                <p class="pt-4"><strong class="text-slate-800">Job:</strong> Give leadership a Canada story that survives diligence — not a link dump from a single search API.</p>
-                <p class="mt-2"><strong class="text-slate-800">Evidence:</strong> StatCan field + greenhouse production, AAFC / provincial stats, named Canadian entities and literature.</p>
-                <p class="mt-2"><strong class="text-slate-800">Do:</strong> Build slide banks from StatCan tables and vetted domestic sources; use Exa only as a discovery layer with human filtering.</p>
-              </div>
-            </details>
-
-            <details class="strategy-card group rounded-2xl bg-white border border-slate-200/80 shadow-sm open:shadow-md open:border-emerald-200/60 transition-shadow">
-              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-slate-900 hover:bg-slate-50/80 rounded-2xl">
-                <span class="flex items-center gap-3">
-                  <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-100 text-emerald-800 text-sm font-bold">2</span>
-                  Prove “global genetics, local proof”
-                </span>
-                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-              </summary>
-              <div class="px-5 pb-5 pt-0 text-slate-600 text-sm leading-relaxed border-t border-slate-100">
-                <p class="pt-4"><strong class="text-slate-800">Job:</strong> Show why your variety program wins in <em>this</em> cluster, not globally in the abstract.</p>
-                <p class="mt-2"><strong class="text-slate-800">Evidence:</strong> Offices, channel partners, trial maps, CGC / OGVG / CSGA adjacency, Leamington-adjacent press.</p>
-                <p class="mt-2"><strong class="text-slate-800">Do:</strong> Map entities and URLs per competitor; pair with protected-output scale from charts above to size the serviceable pool.</p>
-              </div>
-            </details>
-
-            <details class="strategy-card group rounded-2xl bg-white border border-slate-200/80 shadow-sm open:shadow-md open:border-emerald-200/60 transition-shadow">
-              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-slate-900 hover:bg-slate-50/80 rounded-2xl">
-                <span class="flex items-center gap-3">
-                  <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-100 text-emerald-800 text-sm font-bold">3</span>
-                  Treat registry as a data product
-                </span>
-                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-              </summary>
-              <div class="px-5 pb-5 pt-0 text-slate-600 text-sm leading-relaxed border-t border-slate-100">
-                <p class="pt-4"><strong class="text-slate-800">Job:</strong> Make variety and transparency legible for registration, marketing, and gene-editing positioning.</p>
-                <p class="mt-2"><strong class="text-slate-800">Evidence:</strong> CFIA exports; Seeds Canada transparency CSV — not marketing HTML shells.</p>
-                <p class="mt-2"><strong class="text-slate-800">Do:</strong> Invest in CSV ingestion + crop-kind filters; wire CFIA bulk outputs into the same pipeline as transparency DB.</p>
-              </div>
-            </details>
-
-            <details class="strategy-card group rounded-2xl bg-white border border-slate-200/80 shadow-sm open:shadow-md open:border-emerald-200/60 transition-shadow">
-              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-slate-900 hover:bg-slate-50/80 rounded-2xl">
-                <span class="flex items-center gap-3">
-                  <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-100 text-emerald-800 text-sm font-bold">4</span>
-                  Design search for signal, not noise
-                </span>
-                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-              </summary>
-              <div class="px-5 pb-5 pt-0 text-slate-600 text-sm leading-relaxed border-t border-slate-100">
-                <p class="pt-4"><strong class="text-slate-800">Job:</strong> Find carrot and greenhouse seed intelligence without essential-oil SKUs, IPPC pest reports, or canola capex drowning the result set.</p>
-                <p class="mt-2"><strong class="text-slate-800">Evidence:</strong> v21/v22 runs — generic “Carrot” and broad Leamington queries drifted off-topic.</p>
-                <p class="mt-2"><strong class="text-slate-800">Do:</strong> Use long hybrid/rootstock strings, negative filters (<code class="bg-slate-100 px-1 rounded">-pest</code>, <code class="bg-slate-100 px-1 rounded">-IPPC</code>), and domain includes where appropriate.</p>
-              </div>
-            </details>
-          </div>
-        </section>
-
-        <!-- Sources -->
-        <section id="sources" class="scroll-mt-8 pb-8">
-          <h3 class="font-display text-xl font-bold text-slate-900 mb-4">Go deeper</h3>
-          <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <!-- Profit pool -->
+        <section id="profit" class="mb-12 scroll-mt-24">
+          <h3 class="font-display text-2xl font-bold text-ag-slate mb-2">Profit pool mapping</h3>
+          <p class="text-slate-600 text-sm mb-4">Implied farm-gate revenue per tonne (FGV ÷ production) — revenue concentration proxy, not net margin.</p>
+          <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
             <table class="w-full text-sm text-left">
-              <thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                <tr>
-                  <th class="px-4 py-3">Resource</th>
-                  <th class="px-4 py-3">Role</th>
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
+                  <th class="px-4 py-3 font-semibold">Crop</th>
+                  <th class="px-4 py-3 font-semibold tabular-nums">~CAD / tonne</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100 text-slate-700">
-                <tr><td class="px-4 py-3 font-medium text-emerald-800">Canada_Market_Opportunity_v2.md</td><td class="px-4 py-3">Full narrative &amp; citations</td></tr>
-                <tr><td class="px-4 py-3 font-medium text-emerald-800">Canada_Market_Opportunity_v2.1.md</td><td class="px-4 py-3">MCP / Exa tool run log</td></tr>
-                <tr><td class="px-4 py-3 font-medium text-emerald-800">Canada_Market_Findings_Summary.md</td><td class="px-4 py-3">Executive synthesis</td></tr>
-                <tr><td class="px-4 py-3 font-medium text-emerald-800">tmp/canada_v21 / v22 digests</td><td class="px-4 py-3">JSON excerpts from research scripts</td></tr>
+              <tbody class="divide-y divide-slate-100">
+                <tr><td class="px-4 py-3 font-medium">Lettuce</td><td class="px-4 py-3 tabular-nums text-emerald-800 font-semibold">~1,370</td></tr>
+                <tr class="bg-slate-50/50"><td class="px-4 py-3 font-medium">Cabbage</td><td class="px-4 py-3 tabular-nums">~785</td></tr>
+                <tr><td class="px-4 py-3 font-medium">Dry onions</td><td class="px-4 py-3 tabular-nums">~606</td></tr>
+                <tr class="bg-slate-50/50"><td class="px-4 py-3 font-medium">Carrots</td><td class="px-4 py-3 tabular-nums">~466</td></tr>
+                <tr><td class="px-4 py-3 font-medium">Field tomatoes</td><td class="px-4 py-3 tabular-nums">~291</td></tr>
               </tbody>
             </table>
           </div>
+          <p class="text-sm text-slate-600 mt-4">Greenhouse sector: <strong class="text-ag-slate">866,484 t</strong> production, <strong class="text-ag-slate">$2.7B</strong> sales (2024) — parallel profit pool for fresh tomato, cucumber, pepper.</p>
         </section>
 
-      </div>
+        <!-- Strategy insights / JTBD collapsible -->
+        <section id="strategy" class="mb-12 scroll-mt-24">
+          <h3 class="font-display text-2xl font-bold text-ag-slate mb-2">Strategy insights</h3>
+          <p class="text-slate-600 text-sm mb-6">Jobs-to-be-done (JTBD) — expand each card for grower rationale.</p>
+          <div class="space-y-3">
+            <details class="strategy-card group rounded-xl bg-white border border-slate-200 shadow-sm open:ring-2 open:ring-emerald-500/20">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-ag-slate hover:bg-slate-50 rounded-xl transition-colors">
+                <span class="flex items-center gap-3">
+                  <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-red-100 text-red-700 text-sm font-bold">T</span>
+                  Field tomatoes
+                </span>
+                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </summary>
+              <div class="px-5 pb-5 pt-0 text-sm text-slate-600 leading-relaxed border-t border-slate-100">
+                <p class="pt-4"><strong class="text-ag-slate">JTBD:</strong> Processor contract stability — ~93% of Canadian field tomatoes go to processing. Ontario concentration supports scale logistics; US remains ~96.8% of export value for field vegetables.</p>
+              </div>
+            </details>
+            <details class="strategy-card group rounded-xl bg-white border border-slate-200 shadow-sm open:ring-2 open:ring-emerald-500/20">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-ag-slate hover:bg-slate-50 rounded-xl transition-colors">
+                <span class="flex items-center gap-3">
+                  <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-100 text-orange-700 text-sm font-bold">C</span>
+                  Carrots
+                </span>
+                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </summary>
+              <div class="px-5 pb-5 pt-0 text-sm text-slate-600 leading-relaxed border-t border-slate-100">
+                <p class="pt-4"><strong class="text-ag-slate">JTBD:</strong> National footprint + export orientation — ON/QC/NS triad; carrots led ~10.5% share of field vegetable export value in 2024.</p>
+              </div>
+            </details>
+            <details class="strategy-card group rounded-xl bg-white border border-slate-200 shadow-sm open:ring-2 open:ring-emerald-500/20">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-ag-slate hover:bg-slate-50 rounded-xl transition-colors">
+                <span class="flex items-center gap-3">
+                  <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 text-amber-800 text-sm font-bold">O</span>
+                  Dry onions
+                </span>
+                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </summary>
+              <div class="px-5 pb-5 pt-0 text-sm text-slate-600 leading-relaxed border-t border-slate-100">
+                <p class="pt-4"><strong class="text-ag-slate">JTBD:</strong> Price cycle + geographic diversification — strong 2024 FGV (+12.9% YoY) and volume (+8.0%); AB/QC/ON spread hedges weather and disease pockets.</p>
+              </div>
+            </details>
+            <details class="strategy-card group rounded-xl bg-white border border-slate-200 shadow-sm open:ring-2 open:ring-emerald-500/20">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-ag-slate hover:bg-slate-50 rounded-xl transition-colors">
+                <span class="flex items-center gap-3">
+                  <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-green-100 text-green-800 text-sm font-bold">B</span>
+                  Cabbage
+                </span>
+                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </summary>
+              <div class="px-5 pb-5 pt-0 text-sm text-slate-600 leading-relaxed border-t border-slate-100">
+                <p class="pt-4"><strong class="text-ag-slate">JTBD:</strong> Dual pathway — domestic + export growth; cabbage export values +18.1% YoY; aligns with ethnic / fermented / slaw demand.</p>
+              </div>
+            </details>
+            <details class="strategy-card group rounded-xl bg-white border border-slate-200 shadow-sm open:ring-2 open:ring-emerald-500/20">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-ag-slate hover:bg-slate-50 rounded-xl transition-colors">
+                <span class="flex items-center gap-3">
+                  <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-lime-100 text-lime-800 text-sm font-bold">L</span>
+                  Lettuce
+                </span>
+                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </summary>
+              <div class="px-5 pb-5 pt-0 text-sm text-slate-600 leading-relaxed border-t border-slate-100">
+                <p class="pt-4"><strong class="text-ag-slate">JTBD:</strong> High FGV per tonne but structurally import-backed — lettuce ~16.3% of field vegetable import value; domestic production does not solve off-season / Western retail alone.</p>
+              </div>
+            </details>
+          </div>
+        </section>
 
-      <footer class="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500">
-        VegSeed Intel · Canada crop analysis dashboard · Single-file export · No server required
-      </footer>
+        <!-- Friction -->
+        <section id="friction" class="mb-12 scroll-mt-24">
+          <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">Friction points</h3>
+          <ul class="space-y-3 text-sm text-slate-600">
+            <li class="flex gap-3 rounded-xl bg-white border border-slate-200 p-4"><span class="text-emerald-600 font-bold">·</span><span><strong class="text-ag-slate">Climate / regional volatility:</strong> Eastern Canada rebounded from wet 2023; BC and Manitoba saw weaker vegetable performance in national accounts; AAFC cites BC field veg production −8.3% and Manitoba −3.3% vs 2023.</span></li>
+            <li class="flex gap-3 rounded-xl bg-white border border-slate-200 p-4"><span class="text-emerald-600 font-bold">·</span><span><strong class="text-ag-slate">Trade:</strong> Large deficit; Mexico ~24% of import value, US ~59.5% — currency, logistics, tariffs hit lettuce and tomato lines first.</span></li>
+            <li class="flex gap-3 rounded-xl bg-white border border-slate-200 p-4"><span class="text-emerald-600 font-bold">·</span><span><strong class="text-ag-slate">Operations:</strong> Greenhouse is capital- and energy-intensive; Ontario ~72% of national greenhouse tonnage.</span></li>
+          </ul>
+        </section>
+
+        <!-- White space -->
+        <section id="whitespace" class="mb-12 scroll-mt-24">
+          <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">White space</h3>
+          <div class="grid sm:grid-cols-2 gap-3 text-sm">
+            <div class="rounded-xl bg-emerald-50/80 border border-emerald-200/60 p-4 text-slate-700">Organic / IPM brassicas &amp; carrots in Atlantic + QC corridors.</div>
+            <div class="rounded-xl bg-emerald-50/80 border border-emerald-200/60 p-4 text-slate-700">Year-round leaf &amp; blend SKUs (greenhouse + regional field) vs US/Mexico lettuce share.</div>
+            <div class="rounded-xl bg-emerald-50/80 border border-emerald-200/60 p-4 text-slate-700">Processing tomato genetics for moisture/heat volatility without sacrificing solids.</div>
+            <div class="rounded-xl bg-emerald-50/80 border border-emerald-200/60 p-4 text-slate-700">Onion varieties for storage &amp; energy-stressed curing in Alberta (~13% of national onion production).</div>
+          </div>
+        </section>
+
+        <!-- Strategy gap -->
+        <section id="gaps" class="mb-12 scroll-mt-24">
+          <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">Strategy gap · one wedge per crop</h3>
+          <div class="space-y-4">
+            <div class="rounded-xl border-l-4 border-amber-500 bg-white border border-slate-200 p-5 shadow-sm">
+              <h4 class="font-display font-bold text-ag-slate">Dry onions</h4>
+              <p class="text-sm text-slate-600 mt-2">Alberta storage onion + export-grade seed stack — AB’s 13% share as distinct day-length / storage / freight sub-market; onion export values +9.9% YoY.</p>
+            </div>
+            <div class="rounded-xl border-l-4 border-orange-500 bg-white border border-slate-200 p-5 shadow-sm">
+              <h4 class="font-display font-bold text-ag-slate">Carrots</h4>
+              <p class="text-sm text-slate-600 mt-2">Export value recovery — production +1.8% but export values −8.3%; SKU-level quality (sizing, skin, disease) to recapture US retail.</p>
+            </div>
+            <div class="rounded-xl border-l-4 border-red-500 bg-white border border-slate-200 p-5 shadow-sm">
+              <h4 class="font-display font-bold text-ag-slate">Tomatoes</h4>
+              <p class="text-sm text-slate-600 mt-2">Split narrative: field processing (~93%) vs greenhouse fresh — coordinated variety planning across two profit pools.</p>
+            </div>
+            <div class="rounded-xl border-l-4 border-green-600 bg-white border border-slate-200 p-5 shadow-sm">
+              <h4 class="font-display font-bold text-ag-slate">Cabbage</h4>
+              <p class="text-sm text-slate-600 mt-2">Export-led brassica program for kimchi / sauerkraut / specialty slaw; cabbage also 6.3% of import value.</p>
+            </div>
+            <div class="rounded-xl border-l-4 border-lime-500 bg-white border border-slate-200 p-5 shadow-sm">
+              <h4 class="font-display font-bold text-ag-slate">Lettuce</h4>
+              <p class="text-sm text-slate-600 mt-2">BC + import substitution CEA play — lettuce leads import share; national weakness in BC vegetables.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Citations -->
+        <section id="citations" class="mb-8 scroll-mt-24">
+          <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">Citations</h3>
+          <ol class="list-decimal list-inside space-y-2 text-sm text-slate-600">
+            <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://agriculture.canada.ca/en/sector/horticulture/reports/statistical-overview-canadian-field-vegetable-industry-2024" target="_blank" rel="noopener">AAFC — Statistical Overview of the Canadian Field Vegetable Industry, 2024</a> (StatCan Table 32-10-0365-01)</li>
+            <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://www150.statcan.gc.ca/n1/daily-quotidien/250217/dq250217b-eng.pdf" target="_blank" rel="noopener">Statistics Canada — The Daily, Fruit and vegetable production, 2024 (PDF)</a></li>
+            <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://agriculture.canada.ca/en/sector/horticulture/reports/statistical-overview-canadian-greenhouse-vegetable-and-mushroom-industry-2024" target="_blank" rel="noopener">AAFC — Greenhouse Vegetable and Mushroom Industry, 2024</a></li>
+            <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210036501" target="_blank" rel="noopener">StatCan Table 32-10-0365-01</a></li>
+          </ol>
+        </section>
+
+        <footer class="text-center text-xs text-slate-500 pb-8 border-t border-slate-200 pt-8">
+          VegSeed Intel · Canada field vegetable dashboard · Single-file HTML · Tailwind CDN + Chart.js
+        </footer>
+      </div>
     </main>
   </div>
 
   <script>
     (function () {
-      const crops = ['Tomato', 'Cucumber', 'Pepper', 'Dry onion', 'Carrot'];
-      const productionKt = [899.014, 369.893, 257.938, 298.564, 351.568];
-      const colors = ['#14532d', '#166534', '#15803d', '#22c55e', '#4ade80'];
+      const crops = ['Tomatoes', 'Carrots', 'Dry onions', 'Cabbage', 'Lettuce'];
+      const production = [548107, 351568, 298564, 171765, 77502];
+      const fgvMillions = [159.3, 163.8, 181.1, 134.9, 106.0];
+      const colors = ['rgba(220, 38, 38, 0.85)', 'rgba(234, 88, 12, 0.85)', 'rgba(180, 83, 9, 0.85)', 'rgba(21, 128, 61, 0.85)', 'rgba(101, 163, 13, 0.85)'];
+      const borderColors = ['rgb(185, 28, 28)', 'rgb(194, 65, 12)', 'rgb(146, 64, 14)', 'rgb(22, 101, 52)', 'rgb(77, 124, 15)'];
 
-      const ctxPort = document.getElementById('chartPortfolio').getContext('2d');
-      let chartType = 'bar';
-      let chartPortfolio = new Chart(ctxPort, {
-        type: 'bar',
-        data: {
-          labels: crops,
-          datasets: [{
-            label: '2024 Production (kt)',
-            data: productionKt,
-            backgroundColor: colors,
-            borderRadius: 8,
-            borderSkipped: false,
-          }],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: function (ctx) {
-                  const v = ctx.raw;
-                  return (typeof v === 'number' ? v.toFixed(1) : v) + ' kt';
-                },
-              },
-            },
-          },
-          scales: chartType === 'bar' ? {
-            y: {
-              beginAtZero: true,
-              grid: { color: 'rgba(148, 163, 184, 0.2)' },
-              ticks: { color: '#64748b', font: { size: 11 } },
-            },
-            x: {
-              grid: { display: false },
-              ticks: { color: '#475569', font: { size: 11 } },
-            },
-          } : {},
-        },
-      });
+      const ctx = document.getElementById('cropChart');
+      let chart = null;
+      let mode = 'bar-volume';
 
-      function setPortfolioChartType(type) {
-        chartType = type;
-        chartPortfolio.destroy();
-        const opts = {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { position: 'bottom', labels: { color: '#475569', padding: 16, font: { size: 11 } } },
-            tooltip: {
-              callbacks: {
-                label: function (ctx) {
-                  const v = Number(ctx.raw);
-                  const arr = ctx.chart.data.datasets[0].data.map(Number);
-                  const sum = arr.reduce(function (a, b) { return a + b; }, 0);
-                  const pct = sum ? ((v / sum) * 100).toFixed(1) : '0';
-                  return (Number.isFinite(v) ? v.toFixed(1) : ctx.raw) + ' kt (' + pct + '%)';
-                },
-              },
-            },
-          },
-        };
-        if (type === 'bar') {
-          opts.scales = {
-            y: { beginAtZero: true, grid: { color: 'rgba(148, 163, 184, 0.2)' }, ticks: { color: '#64748b' } },
-            x: { grid: { display: false }, ticks: { color: '#475569' } },
-          };
-        }
-        chartPortfolio = new Chart(ctxPort, {
-          type: type === 'pie' ? 'pie' : 'bar',
-          data: {
-            labels: crops,
-            datasets: [{
-              label: '2024 Production (kt)',
-              data: productionKt,
-              backgroundColor: colors,
-              borderWidth: type === 'pie' ? 2 : 0,
-              borderColor: '#fff',
-              borderRadius: type === 'bar' ? 8 : 0,
-              borderSkipped: false,
-            }],
-          },
-          options: opts,
+      function setActiveButton(activeId) {
+        ['btn-bar-volume', 'btn-bar-fgv', 'btn-pie-volume', 'btn-pie-fgv'].forEach(function (id) {
+          const el = document.getElementById(id);
+          if (id === activeId) {
+            el.className = 'px-4 py-2 rounded-lg text-sm font-semibold bg-ag-deep text-white shadow-sm ring-2 ring-ag-leaf/30';
+          } else {
+            el.className = 'px-4 py-2 rounded-lg text-sm font-semibold bg-white border border-slate-200 text-ag-slate hover:bg-slate-50';
+          }
         });
       }
 
-      document.getElementById('btn-bar').addEventListener('click', function () {
-        document.getElementById('btn-bar').className = 'chart-toggle px-3 py-1.5 rounded-md bg-white text-ag-forest shadow-sm';
-        document.getElementById('btn-pie').className = 'chart-toggle px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900';
-        setPortfolioChartType('bar');
+      function buildConfig(m) {
+        const isPie = m.startsWith('pie');
+        const isFgv = m.endsWith('fgv');
+        const data = isFgv ? fgvMillions : production;
+        const label = isFgv ? 'Farm gate value ($M)' : 'Production (metric tons)';
+
+        if (isPie) {
+          return {
+            type: 'pie',
+            data: {
+              labels: crops,
+              datasets: [{
+                data: data,
+                backgroundColor: colors,
+                borderColor: borderColors,
+                borderWidth: 2
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: 'bottom', labels: { padding: 16, font: { size: 11 } } },
+                tooltip: {
+                  callbacks: {
+                    label: function (c) {
+                      const v = c.raw;
+                      const total = data.reduce(function (a, b) { return a + b; }, 0);
+                      const pct = ((v / total) * 100).toFixed(1);
+                      if (isFgv) return c.label + ': $' + v + 'M (' + pct + '%)';
+                      return c.label + ': ' + v.toLocaleString() + ' t (' + pct + '%)';
+                    }
+                  }
+                }
+              }
+            }
+          };
+        }
+
+        return {
+          type: 'bar',
+          data: {
+            labels: crops,
+            datasets: [{
+              label: label,
+              data: data,
+              backgroundColor: colors,
+              borderColor: borderColors,
+              borderWidth: 1.5,
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function (c) {
+                    if (isFgv) return '$' + c.raw + 'M';
+                    return c.raw.toLocaleString() + ' t';
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: { color: 'rgba(148, 163, 184, 0.2)' },
+                ticks: {
+                  color: '#64748b',
+                  callback: function (val) {
+                    if (isFgv) return '$' + val + 'M';
+                    if (val >= 1e6) return (val / 1e6).toFixed(2) + 'M';
+                    if (val >= 1e3) return (val / 1e3).toFixed(0) + 'k';
+                    return val;
+                  }
+                }
+              },
+              x: {
+                grid: { display: false },
+                ticks: { color: '#64748b', maxRotation: 45, minRotation: 0 }
+              }
+            }
+          }
+        };
+      }
+
+      function render(m) {
+        mode = m;
+        if (chart) chart.destroy();
+        chart = new Chart(ctx, buildConfig(m));
+      }
+
+      document.getElementById('btn-bar-volume').addEventListener('click', function () {
+        setActiveButton('btn-bar-volume');
+        render('bar-volume');
       });
-      document.getElementById('btn-pie').addEventListener('click', function () {
-        document.getElementById('btn-pie').className = 'chart-toggle px-3 py-1.5 rounded-md bg-white text-ag-forest shadow-sm';
-        document.getElementById('btn-bar').className = 'chart-toggle px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900';
-        setPortfolioChartType('pie');
+      document.getElementById('btn-bar-fgv').addEventListener('click', function () {
+        setActiveButton('btn-bar-fgv');
+        render('bar-fgv');
+      });
+      document.getElementById('btn-pie-volume').addEventListener('click', function () {
+        setActiveButton('btn-pie-volume');
+        render('pie-volume');
+      });
+      document.getElementById('btn-pie-fgv').addEventListener('click', function () {
+        setActiveButton('btn-pie-fgv');
+        render('pie-fgv');
       });
 
-      const ghYears = ['2018', '2020', '2022', '2023'];
-      const ghTomato = [279.4, 257.6, 294.4, 305.3];
-      const ghCuke = [228.8, 252.6, 273.2, 318.3];
-      new Chart(document.getElementById('chartGreenhouse').getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: ghYears,
-          datasets: [
-            {
-              label: 'Fresh tomatoes (kt)',
-              data: ghTomato,
-              backgroundColor: '#14532d',
-              borderRadius: 6,
-            },
-            {
-              label: 'Fresh cucumbers (kt)',
-              data: ghCuke,
-              backgroundColor: '#22c55e',
-              borderRadius: 6,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { position: 'top', labels: { color: '#475569', usePointStyle: true } },
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: { color: 'rgba(148, 163, 184, 0.2)' },
-              ticks: { color: '#64748b' },
-            },
-            x: {
-              grid: { display: false },
-              ticks: { color: '#475569' },
-            },
-          },
-        },
-      });
+      render('bar-volume');
 
-      /* Sidebar active state on scroll */
+      // Scroll spy for sidebar
       const sections = document.querySelectorAll('main section[id]');
       const links = document.querySelectorAll('.sidebar-link');
-      const map = {};
-      links.forEach(function (a) {
-        const id = a.getAttribute('href').slice(1);
-        map[id] = a;
-      });
-      const obs = new IntersectionObserver(
+      const observer = new IntersectionObserver(
         function (entries) {
-          entries.forEach(function (en) {
-            if (!en.isIntersecting) return;
-            const id = en.target.id;
-            links.forEach(function (l) { l.classList.remove('active'); });
-            if (map[id]) map[id].classList.add('active');
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            const id = entry.target.getAttribute('id');
+            links.forEach(function (link) {
+              link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+            });
           });
         },
         { rootMargin: '-20% 0px -60% 0px', threshold: 0 }
       );
-      sections.forEach(function (s) { obs.observe(s); });
-      if (links[0]) links[0].classList.add('active');
+      sections.forEach(function (s) { observer.observe(s); });
+
+      // Mobile drawer
+      var drawer = document.getElementById('mobile-drawer');
+      var backdrop = document.getElementById('mobile-drawer-backdrop');
+      document.getElementById('mobile-menu-btn').addEventListener('click', function () {
+        drawer.classList.remove('hidden');
+      });
+      backdrop.addEventListener('click', function () {
+        drawer.classList.add('hidden');
+      });
+      document.querySelectorAll('.mobile-nav-link').forEach(function (a) {
+        a.addEventListener('click', function () { drawer.classList.add('hidden'); });
+      });
     })();
   </script>
 </body>
