@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VegSeed Intel — Canada Field Vegetable Market Dashboard</title>
+  <title>Canada Top 10 Crop Analysis | VegSeed Intel</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -11,18 +11,24 @@
         extend: {
           colors: {
             ag: {
-              deep: '#0f291e',
-              forest: '#14532d',
+              deep: '#0b1f19',
+              forest: '#123c2c',
               leaf: '#166534',
               mint: '#22c55e',
-              mist: '#ecfdf5',
-              slate: '#1e293b',
-              fog: '#f1f5f9'
+              moss: '#84cc16',
+              fog: '#f4f7f6',
+              slate: '#1f2937',
+              steel: '#64748b',
+              cream: '#fcfdfc'
             }
           },
           fontFamily: {
-            sans: ['DM Sans', 'system-ui', 'sans-serif'],
-            display: ['Outfit', 'system-ui', 'sans-serif']
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Outfit', 'Inter', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            soft: '0 10px 30px rgba(15, 41, 30, 0.10)',
+            panel: '0 12px 36px rgba(2, 8, 23, 0.08)'
           }
         }
       }
@@ -30,439 +36,576 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
-    body { font-family: 'DM Sans', system-ui, sans-serif; }
-    .font-display { font-family: 'Outfit', system-ui, sans-serif; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .font-display { font-family: 'Outfit', 'Inter', system-ui, sans-serif; }
     details.strategy-card > summary { list-style: none; }
     details.strategy-card > summary::-webkit-details-marker { display: none; }
-    .sidebar-link.active { background: rgba(34, 197, 94, 0.15); border-left: 3px solid #22c55e; color: #ecfdf5; }
+    .sidebar-link.active { background: rgba(34, 197, 94, 0.12); color: #ffffff; border-left: 3px solid #22c55e; }
+    .metric-glow { background: radial-gradient(circle at top right, rgba(34,197,94,0.14), transparent 42%); }
   </style>
 </head>
 <body class="bg-ag-fog text-ag-slate antialiased min-h-screen">
-  <!-- Ensures Tailwind CDN includes classes toggled via JS -->
-  <span class="hidden bg-ag-deep text-white shadow-sm ring-2 ring-ag-leaf/30 bg-white border border-slate-200 text-ag-slate hover:bg-slate-50"></span>
   <div class="flex min-h-screen">
-    <!-- Sidebar -->
-    <aside class="hidden lg:flex w-64 shrink-0 flex-col bg-ag-deep text-slate-300 border-r border-emerald-900/50 fixed inset-y-0 z-40">
+    <aside class="hidden lg:flex w-72 shrink-0 flex-col bg-ag-deep text-slate-300 fixed inset-y-0 z-40 border-r border-emerald-900/40">
       <div class="p-6 border-b border-emerald-900/40">
-        <p class="text-xs uppercase tracking-widest text-emerald-500/90 font-semibold">VegSeed Intel</p>
-        <h1 class="font-display text-lg font-bold text-white mt-1 leading-tight">Canada Crop Analysis</h1>
-        <p class="text-xs text-slate-500 mt-2">Field vegetables · 2024</p>
+        <p class="text-xs uppercase tracking-[0.24em] text-emerald-400 font-semibold">VegSeed Intel</p>
+        <h1 class="font-display text-xl font-bold text-white mt-2 leading-tight">Canada Top 10 Crop Analysis</h1>
+        <p class="text-xs text-slate-500 mt-2">Interactive market dashboard · top-10 crops · 2024 actuals + 2025/2026 strategist lens</p>
       </div>
-      <nav class="flex-1 overflow-y-auto p-4 space-y-1" id="sidebar-nav">
-        <a href="#bluf" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Executive summary</a>
-        <a href="#metrics" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Top 5 metric cards</a>
-        <a href="#charts" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Production charts</a>
-        <a href="#trade" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Trade &amp; demand</a>
-        <a href="#profit" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Profit pool</a>
-        <a href="#strategy" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Strategy insights</a>
-        <a href="#friction" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Friction points</a>
-        <a href="#whitespace" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">White space</a>
-        <a href="#gaps" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Strategy gap</a>
-        <a href="#citations" class="sidebar-link block px-3 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors">Citations</a>
+
+      <nav id="sidebar-nav" class="flex-1 overflow-y-auto p-4 space-y-1 text-sm">
+        <a href="#bluf" class="sidebar-link block rounded-lg px-3 py-2 hover:bg-white/5 transition-colors">Executive summary</a>
+        <a href="#metrics" class="sidebar-link block rounded-lg px-3 py-2 hover:bg-white/5 transition-colors">Metric cards</a>
+        <a href="#charts" class="sidebar-link block rounded-lg px-3 py-2 hover:bg-white/5 transition-colors">Interactive charts</a>
+        <a href="#seed-map" class="sidebar-link block rounded-lg px-3 py-2 hover:bg-white/5 transition-colors">Seed import map</a>
+        <a href="#top10" class="sidebar-link block rounded-lg px-3 py-2 hover:bg-white/5 transition-colors">Top-10 market table</a>
+        <a href="#competitors" class="sidebar-link block rounded-lg px-3 py-2 hover:bg-white/5 transition-colors">Competitor matrix</a>
+        <a href="#supply" class="sidebar-link block rounded-lg px-3 py-2 hover:bg-white/5 transition-colors">Supply chain</a>
+        <a href="#strategy" class="sidebar-link block rounded-lg px-3 py-2 hover:bg-white/5 transition-colors">Strategy insights</a>
+        <a href="#white-space" class="sidebar-link block rounded-lg px-3 py-2 hover:bg-white/5 transition-colors">White space</a>
+        <a href="#citations" class="sidebar-link block rounded-lg px-3 py-2 hover:bg-white/5 transition-colors">Citations</a>
       </nav>
+
       <div class="p-4 border-t border-emerald-900/40 text-xs text-slate-500">
-        StatCan 32-10-0365-01 · AAFC 2024
+        Sources: StatCan · WITS/Comtrade · CFIA · AAFC · company disclosures
       </div>
     </aside>
 
-    <!-- Mobile header -->
-    <div class="lg:hidden fixed top-0 left-0 right-0 z-50 bg-ag-deep text-white px-4 py-3 flex items-center justify-between border-b border-emerald-900/50">
-      <span class="font-display font-semibold text-sm">Canada Crop Analysis</span>
-      <button type="button" id="mobile-menu-btn" class="p-2 rounded-lg bg-white/10 text-white" aria-label="Menu">
+    <div class="lg:hidden fixed top-0 inset-x-0 z-50 bg-ag-deep text-white px-4 py-3 border-b border-emerald-900/50 flex items-center justify-between">
+      <div>
+        <p class="text-[10px] uppercase tracking-[0.22em] text-emerald-400">VegSeed Intel</p>
+        <p class="font-display text-sm font-semibold">Canada Top 10 Crop Analysis</p>
+      </div>
+      <button id="mobile-menu-btn" type="button" class="p-2 rounded-lg bg-white/10" aria-label="Menu">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
     </div>
+
     <div id="mobile-drawer" class="lg:hidden fixed inset-0 z-50 hidden">
-      <div class="absolute inset-0 bg-black/50" id="mobile-drawer-backdrop"></div>
-      <nav class="absolute top-0 right-0 w-72 h-full bg-ag-deep text-slate-300 p-6 pt-16 space-y-1 shadow-xl">
-        <a href="#bluf" class="mobile-nav-link block py-2 text-sm border-b border-emerald-900/30">Executive summary</a>
-        <a href="#metrics" class="mobile-nav-link block py-2 text-sm border-b border-emerald-900/30">Metric cards</a>
-        <a href="#charts" class="mobile-nav-link block py-2 text-sm border-b border-emerald-900/30">Charts</a>
-        <a href="#trade" class="mobile-nav-link block py-2 text-sm border-b border-emerald-900/30">Trade</a>
-        <a href="#strategy" class="mobile-nav-link block py-2 text-sm border-b border-emerald-900/30">Strategy insights</a>
-        <a href="#gaps" class="mobile-nav-link block py-2 text-sm border-b border-emerald-900/30">Strategy gap</a>
-        <a href="#citations" class="mobile-nav-link block py-2 text-sm">Citations</a>
+      <div id="mobile-drawer-backdrop" class="absolute inset-0 bg-black/50"></div>
+      <nav class="absolute right-0 top-0 h-full w-72 bg-ag-deep text-slate-300 px-6 pt-16 pb-6 shadow-2xl space-y-2">
+        <a href="#bluf" class="mobile-nav-link block py-2 border-b border-emerald-900/30">Executive summary</a>
+        <a href="#metrics" class="mobile-nav-link block py-2 border-b border-emerald-900/30">Metric cards</a>
+        <a href="#charts" class="mobile-nav-link block py-2 border-b border-emerald-900/30">Charts</a>
+        <a href="#seed-map" class="mobile-nav-link block py-2 border-b border-emerald-900/30">Seed map</a>
+        <a href="#top10" class="mobile-nav-link block py-2 border-b border-emerald-900/30">Top-10 table</a>
+        <a href="#competitors" class="mobile-nav-link block py-2 border-b border-emerald-900/30">Competitors</a>
+        <a href="#supply" class="mobile-nav-link block py-2 border-b border-emerald-900/30">Supply chain</a>
+        <a href="#strategy" class="mobile-nav-link block py-2 border-b border-emerald-900/30">Strategy insights</a>
+        <a href="#white-space" class="mobile-nav-link block py-2 border-b border-emerald-900/30">White space</a>
+        <a href="#citations" class="mobile-nav-link block py-2">Citations</a>
       </nav>
     </div>
 
-    <main class="flex-1 lg:ml-64 pt-14 lg:pt-0">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 lg:py-12">
+    <main class="flex-1 lg:ml-72 pt-16 lg:pt-0">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
 
-        <!-- Hero -->
         <header class="mb-10">
-          <p class="text-emerald-700 text-sm font-semibold tracking-wide uppercase">Ag-Tech market intelligence</p>
-          <h2 class="font-display text-3xl sm:text-4xl font-bold text-ag-slate mt-2">Canadian field vegetable market · 2024</h2>
-          <p class="mt-3 text-slate-600 max-w-3xl">Interactive dashboard derived from AAFC <em>Statistical Overview of the Canadian Field Vegetable Industry, 2024</em> and Statistics Canada Table 32-10-0365-01.</p>
+          <div class="rounded-3xl bg-gradient-to-br from-ag-deep via-ag-forest to-ag-leaf text-white p-6 sm:p-8 lg:p-10 shadow-panel overflow-hidden relative">
+            <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_right,_#84cc16,_transparent_28%),radial-gradient(circle_at_bottom_left,_#22c55e,_transparent_30%)]"></div>
+            <div class="relative">
+              <p class="text-emerald-300 text-sm font-semibold tracking-[0.2em] uppercase">Ag-Tech market intelligence dashboard</p>
+              <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold mt-3 max-w-5xl">Canada vegetable opportunity map — top 10 crops, seed trade, competitor footprint</h2>
+              <p class="mt-4 max-w-4xl text-slate-200 text-sm sm:text-base leading-relaxed">
+                A single-file executive dashboard converting the Canada 2024–2026 market findings into an interactive visual layer spanning farm-gate value, production, self-sufficiency, seed imports, Big 5 competitor signals, and white-space strategy.
+              </p>
+              <div class="grid sm:grid-cols-3 gap-4 mt-7 max-w-5xl">
+                <div class="rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 px-4 py-4">
+                  <p class="text-emerald-300 text-xs uppercase tracking-wide">Seed import market</p>
+                  <p class="font-display text-2xl font-bold mt-2">US$196.0M</p>
+                  <p class="text-slate-300 text-xs mt-1">HS 120991 · 6.03M kg in 2024</p>
+                </div>
+                <div class="rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 px-4 py-4">
+                  <p class="text-emerald-300 text-xs uppercase tracking-wide">Top-10 produce market</p>
+                  <p class="font-display text-2xl font-bold mt-2">C$3.71B</p>
+                  <p class="text-slate-300 text-xs mt-1">2024 farm-gate value across the top 10 crops</p>
+                </div>
+                <div class="rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 px-4 py-4">
+                  <p class="text-emerald-300 text-xs uppercase tracking-wide">Cleanest field wedge</p>
+                  <p class="font-display text-2xl font-bold mt-2">Storage onion</p>
+                  <p class="text-slate-300 text-xs mt-1">Large import dependence + lower visible competitor intensity</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </header>
 
-        <!-- BLUF -->
         <section id="bluf" class="mb-12 scroll-mt-24">
-          <div class="rounded-2xl bg-gradient-to-br from-ag-deep to-ag-forest text-white p-6 sm:p-8 shadow-lg border border-emerald-800/30">
-            <h3 class="font-display text-xl font-bold text-emerald-300 uppercase text-xs tracking-widest mb-3">Executive summary · BLUF</h3>
-            <p class="text-slate-200 leading-relaxed text-sm sm:text-base">
-              The five highest <strong class="text-white">farm gate value</strong> field crops are <strong class="text-emerald-300">dry onions, carrots, tomatoes, cabbage, and lettuce</strong>. Canada remains <strong class="text-white">import-dependent</strong>: 2024 field vegetable imports exceeded <strong class="text-emerald-300">$4.38B</strong> vs. exports ~<strong class="text-emerald-300">$1.06B</strong> (~<strong class="text-white">$3.32B</strong> deficit). Lettuce, onions/shallots, tomatoes, and cabbages rank among the largest import lines by value share. <strong class="text-white">Sweet corn</strong> is 4th by tonnes but 6th by FGV—outside the value-based top five.
-            </p>
+          <div class="grid lg:grid-cols-[1.35fr_0.95fr] gap-6 items-start">
+            <div class="rounded-3xl bg-white border border-slate-200 shadow-soft p-6 sm:p-8">
+              <div class="flex items-center gap-3 mb-4">
+                <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-ag-forest font-bold">BL</span>
+                <div>
+                  <h3 class="font-display text-2xl font-bold text-ag-slate">Executive Summary</h3>
+                  <p class="text-sm text-slate-500">Bottom line up front</p>
+                </div>
+              </div>
+              <p class="text-slate-700 leading-relaxed mb-4">
+                Canada’s commercial vegetable value pool is dominated by a <strong>greenhouse triad</strong> — <strong>tomato, cucumber, and pepper</strong> — centered commercially in <strong>Leamington, Ontario</strong>. Those same crops also align most closely with the highest-value imported seed origin: the <strong>Netherlands</strong>.
+              </p>
+              <p class="text-slate-700 leading-relaxed mb-4">
+                The top-10 crop set totals roughly <strong>C$3.71B</strong> in 2024 farm-gate value, versus a Canadian vegetable seed import market of about <strong>US$196.0M</strong> (roughly <strong>C$266.6M</strong>). This confirms a large downstream produce pool relative to seed spend, with premium protected-culture genetics capturing the highest value density.
+              </p>
+              <p class="text-slate-700 leading-relaxed">
+                The cleanest white-space niche remains <strong>storage onion genetics</strong>: a large demand pool, clear import dependence, and less visible public field-service intensity from the Big 5 than in greenhouse vegetables.
+              </p>
+            </div>
+
+            <div class="rounded-3xl bg-ag-cream border border-emerald-100 shadow-soft p-6 sm:p-8">
+              <h3 class="font-display text-xl font-bold text-ag-slate mb-4">Commercial takeaways</h3>
+              <ul class="space-y-3 text-sm text-slate-700">
+                <li class="flex gap-3"><span class="text-emerald-600 font-bold">•</span><span><strong>Tomato</strong> is the largest absolute profit pool in the portfolio.</span></li>
+                <li class="flex gap-3"><span class="text-emerald-600 font-bold">•</span><span><strong>Cucumber</strong> and <strong>pepper</strong> remain premium greenhouse economics plays.</span></li>
+                <li class="flex gap-3"><span class="text-emerald-600 font-bold">•</span><span><strong>Netherlands-led seed value</strong> matches the strong public Canada presence of Dutch breeders.</span></li>
+                <li class="flex gap-3"><span class="text-emerald-600 font-bold">•</span><span><strong>Dry onion, lettuce, broccoli, and asparagus</strong> are the most import-dependent among the top 10.</span></li>
+              </ul>
+            </div>
           </div>
         </section>
 
-        <!-- Metric cards -->
         <section id="metrics" class="mb-12 scroll-mt-24">
-          <h3 class="font-display text-2xl font-bold text-ag-slate mb-2">Top 5 crops · key metrics</h3>
-          <p class="text-slate-600 text-sm mb-6">2024 field vegetables · production, farm gate value, 3-year CAGR (2021→2024), primary region.</p>
-          <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-            <!-- Dry onions -->
-            <article class="rounded-xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow overflow-hidden group">
-              <div class="h-1.5 bg-gradient-to-r from-amber-600 to-amber-500"></div>
+          <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
+            <div>
+              <h3 class="font-display text-2xl sm:text-3xl font-bold text-ag-slate">Metric Cards · Top 5 by Farm-Gate Value</h3>
+              <p class="text-slate-600 text-sm mt-1">2024 actuals. Combined field + greenhouse where relevant.</p>
+            </div>
+            <div class="text-xs text-slate-500">Top 5: Tomato · Cucumber · Pepper · Dry onion · Lettuce</div>
+          </div>
+
+          <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+            <article class="metric-glow rounded-2xl bg-white border border-slate-200 shadow-soft overflow-hidden">
+              <div class="h-1.5 bg-gradient-to-r from-red-700 to-red-500"></div>
               <div class="p-5">
-                <h4 class="font-display font-bold text-ag-slate text-lg">Dry onions</h4>
-                <dl class="mt-4 space-y-3 text-sm">
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">Production</dt>
-                    <dd class="font-semibold text-ag-slate tabular-nums">298,564 t</dd>
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <h4 class="font-display text-xl font-bold text-ag-slate">Tomato</h4>
+                    <p class="text-xs text-slate-500 mt-1">Largest value pool</p>
                   </div>
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">Farm gate value</dt>
-                    <dd class="font-semibold text-emerald-800 tabular-nums">$181.1M</dd>
-                  </div>
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">CAGR volume</dt>
-                    <dd class="font-semibold text-ag-leaf tabular-nums">~6.9%</dd>
-                  </div>
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">CAGR FGV</dt>
-                    <dd class="font-semibold text-ag-leaf tabular-nums">~15.0%</dd>
-                  </div>
-                  <div class="pt-1">
-                    <dt class="text-slate-500 text-xs uppercase tracking-wide">Primary provinces</dt>
-                    <dd class="font-medium text-ag-slate mt-1">QC 43% · ON 37% · AB 13%</dd>
-                  </div>
+                  <span class="rounded-full bg-red-50 text-red-700 px-3 py-1 text-xs font-semibold">CEA anchor</span>
+                </div>
+                <dl class="mt-5 space-y-3 text-sm">
+                  <div class="flex justify-between border-b border-slate-100 pb-2"><dt class="text-slate-500">Production</dt><dd class="font-semibold tabular-nums">868,434 t</dd></div>
+                  <div class="flex justify-between border-b border-slate-100 pb-2"><dt class="text-slate-500">FGV</dt><dd class="font-semibold text-emerald-800 tabular-nums">C$1.138B</dd></div>
+                  <div class="flex justify-between border-b border-slate-100 pb-2"><dt class="text-slate-500">Self-sufficiency</dt><dd class="font-semibold tabular-nums">103.6%</dd></div>
+                  <div class="flex justify-between"><dt class="text-slate-500">Trade status</dt><dd class="font-semibold">Net exporter</dd></div>
                 </dl>
               </div>
             </article>
-            <!-- Carrots -->
-            <article class="rounded-xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-              <div class="h-1.5 bg-gradient-to-r from-orange-500 to-orange-400"></div>
+
+            <article class="metric-glow rounded-2xl bg-white border border-slate-200 shadow-soft overflow-hidden">
+              <div class="h-1.5 bg-gradient-to-r from-emerald-700 to-emerald-500"></div>
               <div class="p-5">
-                <h4 class="font-display font-bold text-ag-slate text-lg">Carrots</h4>
-                <dl class="mt-4 space-y-3 text-sm">
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">Production</dt>
-                    <dd class="font-semibold text-ag-slate tabular-nums">351,568 t</dd>
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <h4 class="font-display text-xl font-bold text-ag-slate">Cucumber</h4>
+                    <p class="text-xs text-slate-500 mt-1">Premium greenhouse surplus crop</p>
                   </div>
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">Farm gate value</dt>
-                    <dd class="font-semibold text-emerald-800 tabular-nums">$163.8M</dd>
-                  </div>
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">CAGR volume</dt>
-                    <dd class="font-semibold text-rose-600 tabular-nums">~-0.4%</dd>
-                  </div>
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">CAGR FGV</dt>
-                    <dd class="font-semibold text-ag-leaf tabular-nums">~5.6%</dd>
-                  </div>
-                  <div class="pt-1">
-                    <dt class="text-slate-500 text-xs uppercase tracking-wide">Primary provinces</dt>
-                    <dd class="font-medium text-ag-slate mt-1">ON 45% · QC 31% · NS 16%</dd>
-                  </div>
+                  <span class="rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-semibold">High surplus</span>
+                </div>
+                <dl class="mt-5 space-y-3 text-sm">
+                  <div class="flex justify-between border-b border-slate-100 pb-2"><dt class="text-slate-500">Production</dt><dd class="font-semibold tabular-nums">365,219 t</dd></div>
+                  <div class="flex justify-between border-b border-slate-100 pb-2"><dt class="text-slate-500">FGV</dt><dd class="font-semibold text-emerald-800 tabular-nums">C$962.5M</dd></div>
+                  <div class="flex justify-between border-b border-slate-100 pb-2"><dt class="text-slate-500">Self-sufficiency</dt><dd class="font-semibold tabular-nums">357.5%</dd></div>
+                  <div class="flex justify-between"><dt class="text-slate-500">Trade status</dt><dd class="font-semibold">Net exporter</dd></div>
                 </dl>
               </div>
             </article>
-            <!-- Tomatoes -->
-            <article class="rounded-xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-              <div class="h-1.5 bg-gradient-to-r from-red-600 to-red-500"></div>
+
+            <article class="metric-glow rounded-2xl bg-white border border-slate-200 shadow-soft overflow-hidden">
+              <div class="h-1.5 bg-gradient-to-r from-orange-600 to-amber-400"></div>
               <div class="p-5">
-                <h4 class="font-display font-bold text-ag-slate text-lg">Tomatoes (field)</h4>
-                <dl class="mt-4 space-y-3 text-sm">
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">Production</dt>
-                    <dd class="font-semibold text-ag-slate tabular-nums">548,107 t</dd>
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <h4 class="font-display text-xl font-bold text-ag-slate">Pepper</h4>
+                    <p class="text-xs text-slate-500 mt-1">High-value greenhouse pool</p>
                   </div>
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">Farm gate value</dt>
-                    <dd class="font-semibold text-emerald-800 tabular-nums">$159.3M</dd>
-                  </div>
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">CAGR volume</dt>
-                    <dd class="font-semibold text-ag-leaf tabular-nums">~2.1%</dd>
-                  </div>
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">CAGR FGV</dt>
-                    <dd class="font-semibold text-ag-leaf tabular-nums">~10.7%</dd>
-                  </div>
-                  <div class="pt-1">
-                    <dt class="text-slate-500 text-xs uppercase tracking-wide">Concentration</dt>
-                    <dd class="font-medium text-ag-slate mt-1">ON ~98% · ~93% processing</dd>
-                  </div>
+                  <span class="rounded-full bg-orange-50 text-orange-700 px-3 py-1 text-xs font-semibold">Premium crop</span>
+                </div>
+                <dl class="mt-5 space-y-3 text-sm">
+                  <div class="flex justify-between border-b border-slate-100 pb-2"><dt class="text-slate-500">Production</dt><dd class="font-semibold tabular-nums">238,154 t</dd></div>
+                  <div class="flex justify-between border-b border-slate-100 pb-2"><dt class="text-slate-500">FGV</dt><dd class="font-semibold text-emerald-800 tabular-nums">C$717.3M</dd></div>
+                  <div class="flex justify-between border-b border-slate-100 pb-2"><dt class="text-slate-500">Self-sufficiency</dt><dd class="font-semibold tabular-nums">117.2%</dd></div>
+                  <div class="flex justify-between"><dt class="text-slate-500">Trade status</dt><dd class="font-semibold">Net exporter</dd></div>
                 </dl>
               </div>
             </article>
-            <!-- Cabbage -->
-            <article class="rounded-xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-              <div class="h-1.5 bg-gradient-to-r from-green-700 to-green-600"></div>
+
+            <article class="metric-glow rounded-2xl bg-white border border-slate-200 shadow-soft overflow-hidden">
+              <div class="h-1.5 bg-gradient-to-r from-amber-700 to-yellow-500"></div>
               <div class="p-5">
-                <h4 class="font-display font-bold text-ag-slate text-lg">Cabbage</h4>
-                <p class="text-xs text-slate-500 mt-0.5">incl. kale &amp; Chinese cabbage</p>
-                <dl class="mt-3 space-y-3 text-sm">
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">Production</dt>
-                    <dd class="font-semibold text-ag-slate tabular-nums">171,765 t</dd>
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <h4 class="font-display text-xl font-bold text-ag-slate">Dry onion</h4>
+                    <p class="text-xs text-slate-500 mt-1">Best field wedge</p>
                   </div>
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">Farm gate value</dt>
-                    <dd class="font-semibold text-emerald-800 tabular-nums">$134.9M</dd>
-                  </div>
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">CAGR volume</dt>
-                    <dd class="font-semibold text-rose-600 tabular-nums">~-0.7%</dd>
-                  </div>
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">CAGR FGV</dt>
-                    <dd class="font-semibold text-ag-leaf tabular-nums">~7.7%</dd>
-                  </div>
-                  <div class="pt-1">
-                    <dt class="text-slate-500 text-xs uppercase tracking-wide">Hub</dt>
-                    <dd class="font-medium text-ag-slate mt-1">ON–QC (national field base)</dd>
-                  </div>
+                  <span class="rounded-full bg-amber-50 text-amber-800 px-3 py-1 text-xs font-semibold">Import gap</span>
+                </div>
+                <dl class="mt-5 space-y-3 text-sm">
+                  <div class="flex justify-between border-b border-slate-100 pb-2"><dt class="text-slate-500">Production</dt><dd class="font-semibold tabular-nums">298,564 t</dd></div>
+                  <div class="flex justify-between border-b border-slate-100 pb-2"><dt class="text-slate-500">FGV</dt><dd class="font-semibold text-emerald-800 tabular-nums">C$181.1M</dd></div>
+                  <div class="flex justify-between border-b border-slate-100 pb-2"><dt class="text-slate-500">Self-sufficiency</dt><dd class="font-semibold tabular-nums">59.8%</dd></div>
+                  <div class="flex justify-between"><dt class="text-slate-500">Trade status</dt><dd class="font-semibold">Net importer</dd></div>
                 </dl>
               </div>
             </article>
-            <!-- Lettuce -->
-            <article class="rounded-xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow overflow-hidden sm:col-span-2 xl:col-span-1">
-              <div class="h-1.5 bg-gradient-to-r from-lime-600 to-emerald-500"></div>
+
+            <article class="metric-glow rounded-2xl bg-white border border-slate-200 shadow-soft overflow-hidden">
+              <div class="h-1.5 bg-gradient-to-r from-lime-600 to-green-400"></div>
               <div class="p-5">
-                <h4 class="font-display font-bold text-ag-slate text-lg">Lettuce</h4>
-                <p class="text-xs text-slate-500 mt-0.5">leaf, head, mixed</p>
-                <dl class="mt-3 space-y-3 text-sm">
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">Production</dt>
-                    <dd class="font-semibold text-ag-slate tabular-nums">77,502 t</dd>
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <h4 class="font-display text-xl font-bold text-ag-slate">Lettuce</h4>
+                    <p class="text-xs text-slate-500 mt-1">Large deficit market</p>
                   </div>
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">Farm gate value</dt>
-                    <dd class="font-semibold text-emerald-800 tabular-nums">$106.0M</dd>
-                  </div>
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">CAGR volume</dt>
-                    <dd class="font-semibold text-ag-leaf tabular-nums">~0.8%</dd>
-                  </div>
-                  <div class="flex justify-between gap-2 border-b border-slate-100 pb-2">
-                    <dt class="text-slate-500">CAGR FGV</dt>
-                    <dd class="font-semibold text-ag-leaf tabular-nums">~7.6%</dd>
-                  </div>
-                  <div class="pt-1">
-                    <dt class="text-slate-500 text-xs uppercase tracking-wide">Hub</dt>
-                    <dd class="font-medium text-ag-slate mt-1">ON–QC · import-led demand</dd>
-                  </div>
+                  <span class="rounded-full bg-lime-50 text-lime-800 px-3 py-1 text-xs font-semibold">Import-led</span>
+                </div>
+                <dl class="mt-5 space-y-3 text-sm">
+                  <div class="flex justify-between border-b border-slate-100 pb-2"><dt class="text-slate-500">Production</dt><dd class="font-semibold tabular-nums">97,941 t</dd></div>
+                  <div class="flex justify-between border-b border-slate-100 pb-2"><dt class="text-slate-500">FGV</dt><dd class="font-semibold text-emerald-800 tabular-nums">C$174.7M</dd></div>
+                  <div class="flex justify-between border-b border-slate-100 pb-2"><dt class="text-slate-500">Self-sufficiency</dt><dd class="font-semibold tabular-nums">28.8%</dd></div>
+                  <div class="flex justify-between"><dt class="text-slate-500">Trade status</dt><dd class="font-semibold">Net importer</dd></div>
                 </dl>
               </div>
             </article>
           </div>
         </section>
 
-        <!-- Charts -->
         <section id="charts" class="mb-12 scroll-mt-24">
-          <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+          <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-6">
             <div>
-              <h3 class="font-display text-2xl font-bold text-ag-slate">Production &amp; value · interactive</h3>
-              <p class="text-slate-600 text-sm mt-1">Toggle chart type. Data: AAFC / StatCan 2024.</p>
+              <h3 class="font-display text-2xl sm:text-3xl font-bold text-ag-slate">Interactive Top-10 Crop Chart</h3>
+              <p class="text-sm text-slate-600 mt-1">Toggle between production, farm-gate value, and self-sufficiency. Switch between bar and pie views.</p>
             </div>
             <div class="flex flex-wrap gap-2">
-              <button type="button" id="btn-bar-volume" class="px-4 py-2 rounded-lg text-sm font-semibold bg-ag-deep text-white shadow-sm ring-2 ring-ag-leaf/30">Bar · tonnes</button>
-              <button type="button" id="btn-bar-fgv" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white border border-slate-200 text-ag-slate hover:bg-slate-50">Bar · FGV ($M)</button>
-              <button type="button" id="btn-pie-volume" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white border border-slate-200 text-ag-slate hover:bg-slate-50">Pie · tonnes</button>
-              <button type="button" id="btn-pie-fgv" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white border border-slate-200 text-ag-slate hover:bg-slate-50">Pie · FGV</button>
+              <button id="btn-bar-volume" type="button" class="px-4 py-2 rounded-lg text-sm font-semibold bg-ag-deep text-white shadow-sm ring-2 ring-ag-leaf/30">Bar · tonnes</button>
+              <button id="btn-bar-fgv" type="button" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white border border-slate-200 text-ag-slate hover:bg-slate-50">Bar · FGV</button>
+              <button id="btn-bar-ssr" type="button" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white border border-slate-200 text-ag-slate hover:bg-slate-50">Bar · self-suff.</button>
+              <button id="btn-pie-volume" type="button" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white border border-slate-200 text-ag-slate hover:bg-slate-50">Pie · tonnes</button>
+              <button id="btn-pie-fgv" type="button" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white border border-slate-200 text-ag-slate hover:bg-slate-50">Pie · FGV</button>
             </div>
           </div>
-          <div class="rounded-2xl bg-white border border-slate-200/80 shadow-sm p-4 sm:p-6">
-            <div class="relative h-72 sm:h-80 w-full max-w-3xl mx-auto">
-              <canvas id="cropChart" aria-label="Crop production chart"></canvas>
+
+          <div class="grid xl:grid-cols-[1.4fr_0.9fr] gap-6">
+            <div class="rounded-3xl bg-white border border-slate-200 shadow-soft p-4 sm:p-6">
+              <div class="relative h-80 sm:h-96 w-full">
+                <canvas id="cropChart" aria-label="Top 10 crop analysis chart"></canvas>
+              </div>
+            </div>
+
+            <div class="rounded-3xl bg-white border border-slate-200 shadow-soft p-6">
+              <h4 class="font-display text-xl font-bold text-ag-slate mb-4">Chart Notes</h4>
+              <ul class="space-y-3 text-sm text-slate-600">
+                <li class="flex gap-3"><span class="font-bold text-emerald-600">•</span><span>Tomato, cucumber, and pepper dominate value because greenhouse economics overwhelm the field segment.</span></li>
+                <li class="flex gap-3"><span class="font-bold text-emerald-600">•</span><span>Onion and lettuce are the clearest large-scale demand pools still structurally dependent on imports.</span></li>
+                <li class="flex gap-3"><span class="font-bold text-emerald-600">•</span><span>Broccoli shows high deficit intensity despite a sizable market, suggesting opportunity for targeted field-service differentiation.</span></li>
+                <li class="flex gap-3"><span class="font-bold text-emerald-600">•</span><span>Use apparent consumption carefully: it is a trade-based proxy, not audited retail consumption.</span></li>
+              </ul>
             </div>
           </div>
         </section>
 
-        <!-- Trade -->
-        <section id="trade" class="mb-12 scroll-mt-24">
-          <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">Trade &amp; domestic demand</h3>
-          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="rounded-xl bg-ag-deep text-white p-5 border border-emerald-800/40">
-              <p class="text-emerald-400/90 text-xs font-semibold uppercase tracking-wide">Imports 2024</p>
-              <p class="font-display text-2xl font-bold mt-2 tabular-nums">&gt;$4.38B</p>
-              <p class="text-slate-400 text-xs mt-2">Field vegetables</p>
+        <section id="seed-map" class="mb-12 scroll-mt-24">
+          <div class="grid xl:grid-cols-[1.05fr_0.95fr] gap-6">
+            <div class="rounded-3xl bg-white border border-slate-200 shadow-soft p-6">
+              <h3 class="font-display text-2xl font-bold text-ag-slate mb-3">Vegetable Seed Import Map</h3>
+              <p class="text-sm text-slate-600 mb-5">HS 120991, Canada imports, 2024. Value-centric ranking highlights how Dutch-origin premium hybrid seed dominates the upper end of the Canadian market.</p>
+              <div class="overflow-hidden rounded-2xl border border-slate-200">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-50 text-slate-500 uppercase tracking-wide text-xs">
+                    <tr>
+                      <th class="px-4 py-3 text-left">Rank</th>
+                      <th class="px-4 py-3 text-left">Country</th>
+                      <th class="px-4 py-3 text-right">Value</th>
+                      <th class="px-4 py-3 text-right">Volume</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    <tr><td class="px-4 py-3">1</td><td class="px-4 py-3 font-medium">Netherlands</td><td class="px-4 py-3 text-right tabular-nums">US$49.96M</td><td class="px-4 py-3 text-right tabular-nums">73,213 kg</td></tr>
+                    <tr class="bg-slate-50/40"><td class="px-4 py-3">2</td><td class="px-4 py-3 font-medium">United States</td><td class="px-4 py-3 text-right tabular-nums">US$26.49M</td><td class="px-4 py-3 text-right tabular-nums">996,200 kg</td></tr>
+                    <tr><td class="px-4 py-3">3</td><td class="px-4 py-3 font-medium">China</td><td class="px-4 py-3 text-right tabular-nums">US$22.56M</td><td class="px-4 py-3 text-right tabular-nums">4,462,610 kg</td></tr>
+                    <tr class="bg-slate-50/40"><td class="px-4 py-3">4</td><td class="px-4 py-3 font-medium">India</td><td class="px-4 py-3 text-right tabular-nums">US$19.12M</td><td class="px-4 py-3 text-right tabular-nums">34,904 kg</td></tr>
+                    <tr><td class="px-4 py-3">5</td><td class="px-4 py-3 font-medium">Peru</td><td class="px-4 py-3 text-right tabular-nums">US$17.06M</td><td class="px-4 py-3 text-right tabular-nums">18,795 kg</td></tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div class="rounded-xl bg-white border border-slate-200 p-5">
-              <p class="text-slate-500 text-xs font-semibold uppercase tracking-wide">Exports 2024</p>
-              <p class="font-display text-2xl font-bold text-ag-slate mt-2 tabular-nums">~$1.06B</p>
-            </div>
-            <div class="rounded-xl bg-white border border-slate-200 p-5">
-              <p class="text-slate-500 text-xs font-semibold uppercase tracking-wide">Trade deficit</p>
-              <p class="font-display text-2xl font-bold text-rose-700 mt-2 tabular-nums">~$3.32B</p>
-            </div>
-            <div class="rounded-xl bg-emerald-50 border border-emerald-200/80 p-5">
-              <p class="text-emerald-800 text-xs font-semibold uppercase tracking-wide">Import share · lettuce</p>
-              <p class="font-display text-2xl font-bold text-ag-forest mt-2 tabular-nums">16.3%</p>
-              <p class="text-emerald-700/80 text-xs mt-2">Of field veg import value</p>
+
+            <div class="rounded-3xl bg-gradient-to-br from-ag-deep to-ag-forest text-white shadow-soft p-6">
+              <h3 class="font-display text-2xl font-bold mb-4">Cross-Verification Read</h3>
+              <ul class="space-y-4 text-sm text-slate-200 leading-relaxed">
+                <li><strong class="text-white">Dutch alignment:</strong> Netherlands is Canada’s largest vegetable-seed origin by value, matching the strong public Canada presence of Dutch-rooted greenhouse breeders such as Rijk Zwaan and Enza.</li>
+                <li><strong class="text-white">Leamington logic:</strong> greenhouse tomatoes, cucumbers, and peppers are economically dominant and cluster in the same hub where Big 5 technical-service signals are most visible.</li>
+                <li><strong class="text-white">Regulatory gate:</strong> imports run through CBSA + NISC + CFIA ICA, which raises the premium on document quality, traceability, and trusted seed sources.</li>
+                <li><strong class="text-white">2026 strategist lens:</strong> absent contrary evidence, this value-led Dutch greenhouse linkage remains the most probable seed-origin pattern through 2026.</li>
+              </ul>
             </div>
           </div>
-          <p class="text-sm text-slate-600 mt-4">Top import lines by value also include onions/shallots (9.1%), tomatoes (6.7%), cabbages (6.3%). Canada ranks 5th worldwide by fresh vegetable import value (~5.9% share).</p>
         </section>
 
-        <!-- Profit pool -->
-        <section id="profit" class="mb-12 scroll-mt-24">
-          <h3 class="font-display text-2xl font-bold text-ag-slate mb-2">Profit pool mapping</h3>
-          <p class="text-slate-600 text-sm mb-4">Implied farm-gate revenue per tonne (FGV ÷ production) — revenue concentration proxy, not net margin.</p>
-          <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
-            <table class="w-full text-sm text-left">
-              <thead>
-                <tr class="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
-                  <th class="px-4 py-3 font-semibold">Crop</th>
-                  <th class="px-4 py-3 font-semibold tabular-nums">~CAD / tonne</th>
+        <section id="top10" class="mb-12 scroll-mt-24">
+          <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
+            <div>
+              <h3 class="font-display text-2xl sm:text-3xl font-bold text-ag-slate">Integrated Top-10 Market Table</h3>
+              <p class="text-slate-600 text-sm mt-1">Production, apparent domestic consumption, trade status, and directional seed-origin read.</p>
+            </div>
+            <div class="text-xs text-slate-500">Self-sufficiency = production ÷ apparent consumption</div>
+          </div>
+
+          <div class="overflow-x-auto rounded-3xl bg-white border border-slate-200 shadow-soft">
+            <table class="w-full min-w-[1180px] text-sm text-left">
+              <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wide border-b border-slate-200">
+                <tr>
+                  <th class="px-5 py-4">Crop</th>
+                  <th class="px-5 py-4 text-right">FGV (2024)</th>
+                  <th class="px-5 py-4 text-right">Production (MT)</th>
+                  <th class="px-5 py-4 text-right">Domestic consumption (MT)</th>
+                  <th class="px-5 py-4 text-right">Self-suff.</th>
+                  <th class="px-5 py-4">Import / export status</th>
+                  <th class="px-5 py-4">Top seed origin</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100">
-                <tr><td class="px-4 py-3 font-medium">Lettuce</td><td class="px-4 py-3 tabular-nums text-emerald-800 font-semibold">~1,370</td></tr>
-                <tr class="bg-slate-50/50"><td class="px-4 py-3 font-medium">Cabbage</td><td class="px-4 py-3 tabular-nums">~785</td></tr>
-                <tr><td class="px-4 py-3 font-medium">Dry onions</td><td class="px-4 py-3 tabular-nums">~606</td></tr>
-                <tr class="bg-slate-50/50"><td class="px-4 py-3 font-medium">Carrots</td><td class="px-4 py-3 tabular-nums">~466</td></tr>
-                <tr><td class="px-4 py-3 font-medium">Field tomatoes</td><td class="px-4 py-3 tabular-nums">~291</td></tr>
+              <tbody class="divide-y divide-slate-100 text-slate-700">
+                <tr><td class="px-5 py-4 font-semibold">Tomato</td><td class="px-5 py-4 text-right tabular-nums">C$1.138B</td><td class="px-5 py-4 text-right tabular-nums">868,434</td><td class="px-5 py-4 text-right tabular-nums">838,591</td><td class="px-5 py-4 text-right tabular-nums">103.6%</td><td class="px-5 py-4">Net exporter · US outbound / Mexico inbound</td><td class="px-5 py-4">Netherlands</td></tr>
+                <tr class="bg-slate-50/30"><td class="px-5 py-4 font-semibold">Cucumber</td><td class="px-5 py-4 text-right tabular-nums">C$962.5M</td><td class="px-5 py-4 text-right tabular-nums">365,219</td><td class="px-5 py-4 text-right tabular-nums">102,161</td><td class="px-5 py-4 text-right tabular-nums">357.5%</td><td class="px-5 py-4">Net exporter · US outbound / Mexico inbound</td><td class="px-5 py-4">Netherlands</td></tr>
+                <tr><td class="px-5 py-4 font-semibold">Pepper</td><td class="px-5 py-4 text-right tabular-nums">C$717.3M</td><td class="px-5 py-4 text-right tabular-nums">238,154</td><td class="px-5 py-4 text-right tabular-nums">203,284</td><td class="px-5 py-4 text-right tabular-nums">117.2%</td><td class="px-5 py-4">Net exporter · US outbound / Mexico inbound</td><td class="px-5 py-4">Netherlands</td></tr>
+                <tr class="bg-slate-50/30"><td class="px-5 py-4 font-semibold">Dry onion</td><td class="px-5 py-4 text-right tabular-nums">C$181.1M</td><td class="px-5 py-4 text-right tabular-nums">298,564</td><td class="px-5 py-4 text-right tabular-nums">499,375</td><td class="px-5 py-4 text-right tabular-nums">59.8%</td><td class="px-5 py-4">Net importer · US-centered trade</td><td class="px-5 py-4">United States</td></tr>
+                <tr><td class="px-5 py-4 font-semibold">Lettuce</td><td class="px-5 py-4 text-right tabular-nums">C$174.7M</td><td class="px-5 py-4 text-right tabular-nums">97,941</td><td class="px-5 py-4 text-right tabular-nums">340,536</td><td class="px-5 py-4 text-right tabular-nums">28.8%</td><td class="px-5 py-4">Net importer · strongly US-led</td><td class="px-5 py-4">US / Netherlands</td></tr>
+                <tr class="bg-slate-50/30"><td class="px-5 py-4 font-semibold">Carrot</td><td class="px-5 py-4 text-right tabular-nums">C$167.2M</td><td class="px-5 py-4 text-right tabular-nums">357,242</td><td class="px-5 py-4 text-right tabular-nums">361,507</td><td class="px-5 py-4 text-right tabular-nums">98.8%</td><td class="px-5 py-4">Near-balanced / slight net importer</td><td class="px-5 py-4">United States</td></tr>
+                <tr><td class="px-5 py-4 font-semibold">Cabbage</td><td class="px-5 py-4 text-right tabular-nums">C$130.4M</td><td class="px-5 py-4 text-right tabular-nums">171,770</td><td class="px-5 py-4 text-right tabular-nums">202,394</td><td class="px-5 py-4 text-right tabular-nums">84.9%</td><td class="px-5 py-4">Net importer · US-centered trade</td><td class="px-5 py-4">United States</td></tr>
+                <tr class="bg-slate-50/30"><td class="px-5 py-4 font-semibold">Broccoli</td><td class="px-5 py-4 text-right tabular-nums">C$91.8M</td><td class="px-5 py-4 text-right tabular-nums">39,294</td><td class="px-5 py-4 text-right tabular-nums">173,007</td><td class="px-5 py-4 text-right tabular-nums">22.7%</td><td class="px-5 py-4">Net importer · US-led</td><td class="px-5 py-4">United States</td></tr>
+                <tr><td class="px-5 py-4 font-semibold">Sweet corn</td><td class="px-5 py-4 text-right tabular-nums">C$91.7M</td><td class="px-5 py-4 text-right tabular-nums">199,646</td><td class="px-5 py-4 text-right tabular-nums">192,722</td><td class="px-5 py-4 text-right tabular-nums">103.6%</td><td class="px-5 py-4">Net exporter · frozen proxy trade</td><td class="px-5 py-4">United States</td></tr>
+                <tr class="bg-slate-50/30"><td class="px-5 py-4 font-semibold">Asparagus</td><td class="px-5 py-4 text-right tabular-nums">C$53.9M</td><td class="px-5 py-4 text-right tabular-nums">11,430</td><td class="px-5 py-4 text-right tabular-nums">26,599</td><td class="px-5 py-4 text-right tabular-nums">43.0%</td><td class="px-5 py-4">Net importer · Mexico inbound / US outbound</td><td class="px-5 py-4">US / Netherlands</td></tr>
               </tbody>
             </table>
           </div>
-          <p class="text-sm text-slate-600 mt-4">Greenhouse sector: <strong class="text-ag-slate">866,484 t</strong> production, <strong class="text-ag-slate">$2.7B</strong> sales (2024) — parallel profit pool for fresh tomato, cucumber, pepper.</p>
+
+          <div class="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900 shadow-soft">
+            <strong>Method note:</strong> domestic consumption is shown as <strong>apparent consumption</strong> = production + imports - exports. Sweet corn trade is shown using a <strong>frozen sweet-corn proxy</strong> because fresh-code retrieval was not cleanly available in WITS during this research run.
+          </div>
         </section>
 
-        <!-- Strategy insights / JTBD collapsible -->
+        <section id="competitors" class="mb-12 scroll-mt-24">
+          <h3 class="font-display text-2xl sm:text-3xl font-bold text-ag-slate mb-4">Competitor Matrix — Big 5 in Canada</h3>
+          <div class="overflow-x-auto rounded-3xl bg-white border border-slate-200 shadow-soft">
+            <table class="w-full min-w-[980px] text-sm text-left">
+              <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wide border-b border-slate-200">
+                <tr>
+                  <th class="px-5 py-4">Company</th>
+                  <th class="px-5 py-4">Operations in Canada</th>
+                  <th class="px-5 py-4">Key crop focus</th>
+                  <th class="px-5 py-4">Est. market share</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-700">
+                <tr>
+                  <td class="px-5 py-4 font-semibold">Bayer / De Ruiter</td>
+                  <td class="px-5 py-4">Historical protected-culture support signal in <strong>Leamington, ON</strong>; warehouse / office presence linked to greenhouse growers.</td>
+                  <td class="px-5 py-4">Greenhouse tomato, rootstocks, protected-culture seeds</td>
+                  <td class="px-5 py-4">High</td>
+                </tr>
+                <tr class="bg-slate-50/30">
+                  <td class="px-5 py-4 font-semibold">Syngenta</td>
+                  <td class="px-5 py-4">Leamington-area greenhouse trialing, product-placement and technical-service signals.</td>
+                  <td class="px-5 py-4">Greenhouse vegetables, trialing, launch support</td>
+                  <td class="px-5 py-4">Medium</td>
+                </tr>
+                <tr>
+                  <td class="px-5 py-4 font-semibold">BASF | Nunhems</td>
+                  <td class="px-5 py-4">Canada CEA access widened through <strong>Plant Products</strong> collaboration; strong indoor-channel signal.</td>
+                  <td class="px-5 py-4">Indoor tomato, cucumber, CEA vegetables</td>
+                  <td class="px-5 py-4">Medium</td>
+                </tr>
+                <tr class="bg-slate-50/30">
+                  <td class="px-5 py-4 font-semibold">Rijk Zwaan</td>
+                  <td class="px-5 py-4">Visible Leamington contact / commercial base at <strong>1008 Mersea Rd 7</strong>; strongest public Dutch footprint signal.</td>
+                  <td class="px-5 py-4">Tomato, cucumber, leafy vegetables, greenhouse systems</td>
+                  <td class="px-5 py-4">High</td>
+                </tr>
+                <tr>
+                  <td class="px-5 py-4 font-semibold">Enza Zaden</td>
+                  <td class="px-5 py-4">Canada distributor/location signal with emphasis on heated greenhouse crops and leafy vegetables.</td>
+                  <td class="px-5 py-4">Leafy greens, tomato, cucumber, greenhouse crops</td>
+                  <td class="px-5 py-4">Medium</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="grid md:grid-cols-3 gap-4 mt-5 text-sm">
+            <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-soft"><h4 class="font-display font-bold text-ag-slate mb-2">Primary hub</h4><p class="text-slate-600">Leamington is the clearest Canada node for greenhouse technical service, variety demo, and customer concentration.</p></div>
+            <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-soft"><h4 class="font-display font-bold text-ag-slate mb-2">Bias</h4><p class="text-slate-600">Most visible Big 5 activation is geared to <strong>high-tech glasshouse efficiency</strong> rather than broad public field breeding platforms.</p></div>
+            <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-soft"><h4 class="font-display font-bold text-ag-slate mb-2">Field gap</h4><p class="text-slate-600">Onion, broccoli, cabbage, and carrot show weaker branded field-service visibility in public Canada disclosures.</p></div>
+          </div>
+        </section>
+
+        <section id="supply" class="mb-12 scroll-mt-24">
+          <div class="grid xl:grid-cols-[1.05fr_0.95fr] gap-6">
+            <div class="rounded-3xl bg-white border border-slate-200 shadow-soft p-6">
+              <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">Supply Chain Node Diagram</h3>
+              <div class="space-y-3 text-sm">
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4 font-medium text-center">International seed production hubs (Netherlands · US · China · India · Peru · France · Chile)</div>
+                <div class="text-center text-ag-leaf font-bold">↓</div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4 font-medium text-center">Lot testing · phytosanitary documents · treatment declarations · traceability paperwork</div>
+                <div class="text-center text-ag-leaf font-bold">↓</div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4 font-medium text-center">Canadian entry corridor (Windsor-Detroit · Pearson · Montréal · Vancouver)</div>
+                <div class="text-center text-ag-leaf font-bold">↓</div>
+                <div class="rounded-2xl bg-emerald-50 border border-emerald-200 p-4 font-medium text-center">CBSA + NISC + CFIA Import Conformity Assessment (ICA)</div>
+                <div class="text-center text-ag-leaf font-bold">↓</div>
+                <div class="grid sm:grid-cols-2 gap-3">
+                  <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4 text-center">Direct technical sales<br><span class="text-slate-500 text-xs">Large greenhouse accounts</span></div>
+                  <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4 text-center">Distributor / dealer channel<br><span class="text-slate-500 text-xs">Field crops + smaller growers</span></div>
+                </div>
+                <div class="text-center text-ag-leaf font-bold">↓</div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4 font-medium text-center">Grower / greenhouse operator / grower-packer / shipper / processor</div>
+                <div class="text-center text-ag-leaf font-bold">↓</div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4 font-medium text-center">Retail / foodservice / export customer (especially United States)</div>
+              </div>
+            </div>
+
+            <div class="space-y-6">
+              <div class="rounded-3xl bg-white border border-slate-200 shadow-soft p-6">
+                <h4 class="font-display text-xl font-bold text-ag-slate mb-3">Import friction</h4>
+                <ul class="space-y-2 text-sm text-slate-700">
+                  <li><strong>Process gate:</strong> NISC + ICA review still defines seed-entry rhythm.</li>
+                  <li><strong>Document sensitivity:</strong> lot traceability, germination, purity, and admissibility paperwork matter.</li>
+                  <li><strong>Disease pressure:</strong> ToBRFV raises the value of trusted seed and seedling sourcing in tomatoes and peppers.</li>
+                  <li><strong>Time sensitivity:</strong> greenhouse windows penalize any customs or release delay.</li>
+                </ul>
+              </div>
+
+              <div class="rounded-3xl bg-white border border-slate-200 shadow-soft p-6">
+                <h4 class="font-display text-xl font-bold text-ag-slate mb-3">Cluster links</h4>
+                <ul class="space-y-2 text-sm text-slate-700">
+                  <li><strong>Leamington, ON:</strong> greenhouse commercial center of gravity</li>
+                  <li><strong>Fraser Valley, BC:</strong> major protected-culture / produce logistics node</li>
+                  <li><strong>Holland Marsh, ON:</strong> field-vegetable node relevant for onions, carrots, leafy vegetables</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section id="strategy" class="mb-12 scroll-mt-24">
-          <h3 class="font-display text-2xl font-bold text-ag-slate mb-2">Strategy insights</h3>
-          <p class="text-slate-600 text-sm mb-6">Jobs-to-be-done (JTBD) — expand each card for grower rationale.</p>
+          <h3 class="font-display text-2xl sm:text-3xl font-bold text-ag-slate mb-2">Strategy Insights</h3>
+          <p class="text-sm text-slate-600 mb-6">Expandable JTBD cards capturing why growers switch varieties and where switching friction is lowest.</p>
           <div class="space-y-3">
-            <details class="strategy-card group rounded-xl bg-white border border-slate-200 shadow-sm open:ring-2 open:ring-emerald-500/20">
-              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-ag-slate hover:bg-slate-50 rounded-xl transition-colors">
-                <span class="flex items-center gap-3">
-                  <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-red-100 text-red-700 text-sm font-bold">T</span>
-                  Field tomatoes
-                </span>
-                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <details class="strategy-card group rounded-2xl bg-white border border-slate-200 shadow-soft open:ring-2 open:ring-emerald-500/20">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-ag-slate hover:bg-slate-50 rounded-2xl transition-colors">
+                <span class="flex items-center gap-3"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-red-100 text-red-700 text-sm font-bold">T</span> Tomato</span>
+                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
-              <div class="px-5 pb-5 pt-0 text-sm text-slate-600 leading-relaxed border-t border-slate-100">
-                <p class="pt-4"><strong class="text-ag-slate">JTBD:</strong> Processor contract stability — ~93% of Canadian field tomatoes go to processing. Ontario concentration supports scale logistics; US remains ~96.8% of export value for field vegetables.</p>
+              <div class="px-5 pb-5 pt-0 border-t border-slate-100 text-sm text-slate-600 leading-relaxed">
+                <p class="pt-4"><strong class="text-ag-slate">JTBD:</strong> stabilize greenhouse yield, disease resistance, shelf-life and pack-out consistency under high-tech management. Switches happen when a new line reduces biological and labour risk — not just when it claims higher potential yield.</p>
               </div>
             </details>
-            <details class="strategy-card group rounded-xl bg-white border border-slate-200 shadow-sm open:ring-2 open:ring-emerald-500/20">
-              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-ag-slate hover:bg-slate-50 rounded-xl transition-colors">
-                <span class="flex items-center gap-3">
-                  <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-100 text-orange-700 text-sm font-bold">C</span>
-                  Carrots
-                </span>
-                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+
+            <details class="strategy-card group rounded-2xl bg-white border border-slate-200 shadow-soft open:ring-2 open:ring-emerald-500/20">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-ag-slate hover:bg-slate-50 rounded-2xl transition-colors">
+                <span class="flex items-center gap-3"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 text-sm font-bold">C</span> Cucumber</span>
+                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
-              <div class="px-5 pb-5 pt-0 text-sm text-slate-600 leading-relaxed border-t border-slate-100">
-                <p class="pt-4"><strong class="text-ag-slate">JTBD:</strong> National footprint + export orientation — ON/QC/NS triad; carrots led ~10.5% share of field vegetable export value in 2024.</p>
+              <div class="px-5 pb-5 pt-0 border-t border-slate-100 text-sm text-slate-600 leading-relaxed">
+                <p class="pt-4"><strong class="text-ag-slate">JTBD:</strong> improve labour efficiency, fruit uniformity, grade consistency, and greenhouse throughput. The strongest switching trigger is operational smoothness across harvest and grading.</p>
               </div>
             </details>
-            <details class="strategy-card group rounded-xl bg-white border border-slate-200 shadow-sm open:ring-2 open:ring-emerald-500/20">
-              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-ag-slate hover:bg-slate-50 rounded-xl transition-colors">
-                <span class="flex items-center gap-3">
-                  <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 text-amber-800 text-sm font-bold">O</span>
-                  Dry onions
-                </span>
-                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+
+            <details class="strategy-card group rounded-2xl bg-white border border-slate-200 shadow-soft open:ring-2 open:ring-emerald-500/20">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-ag-slate hover:bg-slate-50 rounded-2xl transition-colors">
+                <span class="flex items-center gap-3"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-orange-700 text-sm font-bold">P</span> Pepper</span>
+                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
-              <div class="px-5 pb-5 pt-0 text-sm text-slate-600 leading-relaxed border-t border-slate-100">
-                <p class="pt-4"><strong class="text-ag-slate">JTBD:</strong> Price cycle + geographic diversification — strong 2024 FGV (+12.9% YoY) and volume (+8.0%); AB/QC/ON spread hedges weather and disease pockets.</p>
+              <div class="px-5 pb-5 pt-0 border-t border-slate-100 text-sm text-slate-600 leading-relaxed">
+                <p class="pt-4"><strong class="text-ag-slate">JTBD:</strong> protect premium greenhouse margins through fruit quality, shelf performance, stable yields, and disease management. Switching friction is high, so technical proof matters.</p>
               </div>
             </details>
-            <details class="strategy-card group rounded-xl bg-white border border-slate-200 shadow-sm open:ring-2 open:ring-emerald-500/20">
-              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-ag-slate hover:bg-slate-50 rounded-xl transition-colors">
-                <span class="flex items-center gap-3">
-                  <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-green-100 text-green-800 text-sm font-bold">B</span>
-                  Cabbage
-                </span>
-                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+
+            <details class="strategy-card group rounded-2xl bg-white border border-slate-200 shadow-soft open:ring-2 open:ring-emerald-500/20">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-ag-slate hover:bg-slate-50 rounded-2xl transition-colors">
+                <span class="flex items-center gap-3"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-800 text-sm font-bold">O</span> Storage onion</span>
+                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
-              <div class="px-5 pb-5 pt-0 text-sm text-slate-600 leading-relaxed border-t border-slate-100">
-                <p class="pt-4"><strong class="text-ag-slate">JTBD:</strong> Dual pathway — domestic + export growth; cabbage export values +18.1% YoY; aligns with ethnic / fermented / slaw demand.</p>
+              <div class="px-5 pb-5 pt-0 border-t border-slate-100 text-sm text-slate-600 leading-relaxed">
+                <p class="pt-4"><strong class="text-ag-slate">JTBD:</strong> maximize storage life, curing efficiency, bulb uniformity, and retail / foodservice fit. This is the clearest field-side white space because it combines scale with weaker visible greenhouse-style service concentration.</p>
               </div>
             </details>
-            <details class="strategy-card group rounded-xl bg-white border border-slate-200 shadow-sm open:ring-2 open:ring-emerald-500/20">
-              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-ag-slate hover:bg-slate-50 rounded-xl transition-colors">
-                <span class="flex items-center gap-3">
-                  <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-lime-100 text-lime-800 text-sm font-bold">L</span>
-                  Lettuce
-                </span>
-                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+
+            <details class="strategy-card group rounded-2xl bg-white border border-slate-200 shadow-soft open:ring-2 open:ring-emerald-500/20">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-ag-slate hover:bg-slate-50 rounded-2xl transition-colors">
+                <span class="flex items-center gap-3"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-lime-100 text-lime-800 text-sm font-bold">L</span> Lettuce & broccoli</span>
+                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
-              <div class="px-5 pb-5 pt-0 text-sm text-slate-600 leading-relaxed border-t border-slate-100">
-                <p class="pt-4"><strong class="text-ag-slate">JTBD:</strong> High FGV per tonne but structurally import-backed — lettuce ~16.3% of field vegetable import value; domestic production does not solve off-season / Western retail alone.</p>
+              <div class="px-5 pb-5 pt-0 border-t border-slate-100 text-sm text-slate-600 leading-relaxed">
+                <p class="pt-4"><strong class="text-ag-slate">JTBD:</strong> reduce import dependence through stronger field reliability, quality retention, and marketable pack-out. For these crops, the opportunity is less about headline premium pricing and more about replacing structurally imported volume.</p>
               </div>
             </details>
           </div>
         </section>
 
-        <!-- Friction -->
-        <section id="friction" class="mb-12 scroll-mt-24">
-          <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">Friction points</h3>
-          <ul class="space-y-3 text-sm text-slate-600">
-            <li class="flex gap-3 rounded-xl bg-white border border-slate-200 p-4"><span class="text-emerald-600 font-bold">·</span><span><strong class="text-ag-slate">Climate / regional volatility:</strong> Eastern Canada rebounded from wet 2023; BC and Manitoba saw weaker vegetable performance in national accounts; AAFC cites BC field veg production −8.3% and Manitoba −3.3% vs 2023.</span></li>
-            <li class="flex gap-3 rounded-xl bg-white border border-slate-200 p-4"><span class="text-emerald-600 font-bold">·</span><span><strong class="text-ag-slate">Trade:</strong> Large deficit; Mexico ~24% of import value, US ~59.5% — currency, logistics, tariffs hit lettuce and tomato lines first.</span></li>
-            <li class="flex gap-3 rounded-xl bg-white border border-slate-200 p-4"><span class="text-emerald-600 font-bold">·</span><span><strong class="text-ag-slate">Operations:</strong> Greenhouse is capital- and energy-intensive; Ontario ~72% of national greenhouse tonnage.</span></li>
-          </ul>
-        </section>
-
-        <!-- White space -->
-        <section id="whitespace" class="mb-12 scroll-mt-24">
-          <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">White space</h3>
-          <div class="grid sm:grid-cols-2 gap-3 text-sm">
-            <div class="rounded-xl bg-emerald-50/80 border border-emerald-200/60 p-4 text-slate-700">Organic / IPM brassicas &amp; carrots in Atlantic + QC corridors.</div>
-            <div class="rounded-xl bg-emerald-50/80 border border-emerald-200/60 p-4 text-slate-700">Year-round leaf &amp; blend SKUs (greenhouse + regional field) vs US/Mexico lettuce share.</div>
-            <div class="rounded-xl bg-emerald-50/80 border border-emerald-200/60 p-4 text-slate-700">Processing tomato genetics for moisture/heat volatility without sacrificing solids.</div>
-            <div class="rounded-xl bg-emerald-50/80 border border-emerald-200/60 p-4 text-slate-700">Onion varieties for storage &amp; energy-stressed curing in Alberta (~13% of national onion production).</div>
-          </div>
-        </section>
-
-        <!-- Strategy gap -->
-        <section id="gaps" class="mb-12 scroll-mt-24">
-          <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">Strategy gap · one wedge per crop</h3>
-          <div class="space-y-4">
-            <div class="rounded-xl border-l-4 border-amber-500 bg-white border border-slate-200 p-5 shadow-sm">
-              <h4 class="font-display font-bold text-ag-slate">Dry onions</h4>
-              <p class="text-sm text-slate-600 mt-2">Alberta storage onion + export-grade seed stack — AB’s 13% share as distinct day-length / storage / freight sub-market; onion export values +9.9% YoY.</p>
-            </div>
-            <div class="rounded-xl border-l-4 border-orange-500 bg-white border border-slate-200 p-5 shadow-sm">
-              <h4 class="font-display font-bold text-ag-slate">Carrots</h4>
-              <p class="text-sm text-slate-600 mt-2">Export value recovery — production +1.8% but export values −8.3%; SKU-level quality (sizing, skin, disease) to recapture US retail.</p>
-            </div>
-            <div class="rounded-xl border-l-4 border-red-500 bg-white border border-slate-200 p-5 shadow-sm">
-              <h4 class="font-display font-bold text-ag-slate">Tomatoes</h4>
-              <p class="text-sm text-slate-600 mt-2">Split narrative: field processing (~93%) vs greenhouse fresh — coordinated variety planning across two profit pools.</p>
-            </div>
-            <div class="rounded-xl border-l-4 border-green-600 bg-white border border-slate-200 p-5 shadow-sm">
-              <h4 class="font-display font-bold text-ag-slate">Cabbage</h4>
-              <p class="text-sm text-slate-600 mt-2">Export-led brassica program for kimchi / sauerkraut / specialty slaw; cabbage also 6.3% of import value.</p>
-            </div>
-            <div class="rounded-xl border-l-4 border-lime-500 bg-white border border-slate-200 p-5 shadow-sm">
-              <h4 class="font-display font-bold text-ag-slate">Lettuce</h4>
-              <p class="text-sm text-slate-600 mt-2">BC + import substitution CEA play — lettuce leads import share; national weakness in BC vegetables.</p>
+        <section id="white-space" class="mb-12 scroll-mt-24">
+          <div class="rounded-3xl bg-gradient-to-r from-emerald-50 to-lime-50 border border-emerald-200 shadow-soft p-6 sm:p-8">
+            <h3 class="font-display text-2xl sm:text-3xl font-bold text-ag-slate mb-3">White Space Opportunity</h3>
+            <p class="text-slate-700 leading-relaxed max-w-4xl">
+              <strong>Best niche: storage onion genetics for Canadian field systems.</strong> Onion combines large apparent domestic demand, clear import dependence, and a public competitor footprint that looks less saturated than the greenhouse triad. The grower buying logic is practical and defensible: storage, curing, day-length adaptation, disease tolerance, and bulb uniformity.
+            </p>
+            <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-4 mt-6 text-sm">
+              <div class="rounded-2xl bg-white/80 border border-emerald-100 p-4">Long-storage performance</div>
+              <div class="rounded-2xl bg-white/80 border border-emerald-100 p-4">Energy-stressed curing efficiency</div>
+              <div class="rounded-2xl bg-white/80 border border-emerald-100 p-4">Regional day-length adaptation</div>
+              <div class="rounded-2xl bg-white/80 border border-emerald-100 p-4">Retail + foodservice bulb uniformity</div>
             </div>
           </div>
         </section>
 
-        <!-- Citations -->
-        <section id="citations" class="mb-8 scroll-mt-24">
-          <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">Citations</h3>
-          <ol class="list-decimal list-inside space-y-2 text-sm text-slate-600">
-            <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://agriculture.canada.ca/en/sector/horticulture/reports/statistical-overview-canadian-field-vegetable-industry-2024" target="_blank" rel="noopener">AAFC — Statistical Overview of the Canadian Field Vegetable Industry, 2024</a> (StatCan Table 32-10-0365-01)</li>
-            <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://www150.statcan.gc.ca/n1/daily-quotidien/250217/dq250217b-eng.pdf" target="_blank" rel="noopener">Statistics Canada — The Daily, Fruit and vegetable production, 2024 (PDF)</a></li>
-            <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://agriculture.canada.ca/en/sector/horticulture/reports/statistical-overview-canadian-greenhouse-vegetable-and-mushroom-industry-2024" target="_blank" rel="noopener">AAFC — Greenhouse Vegetable and Mushroom Industry, 2024</a></li>
-            <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210036501" target="_blank" rel="noopener">StatCan Table 32-10-0365-01</a></li>
-          </ol>
+        <section id="citations" class="mb-10 scroll-mt-24">
+          <h3 class="font-display text-2xl sm:text-3xl font-bold text-ag-slate mb-4">Citations</h3>
+          <div class="rounded-3xl bg-white border border-slate-200 shadow-soft p-6">
+            <ol class="list-decimal list-inside space-y-2 text-sm text-slate-600">
+              <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210036501" target="_blank" rel="noopener">Statistics Canada table 32-10-0365-01 — field vegetables</a></li>
+              <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210045601" target="_blank" rel="noopener">Statistics Canada table 32-10-0456-01 — greenhouse vegetables</a></li>
+              <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://wits.worldbank.org/trade/comtrade/en/country/CAN/year/2024/tradeflow/Imports/partner/ALL/product/120991" target="_blank" rel="noopener">WITS / Comtrade — Canada HS 120991 vegetable seed imports, 2024</a></li>
+              <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://inspection.canada.ca/en/plant-health/seeds/seed-imports/abcs-seed-importation" target="_blank" rel="noopener">CFIA — ABCs of seed importation into Canada</a></li>
+              <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://inspection.canada.ca/en/plant-health/invasive-species/plant-diseases/tobrfv" target="_blank" rel="noopener">CFIA — Tomato brown rugose fruit virus (ToBRFV)</a></li>
+              <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://agriculture.canada.ca/en/sector/horticulture/reports/statistical-overview-canadian-greenhouse-vegetable-and-mushroom-industry-2024" target="_blank" rel="noopener">AAFC — greenhouse vegetable industry overview 2024</a></li>
+              <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://agriculture.canada.ca/en/sector/horticulture/reports/statistical-overview-canadian-field-vegetable-industry-2024" target="_blank" rel="noopener">AAFC — field vegetable industry overview 2024</a></li>
+              <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://www.rijkzwaanusa.com/page/contact" target="_blank" rel="noopener">Rijk Zwaan USA / Canada contact — Leamington</a></li>
+              <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://www.rijkzwaan.ca/page/about-us" target="_blank" rel="noopener">Rijk Zwaan Canada — about us</a></li>
+              <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://www.enzazaden.com/this-is-enza-zaden/enza-zaden-worldwide/ca" target="_blank" rel="noopener">Enza Zaden — Canada</a></li>
+              <li><a class="text-emerald-800 underline hover:text-emerald-900" href="https://www.nunhems.com/us/en/News-Events/News/2024/BASF---Nunhems-Announces-Collaboration-with-Plant-Products-" target="_blank" rel="noopener">BASF | Nunhems — Plant Products collaboration</a></li>
+            </ol>
+          </div>
         </section>
 
-        <footer class="text-center text-xs text-slate-500 pb-8 border-t border-slate-200 pt-8">
-          VegSeed Intel · Canada field vegetable dashboard · Single-file HTML · Tailwind CDN + Chart.js
+        <section id="field-cross-check" class="mb-10 scroll-mt-24">
+          <div class="rounded-3xl bg-slate-50 border border-slate-200 p-6 shadow-soft">
+            <h3 class="font-display text-xl font-bold text-ag-slate mb-3">Field-only cross-check (AAFC website tables, 2024)</h3>
+            <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+              <table class="w-full min-w-[640px] text-sm">
+                <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wide">
+                  <tr>
+                    <th class="px-4 py-3 text-left">Crop</th>
+                    <th class="px-4 py-3 text-right">Field-only production</th>
+                    <th class="px-4 py-3 text-right">Field-only FGV</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  <tr><td class="px-4 py-3 font-medium">Dry onion</td><td class="px-4 py-3 text-right tabular-nums">298,564 t</td><td class="px-4 py-3 text-right tabular-nums">C$181.1M</td></tr>
+                  <tr class="bg-slate-50/40"><td class="px-4 py-3 font-medium">Carrot</td><td class="px-4 py-3 text-right tabular-nums">357,242 t</td><td class="px-4 py-3 text-right tabular-nums">C$167.2M</td></tr>
+                  <tr><td class="px-4 py-3 font-medium">Tomato</td><td class="px-4 py-3 text-right tabular-nums">548,107 t</td><td class="px-4 py-3 text-right tabular-nums">C$159.3M</td></tr>
+                  <tr class="bg-slate-50/40"><td class="px-4 py-3 font-medium">Cabbage</td><td class="px-4 py-3 text-right tabular-nums">171,770 t</td><td class="px-4 py-3 text-right tabular-nums">C$130.4M</td></tr>
+                  <tr><td class="px-4 py-3 font-medium">Lettuce</td><td class="px-4 py-3 text-right tabular-nums">77,548 t</td><td class="px-4 py-3 text-right tabular-nums">C$108.5M</td></tr>
+                  <tr class="bg-slate-50/40"><td class="px-4 py-3 font-medium">Pepper</td><td class="px-4 py-3 text-right tabular-nums">62,291 t</td><td class="px-4 py-3 text-right tabular-nums">C$97.3M</td></tr>
+                  <tr><td class="px-4 py-3 font-medium">Cucumber</td><td class="px-4 py-3 text-right tabular-nums">60,097 t</td><td class="px-4 py-3 text-right tabular-nums">C$45.3M</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="mt-4 text-sm text-slate-600">This table is provided as a field-only reconciliation layer against the AAFC field-vegetable website view. The dashboard’s main headline numbers above intentionally combine field and greenhouse where commercially relevant.</p>
+          </div>
+        </section>
+
+        <footer class="text-center text-xs text-slate-500 pt-8 border-t border-slate-200 pb-8">
+          VegSeed Intel · Canada Top 10 Crop Analysis · Single-file HTML dashboard · Tailwind CDN + Chart.js
         </footer>
       </div>
     </main>
@@ -470,19 +613,25 @@
 
   <script>
     (function () {
-      const crops = ['Tomatoes', 'Carrots', 'Dry onions', 'Cabbage', 'Lettuce'];
-      const production = [548107, 351568, 298564, 171765, 77502];
-      const fgvMillions = [159.3, 163.8, 181.1, 134.9, 106.0];
-      const colors = ['rgba(220, 38, 38, 0.85)', 'rgba(234, 88, 12, 0.85)', 'rgba(180, 83, 9, 0.85)', 'rgba(21, 128, 61, 0.85)', 'rgba(101, 163, 13, 0.85)'];
-      const borderColors = ['rgb(185, 28, 28)', 'rgb(194, 65, 12)', 'rgb(146, 64, 14)', 'rgb(22, 101, 52)', 'rgb(77, 124, 15)'];
+      const crops = ['Tomato', 'Cucumber', 'Pepper', 'Dry onion', 'Lettuce', 'Carrot', 'Cabbage', 'Broccoli', 'Sweet corn', 'Asparagus'];
+      const production = [868434, 365219, 238154, 298564, 97941, 357242, 171770, 39294, 199646, 11430];
+      const fgvMillions = [1137.599, 962.489, 717.278, 181.050, 174.721, 167.182, 130.381, 91.844, 91.678, 53.926];
+      const ssr = [103.6, 357.5, 117.2, 59.8, 28.8, 98.8, 84.9, 22.7, 103.6, 43.0];
+      const colors = [
+        'rgba(185, 28, 28, 0.88)', 'rgba(22, 163, 74, 0.88)', 'rgba(234, 88, 12, 0.88)',
+        'rgba(180, 83, 9, 0.88)', 'rgba(132, 204, 22, 0.88)', 'rgba(249, 115, 22, 0.88)',
+        'rgba(20, 83, 45, 0.88)', 'rgba(59, 130, 246, 0.88)', 'rgba(234, 179, 8, 0.88)',
+        'rgba(168, 85, 247, 0.88)'
+      ];
+      const borderColors = ['#7f1d1d','#15803d','#c2410c','#92400e','#65a30d','#c2410c','#14532d','#1d4ed8','#a16207','#7e22ce'];
 
       const ctx = document.getElementById('cropChart');
       let chart = null;
-      let mode = 'bar-volume';
 
       function setActiveButton(activeId) {
-        ['btn-bar-volume', 'btn-bar-fgv', 'btn-pie-volume', 'btn-pie-fgv'].forEach(function (id) {
+        ['btn-bar-volume', 'btn-bar-fgv', 'btn-bar-ssr', 'btn-pie-volume', 'btn-pie-fgv'].forEach(function (id) {
           const el = document.getElementById(id);
+          if (!el) return;
           if (id === activeId) {
             el.className = 'px-4 py-2 rounded-lg text-sm font-semibold bg-ag-deep text-white shadow-sm ring-2 ring-ag-leaf/30';
           } else {
@@ -491,37 +640,32 @@
         });
       }
 
-      function buildConfig(m) {
-        const isPie = m.startsWith('pie');
-        const isFgv = m.endsWith('fgv');
-        const data = isFgv ? fgvMillions : production;
-        const label = isFgv ? 'Farm gate value ($M)' : 'Production (metric tons)';
+      function buildConfig(mode) {
+        const isPie = mode.startsWith('pie');
+        const isFgv = mode.endsWith('fgv');
+        const isSsr = mode.endsWith('ssr');
+        const data = isFgv ? fgvMillions : isSsr ? ssr : production;
 
         if (isPie) {
           return {
             type: 'pie',
             data: {
               labels: crops,
-              datasets: [{
-                data: data,
-                backgroundColor: colors,
-                borderColor: borderColors,
-                borderWidth: 2
-              }]
+              datasets: [{ data, backgroundColor: colors, borderColor: borderColors, borderWidth: 2 }]
             },
             options: {
               responsive: true,
               maintainAspectRatio: false,
               plugins: {
-                legend: { position: 'bottom', labels: { padding: 16, font: { size: 11 } } },
+                legend: { position: 'bottom', labels: { padding: 18, font: { size: 11 } } },
                 tooltip: {
                   callbacks: {
-                    label: function (c) {
-                      const v = c.raw;
-                      const total = data.reduce(function (a, b) { return a + b; }, 0);
-                      const pct = ((v / total) * 100).toFixed(1);
-                      if (isFgv) return c.label + ': $' + v + 'M (' + pct + '%)';
-                      return c.label + ': ' + v.toLocaleString() + ' t (' + pct + '%)';
+                    label: function (context) {
+                      const value = context.raw;
+                      const total = data.reduce((sum, item) => sum + item, 0);
+                      const pct = ((value / total) * 100).toFixed(1);
+                      if (isFgv) return `${context.label}: C$${value.toFixed(1)}M (${pct}%)`;
+                      return `${context.label}: ${Number(value).toLocaleString()} t (${pct}%)`;
                     }
                   }
                 }
@@ -535,12 +679,13 @@
           data: {
             labels: crops,
             datasets: [{
-              label: label,
-              data: data,
+              label: isFgv ? 'Farm gate value (C$M)' : isSsr ? 'Self-sufficiency (%)' : 'Production (tonnes)',
+              data,
               backgroundColor: colors,
               borderColor: borderColors,
               borderWidth: 1.5,
-              borderRadius: 6
+              borderRadius: 10,
+              maxBarThickness: 52
             }]
           },
           options: {
@@ -550,89 +695,67 @@
               legend: { display: false },
               tooltip: {
                 callbacks: {
-                  label: function (c) {
-                    if (isFgv) return '$' + c.raw + 'M';
-                    return c.raw.toLocaleString() + ' t';
+                  label: function (context) {
+                    if (isFgv) return `C$${context.raw.toFixed(1)}M`;
+                    if (isSsr) return `${context.raw.toFixed(1)}%`;
+                    return `${context.raw.toLocaleString()} t`;
                   }
                 }
               }
             },
             scales: {
+              x: { grid: { display: false }, ticks: { color: '#64748b' } },
               y: {
                 beginAtZero: true,
-                grid: { color: 'rgba(148, 163, 184, 0.2)' },
+                grid: { color: 'rgba(148, 163, 184, 0.18)' },
                 ticks: {
                   color: '#64748b',
                   callback: function (val) {
-                    if (isFgv) return '$' + val + 'M';
-                    if (val >= 1e6) return (val / 1e6).toFixed(2) + 'M';
-                    if (val >= 1e3) return (val / 1e3).toFixed(0) + 'k';
+                    if (isFgv) return `C$${val}M`;
+                    if (isSsr) return `${val}%`;
+                    if (val >= 1e6) return `${(val / 1e6).toFixed(1)}M`;
+                    if (val >= 1e3) return `${(val / 1e3).toFixed(0)}k`;
                     return val;
                   }
                 }
-              },
-              x: {
-                grid: { display: false },
-                ticks: { color: '#64748b', maxRotation: 45, minRotation: 0 }
               }
             }
           }
         };
       }
 
-      function render(m) {
-        mode = m;
+      function render(mode) {
         if (chart) chart.destroy();
-        chart = new Chart(ctx, buildConfig(m));
+        chart = new Chart(ctx, buildConfig(mode));
       }
 
-      document.getElementById('btn-bar-volume').addEventListener('click', function () {
-        setActiveButton('btn-bar-volume');
-        render('bar-volume');
-      });
-      document.getElementById('btn-bar-fgv').addEventListener('click', function () {
-        setActiveButton('btn-bar-fgv');
-        render('bar-fgv');
-      });
-      document.getElementById('btn-pie-volume').addEventListener('click', function () {
-        setActiveButton('btn-pie-volume');
-        render('pie-volume');
-      });
-      document.getElementById('btn-pie-fgv').addEventListener('click', function () {
-        setActiveButton('btn-pie-fgv');
-        render('pie-fgv');
-      });
+      document.getElementById('btn-bar-volume').addEventListener('click', function () { setActiveButton('btn-bar-volume'); render('bar-volume'); });
+      document.getElementById('btn-bar-fgv').addEventListener('click', function () { setActiveButton('btn-bar-fgv'); render('bar-fgv'); });
+      document.getElementById('btn-bar-ssr').addEventListener('click', function () { setActiveButton('btn-bar-ssr'); render('bar-ssr'); });
+      document.getElementById('btn-pie-volume').addEventListener('click', function () { setActiveButton('btn-pie-volume'); render('pie-volume'); });
+      document.getElementById('btn-pie-fgv').addEventListener('click', function () { setActiveButton('btn-pie-fgv'); render('pie-fgv'); });
 
       render('bar-volume');
 
-      // Scroll spy for sidebar
       const sections = document.querySelectorAll('main section[id]');
       const links = document.querySelectorAll('.sidebar-link');
-      const observer = new IntersectionObserver(
-        function (entries) {
-          entries.forEach(function (entry) {
-            if (!entry.isIntersecting) return;
-            const id = entry.target.getAttribute('id');
-            links.forEach(function (link) {
-              link.classList.toggle('active', link.getAttribute('href') === '#' + id);
-            });
+      const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          const id = entry.target.getAttribute('id');
+          links.forEach(function (link) {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + id);
           });
-        },
-        { rootMargin: '-20% 0px -60% 0px', threshold: 0 }
-      );
-      sections.forEach(function (s) { observer.observe(s); });
+        });
+      }, { rootMargin: '-20% 0px -60% 0px', threshold: 0 });
+      sections.forEach(section => observer.observe(section));
 
-      // Mobile drawer
-      var drawer = document.getElementById('mobile-drawer');
-      var backdrop = document.getElementById('mobile-drawer-backdrop');
-      document.getElementById('mobile-menu-btn').addEventListener('click', function () {
-        drawer.classList.remove('hidden');
-      });
-      backdrop.addEventListener('click', function () {
-        drawer.classList.add('hidden');
-      });
-      document.querySelectorAll('.mobile-nav-link').forEach(function (a) {
-        a.addEventListener('click', function () { drawer.classList.add('hidden'); });
+      const drawer = document.getElementById('mobile-drawer');
+      const backdrop = document.getElementById('mobile-drawer-backdrop');
+      document.getElementById('mobile-menu-btn').addEventListener('click', function () { drawer.classList.remove('hidden'); });
+      backdrop.addEventListener('click', function () { drawer.classList.add('hidden'); });
+      document.querySelectorAll('.mobile-nav-link').forEach(function (link) {
+        link.addEventListener('click', function () { drawer.classList.add('hidden'); });
       });
     })();
   </script>
