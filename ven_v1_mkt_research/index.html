@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Venezuela Crop Intelligence | VegSeed Intel</title>
+  <title>Venezuela Top 10 Crop Analysis | VegSeed Intel</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -17,11 +17,15 @@
               mint: '#22c55e',
               mist: '#ecfdf5',
               slate: '#1e293b',
+              ash: '#64748b'
             }
           },
           fontFamily: {
-            sans: ['DM Sans', 'system-ui', 'sans-serif'],
-            display: ['Outfit', 'system-ui', 'sans-serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Outfit', 'Inter', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            panel: '0 12px 32px rgba(15, 41, 24, 0.12)'
           }
         }
       }
@@ -29,398 +33,518 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
-    .sidebar-link.active { background: linear-gradient(90deg, rgba(34,197,94,0.2) 0%, transparent 100%); border-left: 3px solid #22c55e; color: #ecfdf5; }
+    .sidebar-link.active {
+      background: linear-gradient(90deg, rgba(34,197,94,0.18) 0%, transparent 100%);
+      border-left: 3px solid #22c55e;
+      color: #ecfdf5;
+    }
     details.strategy-card summary { list-style: none; }
     details.strategy-card summary::-webkit-details-marker { display: none; }
-    .chart-tab.active { background: #14532d; color: #fff; border-color: #22c55e; }
+    .chart-tab.active {
+      background: #14532d;
+      color: #fff;
+      border-color: #22c55e;
+    }
+    .table-wrap::-webkit-scrollbar { height: 10px; }
+    .table-wrap::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 999px; }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex">
-
-  <!-- Sidebar -->
-  <aside class="w-64 shrink-0 bg-ag-deep text-slate-300 flex flex-col border-r border-ag-forest min-h-screen sticky top-0">
+  <aside class="w-72 shrink-0 bg-ag-deep text-slate-300 flex flex-col border-r border-ag-forest min-h-screen sticky top-0">
     <div class="p-6 border-b border-ag-forest">
-      <p class="font-display text-xs uppercase tracking-widest text-ag-mint/80">VegSeed Intel</p>
-      <h1 class="font-display text-lg font-semibold text-white leading-tight mt-1">Venezuela<br/><span class="text-ag-mint">Crop Analysis</span></h1>
-      <p class="text-xs text-slate-500 mt-2">FAO · USDA FAS · GIEWS</p>
+      <p class="font-display text-xs uppercase tracking-[0.25em] text-ag-mint/80">VegSeed Intel</p>
+      <h1 class="font-display text-xl font-semibold text-white leading-tight mt-2">Venezuela<br><span class="text-ag-mint">Top 10 Crop Dashboard</span></h1>
+      <p class="text-xs text-slate-500 mt-3 leading-relaxed">Interactive single-file briefing on market opportunity, seed channels, and commercial friction.</p>
     </div>
     <nav class="flex-1 p-3 space-y-1 overflow-y-auto" id="sidebar-nav">
       <a href="#bluf" class="sidebar-link active block px-3 py-2 rounded-r-lg text-sm hover:bg-white/5 transition">Executive Summary</a>
       <a href="#metrics" class="sidebar-link block px-3 py-2 rounded-r-lg text-sm hover:bg-white/5 transition">Top 5 Crops</a>
       <a href="#charts" class="sidebar-link block px-3 py-2 rounded-r-lg text-sm hover:bg-white/5 transition">Production Charts</a>
-      <a href="#trade" class="sidebar-link block px-3 py-2 rounded-r-lg text-sm hover:bg-white/5 transition">Trade &amp; Demand</a>
-      <a href="#strategic" class="sidebar-link block px-3 py-2 rounded-r-lg text-sm hover:bg-white/5 transition">Strategic Lenses</a>
+      <a href="#table" class="sidebar-link block px-3 py-2 rounded-r-lg text-sm hover:bg-white/5 transition">Integrated Market Table</a>
+      <a href="#pipeline" class="sidebar-link block px-3 py-2 rounded-r-lg text-sm hover:bg-white/5 transition">Seed Import Pipeline</a>
+      <a href="#competition" class="sidebar-link block px-3 py-2 rounded-r-lg text-sm hover:bg-white/5 transition">Competitor & Distributor Matrix</a>
+      <a href="#friction" class="sidebar-link block px-3 py-2 rounded-r-lg text-sm hover:bg-white/5 transition">Logistics Friction Map</a>
       <a href="#jtbd" class="sidebar-link block px-3 py-2 rounded-r-lg text-sm hover:bg-white/5 transition">Strategy Insights</a>
-      <a href="#gap" class="sidebar-link block px-3 py-2 rounded-r-lg text-sm hover:bg-white/5 transition">Strategy Gap</a>
+      <a href="#whitespace" class="sidebar-link block px-3 py-2 rounded-r-lg text-sm hover:bg-white/5 transition">White Space</a>
       <a href="#citations" class="sidebar-link block px-3 py-2 rounded-r-lg text-sm hover:bg-white/5 transition">Citations</a>
     </nav>
     <div class="p-4 border-t border-ag-forest text-xs text-slate-500">
-      Data vintage: 2024–2025<br/>Single-file dashboard
+      Data vintage: 2023–2026<br>
+      Sources: Statbase/FAOSTAT, Fedeagro, INSAI, local press, distributor sites
     </div>
   </aside>
 
-  <!-- Main -->
   <main class="flex-1 min-w-0 overflow-x-hidden">
     <header class="bg-white border-b border-slate-200 px-8 py-6 shadow-sm">
-      <div class="max-w-5xl mx-auto flex flex-wrap items-end justify-between gap-4">
+      <div class="max-w-7xl mx-auto flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p class="text-ag-leaf text-sm font-medium">Market intelligence · Venezuela (Bolivarian Republic)</p>
-          <h2 class="font-display text-2xl md:text-3xl font-bold text-ag-slate mt-1">Vegetable-sector opportunity dashboard</h2>
+          <p class="text-ag-leaf text-sm font-medium">Emerging Markets | LATAM | Venezuela</p>
+          <h2 class="font-display text-3xl md:text-4xl font-bold text-ag-slate mt-1">Vegetable seed market opportunity dashboard</h2>
+          <p class="text-slate-500 text-sm mt-2">High-resolution view of crop economics, seed trade dynamics, channel partners, and strategic white space.</p>
         </div>
-        <div class="flex gap-2">
-          <span class="px-3 py-1 rounded-full bg-ag-mist text-ag-forest text-xs font-semibold border border-green-200">Ag-Tech</span>
-          <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-medium border border-slate-200">Interactive</span>
+        <div class="flex gap-2 flex-wrap">
+          <span class="px-3 py-1 rounded-full bg-ag-mist text-ag-forest text-xs font-semibold border border-green-200">Ag-Tech Aesthetic</span>
+          <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-medium border border-slate-200">Single-file HTML</span>
+          <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-medium border border-slate-200">Chart.js Interactive</span>
         </div>
       </div>
     </header>
 
-    <div class="max-w-5xl mx-auto px-8 py-10 space-y-14">
-
-      <!-- BLUF -->
+    <div class="max-w-7xl mx-auto px-8 py-10 space-y-14">
       <section id="bluf" class="scroll-mt-8">
-        <div class="rounded-2xl bg-gradient-to-br from-ag-forest to-ag-deep text-white p-8 shadow-xl border border-ag-leaf/30">
-          <h3 class="font-display text-sm font-semibold uppercase tracking-wider text-ag-mint mb-3">Bottom line up front</h3>
-          <ul class="space-y-3 text-slate-200 text-sm md:text-base leading-relaxed">
-            <li class="flex gap-3"><span class="text-ag-mint shrink-0">●</span><span><strong class="text-white">Scale:</strong> Largest documented FAOSTAT lines (2024, via Our World in Data): <strong class="text-white">potatoes ~521 kt</strong>, <strong class="text-white">tomatoes ~184 kt</strong>, <strong class="text-white">sweet potatoes ~23 kt</strong>. Cassava (~453 kt) is a roots/tubers staple, not counted in “vegetables primary.”</span></li>
-            <li class="flex gap-3"><span class="text-ag-mint shrink-0">●</span><span><strong class="text-white">System:</strong> National vegetable crop production <strong class="text-white">~1.29 Mt (2024)</strong> (FAOSTAT aggregate). USDA: <strong class="text-white">~60%</strong> of food supply from imports; <strong class="text-white">$3.02 bn</strong> ag imports in 2024.</span></li>
-            <li class="flex gap-3"><span class="text-ag-mint shrink-0">●</span><span><strong class="text-white">FGV:</strong> Harmonized crop-level farm-gate value in USD not retrieved for 2024–2026—use import-parity and input-cost context (GIEWS, USDA tables).</span></li>
-            <li class="flex gap-3"><span class="text-ag-mint shrink-0">●</span><span><strong class="text-white">White space:</strong> Protected cultivation genetics, short-cycle varieties, onion/pepper systems with opaque national series but strong retail pull.</span></li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- Metric cards -->
-      <section id="metrics" class="scroll-mt-8">
-        <h3 class="font-display text-xl font-bold text-ag-slate mb-2">Top 5 vegetable lines</h3>
-        <p class="text-slate-600 text-sm mb-6">Production (tonnes, 2024) from FAO QCL via <a class="text-ag-leaf underline hover:no-underline" href="https://ourworldindata.org/" target="_blank" rel="noopener">Our World in Data</a> CSVs. Rows 4–5: volumes require direct FAOSTAT QCL pull.</p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          <article class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow border-t-4 border-t-ag-leaf">
-            <p class="text-xs font-semibold uppercase text-slate-500 tracking-wide">01 · Potatoes</p>
-            <p class="font-display text-2xl font-bold text-ag-forest mt-2">520,567 <span class="text-sm font-normal text-slate-500">t</span></p>
-            <p class="text-ag-leaf text-sm font-medium mt-2">CAGR ~3.1%</p>
-            <p class="text-xs text-slate-500 mt-3 leading-snug">Portuguesa, Guárico, Barinas belt (GIEWS)</p>
-          </article>
-          <article class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow border-t-4 border-t-emerald-500">
-            <p class="text-xs font-semibold uppercase text-slate-500 tracking-wide">02 · Tomatoes</p>
-            <p class="font-display text-2xl font-bold text-ag-forest mt-2">184,376 <span class="text-sm font-normal text-slate-500">t</span></p>
-            <p class="text-emerald-600 text-sm font-medium mt-2">CAGR ~0.4%</p>
-            <p class="text-xs text-slate-500 mt-3 leading-snug">Central llanos + Andean horticulture</p>
-          </article>
-          <article class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow border-t-4 border-t-lime-500">
-            <p class="text-xs font-semibold uppercase text-slate-500 tracking-wide">03 · Sweet potatoes</p>
-            <p class="font-display text-2xl font-bold text-ag-forest mt-2">22,666 <span class="text-sm font-normal text-slate-500">t</span></p>
-            <p class="text-lime-700 text-sm font-medium mt-2">CAGR ~2.2%</p>
-            <p class="text-xs text-slate-500 mt-3 leading-snug">State map n.a. in sources</p>
-          </article>
-          <article class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow border-t-4 border-t-amber-500">
-            <p class="text-xs font-semibold uppercase text-slate-500 tracking-wide">04 · Green chillies &amp; peppers</p>
-            <p class="font-display text-xl font-bold text-slate-600 mt-2">FAOSTAT QCL</p>
-            <p class="text-amber-700 text-sm font-medium mt-2">Volume n.a. here</p>
-            <p class="text-xs text-slate-500 mt-3 leading-snug">Lara, Aragua, Carabobo (typical belt)</p>
-          </article>
-          <article class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow border-t-4 border-t-orange-500">
-            <p class="text-xs font-semibold uppercase text-slate-500 tracking-wide">05 · Dry onions</p>
-            <p class="font-display text-xl font-bold text-slate-600 mt-2">FAOSTAT QCL</p>
-            <p class="text-orange-700 text-sm font-medium mt-2">Volume n.a. here</p>
-            <p class="text-xs text-slate-500 mt-3 leading-snug">Lara, Zulia, central valleys</p>
-          </article>
-        </div>
-        <p class="mt-4 text-xs text-slate-500">National aggregate <strong class="text-slate-700">vegetables primary: 1,286,912 t (2024)</strong> — <a class="text-ag-leaf underline" href="https://statbase.org/data/ven-vegetable-production/" target="_blank" rel="noopener">Statbase / FAOSTAT</a>. Context: <strong>cassava 453,192 t (2024)</strong> — roots/tubers.</p>
-      </section>
-
-      <!-- Charts -->
-      <section id="charts" class="scroll-mt-8">
-        <h3 class="font-display text-xl font-bold text-ag-slate mb-2">Production visualization</h3>
-        <p class="text-slate-600 text-sm mb-4">Toggle chart type. Data: documented 2024 tonnes (FAO via OWID).</p>
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 md:p-8">
-          <div class="flex flex-wrap gap-2 mb-6">
-            <button type="button" id="tab-bar" class="chart-tab active px-4 py-2 rounded-lg text-sm font-medium border border-slate-200 bg-slate-50 text-ag-slate transition">Bar chart</button>
-            <button type="button" id="tab-pie" class="chart-tab px-4 py-2 rounded-lg text-sm font-medium border border-slate-200 bg-slate-50 text-slate-600 transition">Pie chart</button>
-            <button type="button" id="tab-compare" class="chart-tab px-4 py-2 rounded-lg text-sm font-medium border border-slate-200 bg-slate-50 text-slate-600 transition">vs. national veg total</button>
-          </div>
-          <div class="relative h-80 max-w-3xl mx-auto">
-            <canvas id="productionChart"></canvas>
-          </div>
-          <p class="text-center text-xs text-slate-500 mt-4">CAGR computed 2021→2024 from same OWID series. Pepper/onion excluded from chart—no CSV values in dashboard source slice.</p>
-        </div>
-      </section>
-
-      <!-- Trade -->
-      <section id="trade" class="scroll-mt-8">
-        <h3 class="font-display text-xl font-bold text-ag-slate mb-4">Trade &amp; demand context</h3>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-            <h4 class="font-semibold text-ag-forest mb-3">Import pressure</h4>
-            <ul class="text-sm text-slate-600 space-y-2">
-              <li><strong class="text-ag-slate">~60%</strong> of food supply from imports (USDA FAS VE2025-0008)</li>
-              <li><strong class="text-ag-slate">$3.022 bn</strong> agricultural imports (2024)</li>
-              <li><strong class="text-ag-slate">4.925 Mt</strong> import volume (2024)</li>
-              <li>Consumer-oriented imports <strong class="text-ag-slate">~$1,902/MT</strong> avg (2024)</li>
+        <div class="rounded-3xl bg-gradient-to-br from-ag-forest to-ag-deep text-white p-8 shadow-panel border border-ag-leaf/30">
+          <h3 class="font-display text-sm font-semibold uppercase tracking-[0.25em] text-ag-mint mb-4">Bottom line up front</h3>
+          <div class="grid lg:grid-cols-2 gap-6 text-sm md:text-base leading-relaxed">
+            <ul class="space-y-3 text-slate-200">
+              <li class="flex gap-3"><span class="text-ag-mint">●</span><span><strong class="text-white">Market reality:</strong> Venezuela’s horticulture sector is rebounding, but commercial performance is still constrained by FX distortion, delayed payments, diesel shortages, road deterioration, and contraband inflows from Colombia.</span></li>
+              <li class="flex gap-3"><span class="text-ag-mint">●</span><span><strong class="text-white">Top official crops:</strong> Potatoes, carrots, onions, tomatoes, and peppers lead the vegetable production stack, with potatoes at <strong class="text-white">475,912 MT</strong> and tomatoes at <strong class="text-white">182,454 MT</strong> in the official 2023 series.</span></li>
+              <li class="flex gap-3"><span class="text-ag-mint">●</span><span><strong class="text-white">Commercial gap:</strong> Fedeagro’s 2024 estimates show meaningful shortages in onion, tomato, potato, and pepper, implying demand is being balanced by suppressed consumption and hidden trade rather than formal imports.</span></li>
+            </ul>
+            <ul class="space-y-3 text-slate-200">
+              <li class="flex gap-3"><span class="text-ag-mint">●</span><span><strong class="text-white">Verified channel partners:</strong> Rijk Zwaan → <strong class="text-white">Tecnología Agrícola Sartenejas</strong>, Enza Zaden → <strong class="text-white">Mas Semillas Venezuela</strong>, Emerald Seeds → <strong class="text-white">Diproagro</strong>.</span></li>
+              <li class="flex gap-3"><span class="text-ag-mint">●</span><span><strong class="text-white">Seed buying logic:</strong> Growers buy hybrids to reduce commercial risk: shorter cycle, shelf life, firmness, disease resilience, and better marketable pack-out under logistics stress.</span></li>
+              <li class="flex gap-3"><span class="text-ag-mint">●</span><span><strong class="text-white">White space:</strong> <strong class="text-white">Dry onion</strong> is the cleanest under-supplied opening; tomato and pepper remain strategically critical but more competitive.</span></li>
             </ul>
           </div>
-          <div class="bg-ag-mist/50 rounded-xl border border-green-200 p-6 shadow-sm">
-            <h4 class="font-semibold text-ag-forest mb-3">Comtrade note</h4>
-            <p class="text-sm text-slate-600 leading-relaxed">Low reporter reliability for Venezuela: mirror-reporter or TDM-style triangulation (as USDA uses) rather than raw null Comtrade rows for fresh tomato/onion HS chapters.</p>
-            <a href="https://apps.fas.usda.gov/newgainapi/api/Report/DownloadReportByFileName?fileName=Venezuela%20Agricultural%20Imports%20Grow%209%20Percent%20in%202024%20with%20the%20United%20States%20among%20Leading%20Suppliers_Caracas_Venezuela_VE2025-0008.pdf" target="_blank" rel="noopener" class="inline-block mt-4 text-sm font-medium text-ag-leaf hover:underline">Open USDA GAIN VE2025-0008 →</a>
+        </div>
+      </section>
+
+      <section id="metrics" class="scroll-mt-8">
+        <div class="flex items-end justify-between gap-4 mb-6 flex-wrap">
+          <div>
+            <h3 class="font-display text-2xl font-bold text-ag-slate mb-1">Top 5 crops by official production</h3>
+            <p class="text-slate-600 text-sm">Statbase/FAOSTAT-like 2023 ranking used for market sizing baseline.</p>
+          </div>
+          <div class="text-xs text-slate-500 bg-white border border-slate-200 rounded-xl px-4 py-2 shadow-sm">Metric cards show official output; strategy sections overlay Fedeagro 2024 commercial estimates.</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
+          <article class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm border-t-4 border-t-ag-leaf">
+            <p class="text-xs font-semibold uppercase text-slate-500 tracking-wide">01 · Potatoes</p>
+            <p class="font-display text-3xl font-bold text-ag-forest mt-2">475,912 <span class="text-sm font-normal text-slate-500">MT</span></p>
+            <p class="text-ag-leaf text-sm font-medium mt-2">Yield 19.96 MT/Ha</p>
+            <p class="text-xs text-slate-500 mt-3">Andes-led system, but heavily exposed to contraband pressure and certified-seed constraints.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm border-t-4 border-t-emerald-500">
+            <p class="text-xs font-semibold uppercase text-slate-500 tracking-wide">02 · Carrots</p>
+            <p class="font-display text-3xl font-bold text-ag-forest mt-2">230,781 <span class="text-sm font-normal text-slate-500">MT</span></p>
+            <p class="text-emerald-600 text-sm font-medium mt-2">Yield 22.92 MT/Ha</p>
+            <p class="text-xs text-slate-500 mt-3">Highland production with hidden pressure from cross-border substitution and market distortion.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm border-t-4 border-t-lime-500">
+            <p class="text-xs font-semibold uppercase text-slate-500 tracking-wide">03 · Dry onion</p>
+            <p class="font-display text-3xl font-bold text-ag-forest mt-2">186,730 <span class="text-sm font-normal text-slate-500">MT</span></p>
+            <p class="text-lime-700 text-sm font-medium mt-2">Yield 21.37 MT/Ha</p>
+            <p class="text-xs text-slate-500 mt-3">Best white-space crop: large deficit, strong shelf-life economics, and lower public brand saturation.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm border-t-4 border-t-amber-500">
+            <p class="text-xs font-semibold uppercase text-slate-500 tracking-wide">04 · Tomatoes</p>
+            <p class="font-display text-3xl font-bold text-ag-forest mt-2">182,454 <span class="text-sm font-normal text-slate-500">MT</span></p>
+            <p class="text-amber-700 text-sm font-medium mt-2">Yield 20.98 MT/Ha</p>
+            <p class="text-xs text-slate-500 mt-3">Most strategic hybrid market after onion, especially for firmness, disease package, and shorter cash cycle.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm border-t-4 border-t-orange-500">
+            <p class="text-xs font-semibold uppercase text-slate-500 tracking-wide">05 · Watermelons</p>
+            <p class="font-display text-3xl font-bold text-ag-forest mt-2">179,451 <span class="text-sm font-normal text-slate-500">MT</span></p>
+            <p class="text-orange-700 text-sm font-medium mt-2">Yield 21.90 MT/Ha</p>
+            <p class="text-xs text-slate-500 mt-3">Large volume line, but lower seed-strategy priority than tomato/pepper/onion for multinational vegetable portfolios.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="charts" class="scroll-mt-8">
+        <div class="flex items-end justify-between gap-4 flex-wrap mb-4">
+          <div>
+            <h3 class="font-display text-2xl font-bold text-ag-slate mb-1">Interactive production charts</h3>
+            <p class="text-slate-600 text-sm">Toggle between bar and pie views for the official top 10 vegetable crop ranking.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" id="tab-bar" class="chart-tab active px-4 py-2 rounded-lg text-sm font-medium border border-slate-200 bg-slate-50 text-ag-slate transition">Bar chart</button>
+            <button type="button" id="tab-pie" class="chart-tab px-4 py-2 rounded-lg text-sm font-medium border border-slate-200 bg-slate-50 text-slate-600 transition">Pie chart</button>
+            <button type="button" id="tab-gap" class="chart-tab px-4 py-2 rounded-lg text-sm font-medium border border-slate-200 bg-slate-50 text-slate-600 transition">Demand gap</button>
+          </div>
+        </div>
+        <div class="grid xl:grid-cols-[1.4fr,0.8fr] gap-5">
+          <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 md:p-8">
+            <div class="relative h-[420px]">
+              <canvas id="productionChart"></canvas>
+            </div>
+          </div>
+          <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+            <h4 class="font-semibold text-ag-forest mb-4">Chart notes</h4>
+            <ul class="text-sm text-slate-600 space-y-3 leading-relaxed">
+              <li><strong class="text-ag-slate">Production chart:</strong> official 2023 tonnage from Statbase/FAOSTAT-style series.</li>
+              <li><strong class="text-ag-slate">Demand gap chart:</strong> Fedeagro 2024 commercial estimates for potato, tomato, onion, and pepper.</li>
+              <li><strong class="text-ag-slate">Interpretation:</strong> official macro output is higher than commercial estimates, so the dashboard shows both a macro baseline and a market-stress lens.</li>
+              <li><strong class="text-ag-slate">Strategy takeaway:</strong> the biggest opportunity is not raw acreage expansion but better <em>marketable</em> yield and faster cash conversion.</li>
+            </ul>
           </div>
         </div>
       </section>
 
-      <!-- Strategic lenses (compact) -->
-      <section id="strategic" class="scroll-mt-8">
-        <h3 class="font-display text-xl font-bold text-ag-slate mb-4">Strategic lenses</h3>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="rounded-xl bg-slate-800 text-slate-200 p-6">
-            <h4 class="font-display font-semibold text-ag-mint mb-2">Profit pool</h4>
-            <p class="text-sm leading-relaxed text-slate-300">Import-parity consumer pricing vs. input-cost drag (diesel, seed, credit). Downstream cold chain &amp; retail may capture more USD-equivalent value than farm gate.</p>
-          </div>
-          <div class="rounded-xl bg-slate-800 text-slate-200 p-6">
-            <h4 class="font-display font-semibold text-ag-mint mb-2">Friction</h4>
-            <p class="text-sm leading-relaxed text-slate-300">GIEWS: input costs, erratic rainfall, flooding risk (e.g. Portuguesa). Macro/FX and sanctions risk to import capacity (USDA 2025 outlook).</p>
+      <section id="table" class="scroll-mt-8">
+        <div class="flex items-end justify-between gap-4 flex-wrap mb-4">
+          <div>
+            <h3 class="font-display text-2xl font-bold text-ag-slate mb-1">Integrated market table</h3>
+            <p class="text-slate-600 text-sm">Official output and agronomic benchmarks combined with seed-channel and trade interpretation.</p>
           </div>
         </div>
-      </section>
-
-      <!-- JTBD expandable -->
-      <section id="jtbd" class="scroll-mt-8">
-        <h3 class="font-display text-xl font-bold text-ag-slate mb-2">Strategy insights — Jobs to be done</h3>
-        <p class="text-slate-600 text-sm mb-6">Expand each card for grower motivations and system context.</p>
-        <div class="space-y-3">
-          <details class="strategy-card group bg-white rounded-xl border border-slate-200 shadow-sm open:ring-2 open:ring-ag-leaf/20">
-            <summary class="px-6 py-4 cursor-pointer flex items-center justify-between font-semibold text-ag-forest hover:bg-slate-50 rounded-xl transition">
-              <span>Climate &amp; risk — why short cycles win</span>
-              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
-            </summary>
-            <div class="px-6 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
-              Erratic rainfall and flood risk in core states (FAO GIEWS) favor <strong class="text-ag-slate">short-cycle crops</strong> and <strong class="text-ag-slate">varietal resilience</strong>. Tomato and potato offer faster cash-turn than tree crops.
-            </div>
-          </details>
-          <details class="strategy-card group bg-white rounded-xl border border-slate-200 shadow-sm open:ring-2 open:ring-ag-leaf/20">
-            <summary class="px-6 py-4 cursor-pointer flex items-center justify-between font-semibold text-ag-forest hover:bg-slate-50 rounded-xl transition">
-              <span>Cash flow &amp; offtake</span>
-              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
-            </summary>
-            <div class="px-6 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
-              High-velocity vegetables align with <strong class="text-ag-slate">urban wholesale channels</strong>. Policy-linked distribution (e.g. historical CLAP-type programs per USDA food-security narrative) has shaped predictable demand for calorie staples and oils—positioning for <strong class="text-ag-slate">complementary</strong> horticulture SKUs matters.
-            </div>
-          </details>
-          <details class="strategy-card group bg-white rounded-xl border border-slate-200 shadow-sm open:ring-2 open:ring-ag-leaf/20">
-            <summary class="px-6 py-4 cursor-pointer flex items-center justify-between font-semibold text-ag-forest hover:bg-slate-50 rounded-xl transition">
-              <span>Input stack &amp; technology job</span>
-              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
-            </summary>
-            <div class="px-6 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
-              Growers “hire” seed and crop protection to <strong class="text-ag-slate">reduce variance</strong> under expensive diesel and constrained credit (GIEWS). Bundled protocols (genetics + agronomy + storage) outperform commodity bag price selling.
-            </div>
-          </details>
-          <details class="strategy-card group bg-white rounded-xl border border-slate-200 shadow-sm open:ring-2 open:ring-ag-leaf/20">
-            <summary class="px-6 py-4 cursor-pointer flex items-center justify-between font-semibold text-ag-forest hover:bg-slate-50 rounded-xl transition">
-              <span>Import parity as ceiling</span>
-              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
-            </summary>
-            <div class="px-6 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
-              When <strong class="text-ag-slate">~60%</strong> of food supply is import-backed, domestic producers benchmark against <strong class="text-ag-slate">landed cost and quality</strong>. Seed value props should articulate <strong class="text-ag-slate">yield stability</strong> and <strong class="text-ag-slate">grade-out</strong> vs. import substitute.
-            </div>
-          </details>
-        </div>
-      </section>
-
-      <!-- Strategy gap -->
-      <section id="gap" class="scroll-mt-8">
-        <h3 class="font-display text-xl font-bold text-ag-slate mb-4">Strategy gap — one opportunity per crop</h3>
-        <div class="overflow-hidden rounded-xl border border-slate-200 shadow-sm">
-          <table class="w-full text-sm">
+        <div class="table-wrap overflow-x-auto rounded-3xl border border-slate-200 shadow-sm bg-white">
+          <table class="min-w-full text-sm">
             <thead class="bg-ag-forest text-white text-left">
               <tr>
                 <th class="px-4 py-3 font-display font-semibold">Crop</th>
-                <th class="px-4 py-3 font-display font-semibold">Commercial angle</th>
+                <th class="px-4 py-3 font-display font-semibold">Region</th>
+                <th class="px-4 py-3 font-display font-semibold">Yield MT/Ha</th>
+                <th class="px-4 py-3 font-display font-semibold">Import/Export Balance</th>
+                <th class="px-4 py-3 font-display font-semibold">Primary Seed Brand / Origin</th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-slate-100">
-              <tr class="hover:bg-ag-mist/30"><td class="px-4 py-3 font-medium text-ag-forest">Potatoes</td><td class="px-4 py-3 text-slate-600">Certified seed + storage physiology: short dormancy varieties with cold-humidity specs, sold on yield-per-kg-seed.</td></tr>
-              <tr class="hover:bg-ag-mist/30"><td class="px-4 py-3 font-medium text-ag-forest">Tomatoes</td><td class="px-4 py-3 text-slate-600">Determinate processing genetics + soluble fertilizer protocol for private paste/sauce processors (import-substitution).</td></tr>
-              <tr class="hover:bg-ag-mist/30"><td class="px-4 py-3 font-medium text-ag-forest">Sweet potatoes</td><td class="px-4 py-3 text-slate-600">Orange-fleshed varieties + vine logistics for institutional nutrition buyers, avoiding direct snack-channel clash with potato.</td></tr>
-              <tr class="hover:bg-ag-mist/30"><td class="px-4 py-3 font-medium text-ag-forest">Peppers</td><td class="px-4 py-3 text-slate-600">Virus-indexed hybrid + GDD sowing calendar as “planting-window insurance” under erratic rains.</td></tr>
-              <tr class="hover:bg-ag-mist/30"><td class="px-4 py-3 font-medium text-ag-forest">Onions</td><td class="px-4 py-3 text-slate-600">Photoperiod portfolio + curing / bulb-firmness bundle for wholesale quality when import channels face FX friction.</td></tr>
+            <tbody class="divide-y divide-slate-100 bg-white">
+              <tr class="hover:bg-ag-mist/30"><td class="px-4 py-3 font-medium text-ag-forest">Potatoes</td><td class="px-4 py-3 text-slate-600">Mérida / Táchira / Trujillo</td><td class="px-4 py-3 text-slate-600">19.96</td><td class="px-4 py-3 text-slate-600">Formal imports tiny; real deficit distorted by contraband from Colombia</td><td class="px-4 py-3 text-slate-600">Fragmented local + Colombian seed-tuber ecosystem</td></tr>
+              <tr class="hover:bg-ag-mist/30"><td class="px-4 py-3 font-medium text-ag-forest">Carrots & turnips</td><td class="px-4 py-3 text-slate-600">Andean highlands</td><td class="px-4 py-3 text-slate-600">22.92</td><td class="px-4 py-3 text-slate-600">Near-flat formal trade; hidden inflow pressure likely</td><td class="px-4 py-3 text-slate-600">Fragmented imported seed channels</td></tr>
+              <tr class="hover:bg-ag-mist/30"><td class="px-4 py-3 font-medium text-ag-forest">Onions, dry</td><td class="px-4 py-3 text-slate-600">Lara / Falcón / Zulia / central-west</td><td class="px-4 py-3 text-slate-600">21.37</td><td class="px-4 py-3 text-slate-600">Formal imports low; Fedeagro gap remains large</td><td class="px-4 py-3 text-slate-600">Emerald Seeds via Diproagro; regional Seminis/Nunhems availability</td></tr>
+              <tr class="hover:bg-ag-mist/30"><td class="px-4 py-3 font-medium text-ag-forest">Tomatoes</td><td class="px-4 py-3 text-slate-600">Lara / Aragua / Carabobo / central-west</td><td class="px-4 py-3 text-slate-600">20.98</td><td class="px-4 py-3 text-slate-600">Formal imports minimal; shortfall resolved by suppressed demand + informal flow</td><td class="px-4 py-3 text-slate-600">Rijk Zwaan via TAS; Enza via Mas Semillas Venezuela</td></tr>
+              <tr class="hover:bg-ag-mist/30"><td class="px-4 py-3 font-medium text-ag-forest">Peppers</td><td class="px-4 py-3 text-slate-600">Lara / Aragua / Carabobo</td><td class="px-4 py-3 text-slate-600">13.46</td><td class="px-4 py-3 text-slate-600">Formal trade small; domestic supply still below desirable consumption</td><td class="px-4 py-3 text-slate-600">Rijk Zwaan via TAS; Emerald via Diproagro</td></tr>
+              <tr class="hover:bg-ag-mist/30"><td class="px-4 py-3 font-medium text-ag-forest">Pumpkins / squash</td><td class="px-4 py-3 text-slate-600">Central-west / plains</td><td class="px-4 py-3 text-slate-600">15.94</td><td class="px-4 py-3 text-slate-600">Thin formal trade</td><td class="px-4 py-3 text-slate-600">Fragmented importers</td></tr>
+              <tr class="hover:bg-ag-mist/30"><td class="px-4 py-3 font-medium text-ag-forest">Cabbages</td><td class="px-4 py-3 text-slate-600">Andes / cool zones</td><td class="px-4 py-3 text-slate-600">28.03</td><td class="px-4 py-3 text-slate-600">Trade negligible</td><td class="px-4 py-3 text-slate-600">Mixed local importers</td></tr>
+              <tr class="hover:bg-ag-mist/30"><td class="px-4 py-3 font-medium text-ag-forest">Lettuce</td><td class="px-4 py-3 text-slate-600">Andes / peri-urban cool zones</td><td class="px-4 py-3 text-slate-600">19.36</td><td class="px-4 py-3 text-slate-600">Trade negligible</td><td class="px-4 py-3 text-slate-600">Leafy portfolios through Enza/Rijk Zwaan channels</td></tr>
+              <tr class="hover:bg-ag-mist/30"><td class="px-4 py-3 font-medium text-ag-forest">Cucumbers*</td><td class="px-4 py-3 text-slate-600">Protected + open-field niches</td><td class="px-4 py-3 text-slate-600">n/a</td><td class="px-4 py-3 text-slate-600">Low formal trade</td><td class="px-4 py-3 text-slate-600">Shared channels with tomato/pepper</td></tr>
+              <tr class="hover:bg-ag-mist/30"><td class="px-4 py-3 font-medium text-ag-forest">Eggplants*</td><td class="px-4 py-3 text-slate-600">Mixed horticultural belts</td><td class="px-4 py-3 text-slate-600">n/a</td><td class="px-4 py-3 text-slate-600">Low formal trade</td><td class="px-4 py-3 text-slate-600">Fragmented imported hybrid supply</td></tr>
             </tbody>
           </table>
         </div>
+        <p class="text-xs text-slate-500 mt-3">*Commercially relevant seed crops even if they rank below melon lines in official tonnage.</p>
       </section>
 
-      <!-- Citations -->
+      <section id="pipeline" class="scroll-mt-8">
+        <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">Seed import pipeline</h3>
+        <div class="grid lg:grid-cols-2 gap-5">
+          <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+            <h4 class="font-semibold text-ag-forest mb-3">Sourcing and import mechanics</h4>
+            <ul class="text-sm text-slate-600 space-y-3 leading-relaxed">
+              <li><strong class="text-ag-slate">Origins:</strong> Europe (Rijk Zwaan, Enza, Bayer/Seminis, BASF/Nunhems, Syngenta), U.S. suppliers such as Emerald Seeds, and regional redistribution through Colombia/Brazil.</li>
+              <li><strong class="text-ag-slate">Channel structure:</strong> private importers and authorized distributors dominate vegetable seed entry; the state is more visible in permitting and phytosanitary oversight than in direct merchandising.</li>
+              <li><strong class="text-ag-slate">Seed investment:</strong> vegetable seeds excluding potato propagation material are estimated at roughly <strong>USD 15–25M/year</strong>; including seed tubers and propagation material lifts total addressable spend materially higher.</li>
+              <li><strong class="text-ag-slate">Triangulation effect:</strong> third-country routing raises paperwork complexity, freight cost, stockout risk, and working-capital pressure.</li>
+            </ul>
+          </div>
+          <div class="bg-ag-mist/60 rounded-3xl border border-green-200 shadow-sm p-6">
+            <h4 class="font-semibold text-ag-forest mb-3">INSAI regulatory logic</h4>
+            <ul class="text-sm text-slate-600 space-y-3 leading-relaxed">
+              <li><strong class="text-ag-slate">Cuarentena vegetal:</strong> first phytosanitary barrier for import/export control.</li>
+              <li><strong class="text-ag-slate">ARP:</strong> analysis of pest risk is used to define entry requirements and restrictive measures.</li>
+              <li><strong class="text-ag-slate">Inspection system:</strong> ports, airports, postal customs, and border posts are part of the official control structure.</li>
+              <li><strong class="text-ag-slate">Verification in origin:</strong> INSAI states it can require origin verification for high-risk articles.</li>
+              <li><strong class="text-ag-slate">Domestic movement:</strong> INSAI also controls internal movement of vegetal products and inputs through <em>Movilización Agrícola Integral</em>.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="competition" class="scroll-mt-8">
+        <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">Competitor & distributor matrix</h3>
+        <div class="grid xl:grid-cols-[1.1fr,0.9fr] gap-5">
+          <div class="overflow-hidden rounded-3xl border border-slate-200 shadow-sm bg-white">
+            <table class="w-full text-sm">
+              <thead class="bg-ag-forest text-white text-left">
+                <tr>
+                  <th class="px-4 py-3 font-display font-semibold">Local distributor</th>
+                  <th class="px-4 py-3 font-display font-semibold">Partner / brand</th>
+                  <th class="px-4 py-3 font-display font-semibold">Region of influence</th>
+                  <th class="px-4 py-3 font-display font-semibold">Confidence</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr><td class="px-4 py-3 font-medium text-ag-forest">Tecnología Agrícola Sartenejas</td><td class="px-4 py-3 text-slate-600">Rijk Zwaan</td><td class="px-4 py-3 text-slate-600">Venezuela horticulture market; tomato and pepper focus</td><td class="px-4 py-3"><span class="px-2 py-1 rounded-full bg-green-100 text-green-800 text-xs font-semibold">High</span></td></tr>
+                <tr><td class="px-4 py-3 font-medium text-ag-forest">Mas Semillas Venezuela</td><td class="px-4 py-3 text-slate-600">Enza Zaden</td><td class="px-4 py-3 text-slate-600">National distributor listing for Venezuela</td><td class="px-4 py-3"><span class="px-2 py-1 rounded-full bg-green-100 text-green-800 text-xs font-semibold">High</span></td></tr>
+                <tr><td class="px-4 py-3 font-medium text-ag-forest">Diproagro C.A.</td><td class="px-4 py-3 text-slate-600">Emerald Seeds</td><td class="px-4 py-3 text-slate-600">National / central-west reach</td><td class="px-4 py-3"><span class="px-2 py-1 rounded-full bg-green-100 text-green-800 text-xs font-semibold">High</span></td></tr>
+                <tr><td class="px-4 py-3 font-medium text-ag-forest">Sefloarca</td><td class="px-4 py-3 text-slate-600">Multi-brand retail / distribution</td><td class="px-4 py-3 text-slate-600">Acarigua, El Vigía, Barinas</td><td class="px-4 py-3"><span class="px-2 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-semibold">Medium</span></td></tr>
+                <tr><td class="px-4 py-3 font-medium text-ag-forest">Regional South America channels</td><td class="px-4 py-3 text-slate-600">Bayer / Seminis, BASF / Nunhems, Syngenta</td><td class="px-4 py-3 text-slate-600">Evidence stronger regionally than locally</td><td class="px-4 py-3"><span class="px-2 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">Low-Med</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+            <h4 class="font-semibold text-ag-forest mb-3">Competitive readout</h4>
+            <ul class="text-sm text-slate-600 space-y-3 leading-relaxed">
+              <li><strong class="text-ag-slate">Rijk Zwaan:</strong> strongest public evidence in Venezuela through Tecnología Agrícola Sartenejas, including tomato and pepper portfolios.</li>
+              <li><strong class="text-ag-slate">Enza Zaden:</strong> South America distributor page filtered to Venezuela lists <strong>Mas Semillas Venezuela</strong>.</li>
+              <li><strong class="text-ag-slate">Emerald Seeds:</strong> Diproagro explicitly markets onion, tomato, and pepper horticultural seeds from Emerald Seeds.</li>
+              <li><strong class="text-ag-slate">Bayer / Nunhems / Syngenta:</strong> regionally visible, but this pass found weaker public proof of explicit local Venezuela channel ownership.</li>
+              <li><strong class="text-ag-slate">Field days:</strong> little high-confidence Venezuela public field-day evidence was found; the market appears more relationship-led than event-led.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="friction" class="scroll-mt-8">
+        <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">Distribution & logistics friction map</h3>
+        <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+            <h4 class="font-semibold text-ag-forest mb-2">Money flow</h4>
+            <p class="text-sm text-slate-600">Growers often face payment at <strong>30–60+ days</strong>, while importers and seed suppliers prefer cash in advance or hard-currency-indexed settlement.</p>
+          </div>
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+            <h4 class="font-semibold text-ag-forest mb-2">FX distortion</h4>
+            <p class="text-sm text-slate-600">Fedeagro estimates producers lost roughly <strong>20%</strong> of income in 2024 due to bolívar settlement vs parallel-market USD input pricing.</p>
+          </div>
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+            <h4 class="font-semibold text-ag-forest mb-2">Roads & diesel</h4>
+            <p class="text-sm text-slate-600">Diesel scarcity and deteriorated agricultural roads in Táchira and other western belts raise transport losses and delay harvest evacuation.</p>
+          </div>
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+            <h4 class="font-semibold text-ag-forest mb-2">Market squeeze</h4>
+            <p class="text-sm text-slate-600">Fedeagro reported horticultural goods can retail at up to <strong>5x</strong> what farmers receive, compressing upstream incentive to reinvest.</p>
+          </div>
+        </div>
+
+        <div class="mt-5 bg-slate-900 text-slate-200 rounded-3xl p-6 border border-slate-700 shadow-sm">
+          <h4 class="font-display font-semibold text-ag-mint mb-3">Seed-to-fork journey</h4>
+          <div class="text-sm leading-8 overflow-x-auto whitespace-nowrap">
+            Breeder / seed house
+            <span class="text-ag-mint mx-2">→</span> EU / US / LATAM source
+            <span class="text-ag-mint mx-2">→</span> relay / triangulation hub
+            <span class="text-ag-mint mx-2">→</span> Venezuelan importer / distributor
+            <span class="text-ag-mint mx-2">→</span> INSAI phytosanitary control
+            <span class="text-ag-mint mx-2">→</span> agro-tienda / local rep
+            <span class="text-ag-mint mx-2">→</span> grower in Andes or Lara/Falcón belt
+            <span class="text-ag-mint mx-2">→</span> harvest
+            <span class="text-ag-mint mx-2">→</span> movilización / transport / diesel bottleneck
+            <span class="text-ag-mint mx-2">→</span> wholesale / retail
+            <span class="text-ag-mint mx-2">→</span> consumer
+          </div>
+        </div>
+      </section>
+
+      <section id="jtbd" class="scroll-mt-8">
+        <h3 class="font-display text-2xl font-bold text-ag-slate mb-2">Strategy insights — Jobs to be Done</h3>
+        <p class="text-slate-600 text-sm mb-6">Expandable cards summarize why Venezuelan growers choose certain hybrids and where seed companies can create value.</p>
+        <div class="space-y-3">
+          <details class="strategy-card group bg-white rounded-2xl border border-slate-200 shadow-sm open:ring-2 open:ring-ag-leaf/20">
+            <summary class="px-6 py-4 cursor-pointer flex items-center justify-between font-semibold text-ag-forest hover:bg-slate-50 rounded-2xl transition">
+              <span>1) Survive logistics friction</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="px-6 pb-5 pt-4 border-t border-slate-100 text-sm text-slate-600 leading-relaxed">
+              Growers need firmness, shelf life, reduced bruising, and a better post-harvest profile to survive poor roads, delayed pickup, and weak cold-chain conditions. In Venezuela, “yield” only matters if it arrives sellable.
+            </div>
+          </details>
+          <details class="strategy-card group bg-white rounded-2xl border border-slate-200 shadow-sm open:ring-2 open:ring-ag-leaf/20">
+            <summary class="px-6 py-4 cursor-pointer flex items-center justify-between font-semibold text-ag-forest hover:bg-slate-50 rounded-2xl transition">
+              <span>2) Shorten the cash cycle</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="px-6 pb-5 pt-4 border-t border-slate-100 text-sm text-slate-600 leading-relaxed">
+              Earlier harvests and faster turns reduce exposure to FX slippage, payment delays, and demand swings. Short-cycle tomatoes, onions, and peppers are commercially attractive because they compress risk duration.
+            </div>
+          </details>
+          <details class="strategy-card group bg-white rounded-2xl border border-slate-200 shadow-sm open:ring-2 open:ring-ag-leaf/20">
+            <summary class="px-6 py-4 cursor-pointer flex items-center justify-between font-semibold text-ag-forest hover:bg-slate-50 rounded-2xl transition">
+              <span>3) Reduce variance under weak input reliability</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="px-6 pb-5 pt-4 border-t border-slate-100 text-sm text-slate-600 leading-relaxed">
+              Hybrids are hired to perform acceptably even when fertilization, diesel availability, crop protection timing, and irrigation quality are inconsistent. Reliability matters more than theoretical maximum output.
+            </div>
+          </details>
+          <details class="strategy-card group bg-white rounded-2xl border border-slate-200 shadow-sm open:ring-2 open:ring-ag-leaf/20">
+            <summary class="px-6 py-4 cursor-pointer flex items-center justify-between font-semibold text-ag-forest hover:bg-slate-50 rounded-2xl transition">
+              <span>4) Protect against local pest pressure</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="px-6 pb-5 pt-4 border-t border-slate-100 text-sm text-slate-600 leading-relaxed">
+              Especially in tomato, pest and virus resilience matter as much as yield. Tuta absoluta risk, nursery weakness, and inconsistent spray execution make a strong resistance package a direct commercial benefit.
+            </div>
+          </details>
+          <details class="strategy-card group bg-white rounded-2xl border border-slate-200 shadow-sm open:ring-2 open:ring-ag-leaf/20">
+            <summary class="px-6 py-4 cursor-pointer flex items-center justify-between font-semibold text-ag-forest hover:bg-slate-50 rounded-2xl transition">
+              <span>5) Improve marketable yield, not just biological yield</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="px-6 pb-5 pt-4 border-t border-slate-100 text-sm text-slate-600 leading-relaxed">
+              Uniformity, grading, curing behavior, bulb firmness, and retail appearance determine whether a crop gets paid well. This is why onion and tomato remain the strongest commercial seed categories.
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section id="whitespace" class="scroll-mt-8">
+        <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">White-space recommendation</h3>
+        <div class="grid lg:grid-cols-2 gap-5">
+          <div class="rounded-3xl bg-gradient-to-br from-ag-forest to-ag-deep text-white p-6 shadow-panel border border-ag-leaf/30">
+            <h4 class="font-display text-xl font-semibold mb-3 text-ag-mint">Primary white space: Dry onion</h4>
+            <ul class="text-sm leading-relaxed space-y-3 text-slate-200">
+              <li>Fedeagro implies an onion gap of roughly <strong class="text-white">79,000 MT</strong> in 2024.</li>
+              <li>Onion fits Venezuela’s logistics reality because genetics can monetize through <strong class="text-white">storage, curing, bulb firmness, and photoperiod fit</strong>.</li>
+              <li>Compared with tomato, public evidence of dense multinational saturation is weaker.</li>
+              <li>The crop’s shelf-life advantage gives growers and traders more room to recover margin.</li>
+            </ul>
+          </div>
+          <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+            <h4 class="font-semibold text-ag-forest mb-3">Secondary opportunity: Tomato hybrids</h4>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">Tomato has the largest explicit named deficit, but it is more competitive and more operationally fragile. The winning proposition is not a cheap bag of seed — it is a package that delivers:</p>
+            <ul class="text-sm text-slate-600 space-y-2">
+              <li>• better pack-out,</li>
+              <li>• improved firmness and shelf life,</li>
+              <li>• stronger disease package,</li>
+              <li>• and practical agronomy support through the distributor.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       <section id="citations" class="scroll-mt-8 pb-12">
-        <h3 class="font-display text-xl font-bold text-ag-slate mb-4">Citations</h3>
-        <ol class="list-decimal list-inside space-y-2 text-sm text-slate-600 bg-white rounded-xl border border-slate-200 p-6">
-          <li><a class="text-ag-leaf hover:underline" href="https://ourworldindata.org/grapher/potato-production.csv?v=1&csvType=full&useColumnShortNames=false" target="_blank" rel="noopener">OWID / FAO — Potato production CSV</a></li>
-          <li><a class="text-ag-leaf hover:underline" href="https://ourworldindata.org/grapher/tomato-production.csv?v=1&csvType=full&useColumnShortNames=false" target="_blank" rel="noopener">OWID / FAO — Tomato production CSV</a></li>
-          <li><a class="text-ag-leaf hover:underline" href="https://ourworldindata.org/grapher/sweet-potato-production.csv?v=1&csvType=full&useColumnShortNames=false" target="_blank" rel="noopener">OWID / FAO — Sweet potato production CSV</a></li>
-          <li><a class="text-ag-leaf hover:underline" href="https://ourworldindata.org/grapher/cassava-production.csv?v=1&csvType=full&useColumnShortNames=false" target="_blank" rel="noopener">OWID / FAO — Cassava production CSV</a></li>
-          <li><a class="text-ag-leaf hover:underline" href="https://statbase.org/data/ven-vegetable-production/" target="_blank" rel="noopener">Statbase — Venezuela vegetable production (FAOSTAT)</a></li>
-          <li><a class="text-ag-leaf hover:underline" href="https://apps.fas.usda.gov/newgainapi/api/Report/DownloadReportByFileName?fileName=Venezuela%20Agricultural%20Imports%20Grow%209%20Percent%20in%202024%20with%20the%20United%20States%20among%20Leading%20Suppliers_Caracas_Venezuela_VE2025-0008.pdf" target="_blank" rel="noopener">USDA FAS GAIN VE2025-0008</a></li>
-          <li><a class="text-ag-leaf hover:underline" href="https://www.fao.org/giews/countrybrief/country.jsp?code=VEN" target="_blank" rel="noopener">FAO GIEWS — Venezuela country brief</a></li>
-          <li><a class="text-ag-leaf hover:underline" href="https://apps.fas.usda.gov/newgainapi/api/Report/DownloadReportByFileName?fileName=Analysis%20of%20the%202022%20Venezuela%20Food%20Security%20Situation_Caracas_Venezuela_VE2023-0021.pdf" target="_blank" rel="noopener">USDA FAS GAIN VE2023-0021</a></li>
-          <li><a class="text-ag-leaf hover:underline" href="https://www.fao.org/faostat/en/#data/QCL" target="_blank" rel="noopener">FAOSTAT — QCL (item-level refresh)</a></li>
-        </ol>
+        <h3 class="font-display text-2xl font-bold text-ag-slate mb-4">Verified citations</h3>
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+          <ol class="list-decimal list-inside space-y-2 text-sm text-slate-600">
+            <li><a class="text-ag-leaf hover:underline" href="https://statbase.org/data/ven-agriculture-production-by-items/" target="_blank" rel="noopener">Statbase / FAOSTAT mirror — Agricultural production by item | Venezuela</a></li>
+            <li><a class="text-ag-leaf hover:underline" href="https://statbase.org/data/ven-harvested-area-by-items/" target="_blank" rel="noopener">Statbase / FAOSTAT mirror — Harvested area by items | Venezuela</a></li>
+            <li><a class="text-ag-leaf hover:underline" href="https://statbase.org/data/ven-agriculture-import-by-item-quantity/" target="_blank" rel="noopener">Statbase / FAOSTAT mirror — Import quantity of agricultural products by item</a></li>
+            <li><a class="text-ag-leaf hover:underline" href="https://statbase.org/data/ven-agriculture-export-by-item-quantity/" target="_blank" rel="noopener">Statbase / FAOSTAT mirror — Export quantity of agricultural products by item</a></li>
+            <li><a class="text-ag-leaf hover:underline" href="https://fedeagro.org/wp-content/uploads/2025/03/Resultados-2024-WEB.pdf" target="_blank" rel="noopener">Fedeagro — Resultados 2024 (PDF)</a></li>
+            <li><a class="text-ag-leaf hover:underline" href="https://fedeagro.org/estadisticas-agricolas/consumo-aparente/" target="_blank" rel="noopener">Fedeagro — Consumo aparente</a></li>
+            <li><a class="text-ag-leaf hover:underline" href="https://www.insai.gob.ve/cuarentena-vegetal" target="_blank" rel="noopener">INSAI — Cuarentena vegetal</a></li>
+            <li><a class="text-ag-leaf hover:underline" href="https://www.insai.gob.ve/direccion-salud-vegetal" target="_blank" rel="noopener">INSAI — Dirección de Salud Vegetal</a></li>
+            <li><a class="text-ag-leaf hover:underline" href="https://www.enzazaden.com/south-america/productos-y-servicios/nuestros-distribuidores?regions=Venezuela" target="_blank" rel="noopener">Enza Zaden — Nuestros distribuidores (Venezuela)</a></li>
+            <li><a class="text-ag-leaf hover:underline" href="https://tecnoagrosartenejas.com/compartiendo-un-futuro-saludable/" target="_blank" rel="noopener">Tecnología Agrícola Sartenejas — Rijk Zwaan</a></li>
+            <li><a class="text-ag-leaf hover:underline" href="https://diproagro.com/hortalizas" target="_blank" rel="noopener">Diproagro — Hortalizas / Emerald Seeds</a></li>
+            <li><a class="text-ag-leaf hover:underline" href="https://cronica.uno/contrabando-de-papa-tomate-cebolla-zanahoria-y-ajos-lleva-a-la-ruina-a-productores-venezolanos/" target="_blank" rel="noopener">Crónica Uno — Contrabando de papa, tomate, cebolla, zanahoria y ajos</a></li>
+            <li><a class="text-ag-leaf hover:underline" href="https://diariodelosandes.com/escasez-diesel-tachira-paraliza-camiones-frutas-hortalizas/" target="_blank" rel="noopener">Diario de Los Andes — Escasez de diésel en Táchira</a></li>
+            <li><a class="text-ag-leaf hover:underline" href="https://talcualdigital.com/fedeagro-denuncia-que-hortalizas-son-vendidas-cinco-veces-mas-caras-en-supermercados/" target="_blank" rel="noopener">TalCual — Hortalizas se venden cinco veces más caras en supermercados</a></li>
+          </ol>
+        </div>
       </section>
     </div>
   </main>
 
   <script>
-    (function () {
-      const cropLabels = ['Potatoes', 'Tomatoes', 'Sweet potatoes'];
-      const cropValues = [520567, 184376, 22666];
-      const nationalVeg = 1286912;
-      const colors = ['#166534', '#22c55e', '#84cc16'];
-      const canvas = document.getElementById('productionChart');
-      const ctx = canvas.getContext('2d');
-      let chart = null;
+    (() => {
+      const top10Labels = ['Potatoes', 'Carrots', 'Dry onions', 'Tomatoes', 'Watermelons', 'Peppers', 'Cantaloupes', 'Pumpkins/Squash', 'Cabbages', 'Lettuce'];
+      const top10Values = [475912, 230781, 186730, 182454, 179451, 153476, 141573, 128825, 102041, 75834];
+      const gapLabels = ['Potato', 'Tomato', 'Onion', 'Pepper'];
+      const gapValues = [98030, 102000, 79000, 17000];
+      const colors = ['#166534','#1f7a3a','#22c55e','#4ade80','#84cc16','#65a30d','#f59e0b','#f97316','#64748b','#94a3b8'];
+      const ctx = document.getElementById('productionChart').getContext('2d');
+      let chart;
 
-      const tooltipTonnes = {
+      const commonTooltip = {
         callbacks: {
-          label: function (c) {
-            if (c.chart.config.type === 'pie') {
-              var t = c.parsed;
-              var sum = c.dataset.data.reduce(function (a, b) { return a + b; }, 0);
-              var pct = sum ? ((t / sum) * 100).toFixed(1) : 0;
-              return c.label + ': ' + t.toLocaleString() + ' t (' + pct + '%)';
+          label: function(context) {
+            if (context.chart.config.type === 'pie') {
+              const val = context.parsed;
+              const total = context.dataset.data.reduce((a,b) => a + b, 0);
+              const pct = total ? ((val / total) * 100).toFixed(1) : 0;
+              return `${context.label}: ${val.toLocaleString()} MT (${pct}%)`;
             }
-            return c.parsed.y.toLocaleString() + ' t';
+            return `${context.dataset.label}: ${context.parsed.y.toLocaleString()} MT`;
           }
         }
       };
 
       function destroyChart() {
-        if (chart) {
-          chart.destroy();
-          chart = null;
-        }
+        if (chart) chart.destroy();
       }
 
-      function setBar() {
+      function setActiveTab(id) {
+        document.querySelectorAll('.chart-tab').forEach(el => el.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+      }
+
+      function renderBar() {
         destroyChart();
         chart = new Chart(ctx, {
           type: 'bar',
           data: {
-            labels: cropLabels,
+            labels: top10Labels,
             datasets: [{
-              label: 'Production (tonnes, 2024)',
-              data: cropValues,
+              label: 'Production 2023',
+              data: top10Values,
               backgroundColor: colors,
-              borderWidth: 1,
-              borderRadius: 6
+              borderRadius: 8
             }]
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false }, tooltip: tooltipTonnes },
+            plugins: { legend: { display: false }, tooltip: commonTooltip },
             scales: {
+              x: { ticks: { color: '#334155', maxRotation: 35, minRotation: 35 }, grid: { display: false } },
               y: {
                 beginAtZero: true,
-                grid: { color: 'rgba(148, 163, 184, 0.2)' },
-                ticks: { callback: function (v) { return (v / 1000) + 'k'; }, color: '#64748b' }
-              },
-              x: { grid: { display: false }, ticks: { color: '#334155', font: { weight: '600' } } }
+                ticks: { color: '#64748b', callback: v => `${(v/1000).toFixed(0)}k` },
+                grid: { color: 'rgba(148,163,184,0.2)' }
+              }
             }
           }
         });
       }
 
-      function setPie() {
+      function renderPie() {
         destroyChart();
         chart = new Chart(ctx, {
           type: 'pie',
           data: {
-            labels: cropLabels,
-            datasets: [{
-              data: cropValues,
-              backgroundColor: colors,
-              borderWidth: 2,
-              borderColor: '#fff'
-            }]
+            labels: top10Labels,
+            datasets: [{ data: top10Values, backgroundColor: colors, borderColor: '#fff', borderWidth: 2 }]
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              legend: { display: true, position: 'bottom', labels: { color: '#334155', padding: 14 } },
-              tooltip: tooltipTonnes
+              tooltip: commonTooltip,
+              legend: { position: 'bottom', labels: { color: '#334155', padding: 14 } }
             }
           }
         });
       }
 
-      function setCompare() {
-        var documented = cropValues.reduce(function (a, b) { return a + b; }, 0);
-        var other = Math.max(0, nationalVeg - documented);
+      function renderGap() {
         destroyChart();
         chart = new Chart(ctx, {
           type: 'bar',
           data: {
-            labels: ['Potatoes', 'Tomatoes', 'Sweet potatoes', 'Other veg. (residual)*'],
+            labels: gapLabels,
             datasets: [{
-              label: 'Tonnes (2024)',
-              data: cropValues.concat([other]),
-              backgroundColor: colors.concat(['#94a3b8']),
-              borderWidth: 1,
-              borderRadius: 6
+              label: '2024 Demand gap',
+              data: gapValues,
+              backgroundColor: ['#14532d', '#22c55e', '#84cc16', '#f59e0b'],
+              borderRadius: 8
             }]
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false }, tooltip: tooltipTonnes },
+            plugins: { legend: { display: false }, tooltip: commonTooltip },
             scales: {
+              x: { ticks: { color: '#334155' }, grid: { display: false } },
               y: {
                 beginAtZero: true,
-                grid: { color: 'rgba(148, 163, 184, 0.2)' },
-                ticks: { callback: function (v) { return (v / 1000) + 'k'; }, color: '#64748b' }
-              },
-              x: { grid: { display: false }, ticks: { color: '#334155', font: { weight: '600', maxRotation: 32 } } }
+                ticks: { color: '#64748b', callback: v => `${(v/1000).toFixed(0)}k` },
+                grid: { color: 'rgba(148,163,184,0.2)' }
+              }
             }
           }
         });
       }
 
-      function setActiveTab(id) {
-        document.querySelectorAll('.chart-tab').forEach(function (el) {
-          el.classList.remove('active');
-        });
-        document.getElementById(id).classList.add('active');
-      }
+      renderBar();
+      document.getElementById('tab-bar').addEventListener('click', () => { setActiveTab('tab-bar'); renderBar(); });
+      document.getElementById('tab-pie').addEventListener('click', () => { setActiveTab('tab-pie'); renderPie(); });
+      document.getElementById('tab-gap').addEventListener('click', () => { setActiveTab('tab-gap'); renderGap(); });
 
-      setBar();
-
-      document.getElementById('tab-bar').addEventListener('click', function () {
-        setActiveTab('tab-bar');
-        setBar();
-      });
-      document.getElementById('tab-pie').addEventListener('click', function () {
-        setActiveTab('tab-pie');
-        setPie();
-      });
-      document.getElementById('tab-compare').addEventListener('click', function () {
-        setActiveTab('tab-compare');
-        setCompare();
-      });
-
-      // Sidebar scroll spy
       const sections = document.querySelectorAll('main section[id]');
       const links = document.querySelectorAll('.sidebar-link');
-      const observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
           if (!entry.isIntersecting) return;
           const id = entry.target.getAttribute('id');
-          links.forEach(function (link) {
-            link.classList.toggle('active', link.getAttribute('href') === '#' + id);
-          });
+          links.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
         });
-      }, { rootMargin: '-20% 0px -60% 0px', threshold: 0 });
-      sections.forEach(function (sec) { observer.observe(sec); });
+      }, { rootMargin: '-18% 0px -60% 0px', threshold: 0 });
+      sections.forEach(section => observer.observe(section));
     })();
   </script>
 </body>
