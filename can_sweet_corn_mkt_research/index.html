@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SeedPath | Canada Sweet Corn Seed Market Dashboard</title>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <style>
+    :root{--navy:#0B1F33;--blue:#174A7C;--gold:#E9A319;--amber:#D48806;--green:#2D6A4F;--orange:#F18F01;--red:#BC4749;--bg:#F5F7FA;--line:#D9E1EC;--text:#1C2430;--muted:#667085;--card:#FFFFFF;--soft:#FFF8EA;--shadow:0 18px 48px rgba(11,31,51,.10)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.45}
+    header{position:relative;overflow:hidden;background:linear-gradient(135deg,#5C4A1F 0%,var(--amber) 32%,var(--navy) 100%);color:#fff;padding:34px 46px 30px}
+    header:before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 18% 22%,rgba(233,163,25,.75),transparent 25%),radial-gradient(circle at 90% 10%,rgba(45,106,79,.45),transparent 23%);opacity:.6}
+    header>*{position:relative}h1{margin:0;font-size:38px;letter-spacing:-.03em;line-height:1.05}header p{max-width:1160px;color:#FFF3D6;font-size:15px}
+    .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.23);background:rgba(255,255,255,.12);border-radius:999px;padding:8px 12px;font-size:12px;font-weight:800;letter-spacing:.03em}
+    .layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:22px;max-width:1540px;margin:0 auto;padding:24px 34px 64px}
+    nav{position:sticky;top:18px;align-self:start;background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:0 8px 24px rgba(11,31,51,.06)}
+    nav h3{margin:4px 8px 10px;font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:.18em}nav a{display:block;color:#455468;text-decoration:none;font-size:13px;font-weight:750;padding:9px 10px;border-radius:12px}nav a:hover{background:var(--soft);color:var(--amber)}
+    main{min-width:0}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.triple{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.wide{grid-column:1/-1}
+    .card,.panel,.mini{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 22px rgba(11,31,51,.055);padding:18px;margin-bottom:18px}.panel{padding:20px}.card:hover{transform:translateY(-2px);box-shadow:var(--shadow);transition:.18s ease}
+    .label{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:900;letter-spacing:.10em}.value{font-size:30px;font-weight:900;color:var(--navy);margin-top:7px}.note{color:var(--muted);font-size:12.5px;margin-top:8px}.big{font-size:24px;font-weight:900;color:var(--amber);margin:6px 0}h2{margin:0 0 12px;color:var(--navy);font-size:21px}.sub{color:var(--muted);font-size:13px;margin-top:-5px;margin-bottom:14px}
+    .callout{border-left:5px solid var(--gold);background:var(--soft);padding:14px 16px;border-radius:12px;margin:14px 0}.risk{border-left-color:var(--red);background:#FFF4F3}
+    table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:#F0F4F8;color:var(--navy);text-transform:uppercase;font-size:11px;letter-spacing:.05em}.scroll{overflow-x:auto;width:100%;max-width:100%}
+    #trendTable{width:100%;table-layout:fixed}#trendTable th,#trendTable td{overflow-wrap:anywhere}
+    .tag{display:inline-block;background:#FFF3D6;color:#8A5A00;border-radius:999px;padding:4px 9px;margin:2px;font-size:12px;font-weight:800}.warn-tag{background:#FFF2CC;color:#8A5A00}.red-tag{background:#FDECEC;color:#A33B3D}
+    .btns{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 14px}.btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-weight:850;color:#475467;cursor:pointer}.btn.active,.btn:hover{background:var(--amber);color:#fff;border-color:var(--amber)}
+    details{border:1px solid var(--line);background:#fff;border-radius:16px;padding:13px;margin:10px 0}summary{cursor:pointer;font-weight:900;color:var(--navy)}details p{margin:8px 0;color:#475467}.chart{height:430px}
+    .two-col-list{columns:2;column-gap:28px}.source-list li{break-inside:avoid;margin-bottom:9px}.footer{border-top:1px solid var(--line);background:#fff;text-align:center;padding:22px;color:var(--muted);font-size:12px}
+    @media(max-width:1180px){.layout{grid-template-columns:1fr}nav{position:relative;top:auto}.cards,.grid,.triple{grid-template-columns:1fr 1fr}}
+    @media(max-width:760px){header{padding:28px 20px}.layout{padding:18px}.cards,.grid,.triple{grid-template-columns:1fr}h1{font-size:30px}.two-col-list{columns:1}.chart{height:370px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="label" style="color:#fde9b8">SeedPath Agriculture Intelligence</div>
+  <h1>Canada Sweet Corn Seed Market Opportunity Dashboard</h1>
+  <p><b>FY2026–FY2027 deep-dive.</b> Interactive dashboard converted from the sweet corn seed market report: TAM/SAM/SOM sizing, production footprint, regional concentration, processed trade, climate twins, typology, trend radar, disease/trait priorities, and competitive context.</p>
+  <div class="meta" id="headerPills"></div>
+</header>
+<div class="layout">
+  <nav>
+    <h3>Navigate</h3>
+    <a href="#summary">Executive Summary</a>
+    <a href="#thesisPanel">Board Thesis</a>
+    <a href="#sizing">Market Sizing</a>
+    <a href="#production">Production</a>
+    <a href="#regions">Regions & Climate Twins</a>
+    <a href="#trade">Trade & Demand</a>
+    <a href="#trends">Trend Impact Table</a>
+    <a href="#segments">Typology</a>
+    <a href="#disease">Disease & Traits</a>
+    <a href="#competitors">Competitors</a>
+    <a href="#strategy">Strategy</a>
+    <a href="#sources">Sources</a>
+  </nav>
+  <main>
+    <section id="summary" class="cards"></section>
+    <section id="thesisPanel" class="panel">
+      <h2>Board-Level Thesis</h2>
+      <p id="thesis"></p>
+      <div class="callout"><b>Commercial wedge:</b> fresh-market bicolor synergistic/augmented-supersweet genetics with cold emergence, common rust/NCLB resistance, husk appeal and harvest-window reliability — validated first in southwestern Ontario and Montérégie before expanding west.</div>
+    </section>
+    <section id="sizing" class="grid">
+      <div class="panel"><h2>TAM / SAM / SOM Funnel</h2><p class="sub">FY2026–FY2027 USD seed-market opportunity.</p><div id="funnelChart" class="chart"></div></div>
+      <div class="panel"><h2>Seed Value by Segment</h2><p class="sub">Processing vs fresh vs premium specialty seed pools.</p><div id="segmentValueChart" class="chart"></div></div>
+      <div class="panel"><h2>Sensitivity</h2><p class="sub">Seed spend ±15% impact on TAM, SAM and SOM.</p><div id="sensitivityChart" class="chart"></div></div>
+      <div class="panel"><h2>Planted Acres by Segment</h2><p class="sub">2023–2025 average area basis for seed sizing.</p><div id="segmentAcresChart" class="chart"></div></div>
+      <div class="panel wide"><h2>Seed Sizing Assumptions</h2><div class="scroll"><table id="assumptionsTable"></table></div></div>
+    </section>
+    <section id="production" class="grid">
+      <div class="panel"><h2>Production Volume Trend</h2><p class="sub">Total and marketed fresh sweet corn production, tonnes.</p><div id="productionChart" class="chart"></div></div>
+      <div class="panel"><h2>Farm-Gate Value Trend</h2><p class="sub">Rising value while acreage compresses.</p><div id="valueChart" class="chart"></div></div>
+      <div class="panel"><h2>Area Trend</h2><p class="sub">Planted vs harvested hectares.</p><div id="areaChart" class="chart"></div></div>
+      <div class="panel"><h2>Yield Trend</h2><p class="sub">Tonnes per harvested hectare.</p><div id="yieldChart" class="chart"></div></div>
+      <div class="panel wide"><h2>2023–2025 National Footprint</h2><div id="productionStats" class="triple"></div></div>
+    </section>
+    <section id="regions" class="grid">
+      <div class="panel"><h2>2025 Regional Production</h2><p class="sub">Production tonnes by province.</p><div id="regionalChart" class="chart"></div></div>
+      <div class="panel"><h2>2025 Regional Farm-Gate Value</h2><p class="sub">Farm-gate value by province, CAD.</p><div id="regionalValueChart" class="chart"></div></div>
+      <div class="panel"><h2>Ontario & Québec Concentration</h2><p class="sub">Share of national planted area and production, 2025.</p><div id="concentrationChart" class="chart"></div></div>
+      <div class="panel"><h2>Regional Climate Comparison</h2><p class="sub">NASA POWER climatology for key production belts.</p><div id="climateChart" class="chart"></div></div>
+      <div class="panel wide"><h2>Climate Twins & Positioning</h2><div id="climateCards"></div></div>
+    </section>
+    <section id="trade" class="grid">
+      <div class="panel"><h2>Processed Sweet Corn Trade</h2><p class="sub">Frozen HS071040 and preserved HS200580, 2024 USD.</p><div id="tradeChart" class="chart"></div></div>
+      <div class="panel"><h2>Trade Partners & Demand Signals</h2><div id="tradeTables"></div></div>
+    </section>
+    <section id="trends" class="panel">
+      <h2>Impact × Velocity Trend Table</h2>
+      <p class="sub">Ranked trend radar — acreage compression with rising farm-gate value scores highest.</p>
+      <div class="scroll"><table id="trendTable"></table></div>
+    </section>
+    <section id="segments" class="panel">
+      <h2>Typology, Variety Segments & Buyer Needs</h2>
+      <p class="sub">Five commercial sweet corn segments from fresh bicolor to organic/local.</p>
+      <div id="segmentCards" class="grid"></div>
+    </section>
+    <section id="disease" class="panel">
+      <h2>Disease Pressure & Trait Priorities</h2>
+      <div class="btns" id="diseaseBtns"></div>
+      <div id="diseaseCards" class="grid"></div>
+      <div class="callout risk"><b>Trait stack:</b> marketability (sweetness, bicolor, tip fill, husks) + stand establishment (cold germ) + disease package (rust, NCLB, Stewart's wilt) + harvest-system fit (fresh window vs processing sync) + pest-interface traits (tight husk, IPM compatibility).</div>
+    </section>
+    <section id="competitors" class="grid">
+      <div class="panel"><h2>Competitive Landscape</h2><p class="sub">Incumbent strength and processor gatekeeping.</p><div id="competitorChart" class="chart"></div></div>
+      <div class="panel"><h2>Competitor Context</h2><div id="competitorCards"></div></div>
+    </section>
+    <section id="strategy" class="grid">
+      <div class="panel"><h2>Strategic Recommendations</h2><ol id="recommendations"></ol></div>
+      <div class="panel"><h2>Confidence & Limitations</h2><div id="limitations"></div></div>
+    </section>
+    <section id="sources" class="panel">
+      <h2>Source Register</h2>
+      <ul id="sourcesList" class="source-list two-col-list"></ul>
+    </section>
+  </main>
+</div>
+<div class="footer">Built from <code>data/canada_sweet_corn_seed_market_opportunity_2026_2027.json</code> · SeedPath standalone interactive HTML · Plotly charts support hover, zoom and PNG export</div>
+<script>
+const DATA = {"metadata":{"report_title":"Canada Sweet Corn Seed Market Opportunity Deep-Dive","role_lens":"Senior Market Research Analyst specializing in the Canadian agricultural sector","crop":"Sweet corn seed (Zea mays convar. saccharata / rugosa)","geography":"Canada","fiscal_period":"2026-2027","created":"2026-05-14","currency":"USD for seed-market sizing unless noted; CAD for Canadian farm-gate values","confidence_score":7.8},"market_sizing":{"currency":"USD","period":"FY2026-FY2027 midpoint estimate","tam_usd":6332955,"sam_usd":5383012,"som_usd":269151,"segments":[{"segment":"Processing / freezer-canner contract sweet corn seed","share_of_planted_acres":0.55,"seed_cost_usd_per_acre":110,"forecast_uplift":1.03,"strategic_read":"High-volume but incumbent- and processor-spec driven; synchronized maturity, mechanical harvest and contract reliability matter most.","base_acres_2023_2025_avg":22875.416666666668,"tam_usd":2591785},{"segment":"Fresh retail / farm-market hybrid sweet corn seed","share_of_planted_acres":0.35,"seed_cost_usd_per_acre":175,"forecast_uplift":1.04,"strategic_read":"Best balance of value and accessible switching; eating quality, bicolor presentation, husk protection and disease package drive adoption.","base_acres_2023_2025_avg":14557.083333333332,"tam_usd":2649389},{"segment":"Premium early/late, supersweet, synergistic and organic/local seed","share_of_planted_acres":0.1,"seed_cost_usd_per_acre":250,"forecast_uplift":1.05,"strategic_read":"Smaller acreage but high seed spend per acre; cold germination, sugar retention and differentiated retail experience command premiums.","base_acres_2023_2025_avg":4159.166666666667,"tam_usd":1091781}],"assumptions":{"base_planted_acres_2023_2025_avg":41591.666666666664,"base_planted_ha_2023_2025_avg":16831.333333333332,"typical_seed_requirement_range_seeds_per_acre":"18,000-26,000 depending on type, stand target, germination and replant risk","sizing_method":"Planted acres \u00d7 commercial seed spend per acre \u00d7 FY2026-FY2027 uplift; seed spend per acre proxies seed count, seed treatment and hybrid trait premium.","sam_filter":"85% of TAM, reflecting accessible proprietary/hybrid commercial seed after processor incumbency, saved/non-commercial seed and route-to-market limits.","som_capture_rate_of_sam":0.05},"sensitivity":{"low_seed_price_minus_15_pct":{"tam_usd":5383012,"sam_usd":4575560,"som_usd":228778},"base":{"tam_usd":6332955,"sam_usd":5383012,"som_usd":269151},"high_seed_price_plus_15_pct":{"tam_usd":7282898,"sam_usd":6190464,"som_usd":309524}}},"production":{"statcan_table":"32-10-0365-01","commodity":"Fresh sweet corn [114221811]","annual":[{"year":2023,"planted_acres":42792,"planted_ha":17317,"harvested_acres":40855,"harvested_ha":16533,"total_production_tonnes":189868,"marketed_production_tonnes":188706,"farm_gate_value_cad":90366000,"yield_tonnes_per_harvested_ha":11.484183148853807},{"year":2024,"planted_acres":41659,"planted_ha":16859,"harvested_acres":39709,"harvested_ha":16070,"total_production_tonnes":199646,"marketed_production_tonnes":196568,"farm_gate_value_cad":91678000,"yield_tonnes_per_harvested_ha":12.42352209085252},{"year":2025,"planted_acres":40324,"planted_ha":16318,"harvested_acres":38139,"harvested_ha":15434,"total_production_tonnes":189727,"marketed_production_tonnes":185806,"farm_gate_value_cad":103033000,"yield_tonnes_per_harvested_ha":12.292795127640275}],"avg_2023_2025":{"planted_acres":41591.666666666664,"planted_ha":16831.333333333332,"harvested_acres":39567.666666666664,"harvested_ha":16012.333333333334,"total_production_tonnes":193080.33333333334,"marketed_production_tonnes":190360.0,"farm_gate_value_cad":95025666.66666667,"yield_tonnes_per_harvested_ha":12.058225950829568},"regional_2025":[{"region":"Ontario","planted_acres":19175.0,"planted_ha":7760.0,"harvested_acres":18691.0,"harvested_ha":7564.0,"total_production_tonnes":105290.0,"marketed_production_tonnes":102517.0,"farm_gate_value_cad":50623000,"yield_tonnes_per_harvested_ha":13.91988365943945},{"region":"Quebec","planted_acres":15381.0,"planted_ha":6225.0,"harvested_acres":14579.0,"harvested_ha":5900.0,"total_production_tonnes":65103.0,"marketed_production_tonnes":63980.0,"farm_gate_value_cad":31515000,"yield_tonnes_per_harvested_ha":11.034406779661017},{"region":"Alberta","planted_acres":2450.0,"planted_ha":992.0,"harvested_acres":1725.0,"harvested_ha":698.0,"total_production_tonnes":9380.0,"marketed_production_tonnes":9369.0,"farm_gate_value_cad":4742000,"yield_tonnes_per_harvested_ha":13.43839541547278},{"region":"British Columbia","planted_acres":2201.0,"planted_ha":891.0,"harvested_acres":2051.0,"harvested_ha":830.0,"total_production_tonnes":7272.0,"marketed_production_tonnes":7265.0,"farm_gate_value_cad":11431000,"yield_tonnes_per_harvested_ha":8.76144578313253},{"region":"Nova Scotia","planted_acres":387.0,"planted_ha":157.0,"harvested_acres":387.0,"harvested_ha":157.0,"total_production_tonnes":null,"marketed_production_tonnes":null,"farm_gate_value_cad":1470000},{"region":"Manitoba","planted_acres":325.0,"planted_ha":132.0,"harvested_acres":325.0,"harvested_ha":132.0,"total_production_tonnes":752.0,"marketed_production_tonnes":752.0,"farm_gate_value_cad":1259000,"yield_tonnes_per_harvested_ha":5.696969696969697},{"region":"New Brunswick","planted_acres":231.0,"planted_ha":94.0,"harvested_acres":213.0,"harvested_ha":86.0,"total_production_tonnes":383.0,"marketed_production_tonnes":383.0,"farm_gate_value_cad":1008000,"yield_tonnes_per_harvested_ha":4.453488372093023},{"region":"Saskatchewan","planted_acres":78.0,"planted_ha":32.0,"harvested_acres":77.0,"harvested_ha":31.0,"total_production_tonnes":321.0,"marketed_production_tonnes":314.0,"farm_gate_value_cad":538000,"yield_tonnes_per_harvested_ha":10.35483870967742},{"region":"Prince Edward Island","planted_acres":null,"planted_ha":null,"harvested_acres":null,"harvested_ha":null,"total_production_tonnes":null,"marketed_production_tonnes":null,"farm_gate_value_cad":337000},{"region":"Newfoundland and Labrador","planted_acres":32.0,"planted_ha":13.0,"harvested_acres":32.0,"harvested_ha":13.0,"total_production_tonnes":43.0,"marketed_production_tonnes":43.0,"farm_gate_value_cad":110000,"yield_tonnes_per_harvested_ha":3.3076923076923075}],"regional_concentration_2025":{"ontario_quebec_planted_area_share":0.8570290476774114,"ontario_quebec_production_share":0.8980956848524458}},"typology_segments":[{"segment":"Fresh market bicolor sweet corn","system":"Open-field, staggered plantings for July-September local retail, farm-gate, wholesale and supermarket programs","buyer_need":"Visual bicolor appeal, tenderness, uniform ear size, strong husk flag, tip fill and harvest-window reliability","traits":"Synergistic or augmented-supersweet eating quality, husk protection, common rust/NCLB resistance, cold-soil vigor and strong stand establishment"},{"segment":"Yellow/white fresh market and regional preference types","system":"Open-field local and regional channels, often targeted to ethnic, farm-market or legacy consumer preferences","buyer_need":"Differentiated colour/flavour, consistent maturity, clean husks and dependable eating quality","traits":"Colour purity, sugar retention, tenderness, ear uniformity, disease package and reliable pollen isolation guidance"},{"segment":"Processing / freezer-canner sweet corn","system":"Contract production with processors; synchronized planting and mechanical harvest","buyer_need":"High tonnage, kernel recovery, uniform maturity, cut quality, tender pericarp and predictable delivery windows","traits":"Concentrated maturity, lodging tolerance, kernel depth/recovery, disease resistance, mechanical-harvest fit and processor variety approval"},{"segment":"Early/late shoulder-season sweet corn","system":"Cool-soil early plantings and late-season harvest extension under higher weather risk","buyer_need":"First-to-market premium or late shelf extension with acceptable stand and eating quality","traits":"Cold germination, seedling vigor, early maturity, frost/cool stress tolerance, rapid dry-down of husk after rain and robust seed treatment compatibility"},{"segment":"Organic/local low-input sweet corn","system":"Organic or reduced-input field production, often direct-to-consumer","buyer_need":"Trust, flavour, non-GMO/organic seed availability and resilience without intensive chemical programs","traits":"Untreated/organic seed availability, strong emergence, weed-competitive vigor, disease tolerance, husk coverage against ear pests and non-GMO positioning"}],"trends":[{"category":"Acreage/value","trend":"Acreage is gradually compressing while farm-gate value rises","evidence":"StatCan shows planted area declining from 17,317 ha in 2023 to 16,318 ha in 2025, while farm-gate value rose from C$90.4M to C$103.0M.","impact":9,"velocity":"High","score":27,"seed_implication":"Seed companies must sell yield stability and marketable quality per acre, not just more acres."},{"category":"Regional concentration","trend":"Ontario and Qu\u00e9bec remain the adoption gatekeepers","evidence":"In 2025, Ontario and Qu\u00e9bec together represented about 86% of Canadian planted area and 90% of total production.","impact":10,"velocity":"Medium","score":20,"seed_implication":"Launch trials and distributor focus should begin in southwestern Ontario and Mont\u00e9r\u00e9gie before expanding west."},{"category":"Consumer format","trend":"Fresh/local plus frozen convenience create two different seed value pools","evidence":"StatCan highlights fresh, frozen and canned sweet corn uses; WITS reports 2024 frozen exports of US$22.5M and imports of US$15.0M.","impact":8,"velocity":"Medium","score":16,"seed_implication":"Fresh hybrids need eating quality and husk appeal; processing hybrids need synchronized maturity and kernel recovery."},{"category":"Climate risk","trend":"Weather variability raises the value of emergence, maturity and disease resilience","evidence":"Canada\u2019s sweet-corn belt spans humid Great Lakes/Qu\u00e9bec fields, maritime BC, and irrigated dry Alberta; NASA climatology shows sharply different rainfall and heat profiles.","impact":8,"velocity":"High","score":24,"seed_implication":"Portfolio must include cold-germ, early maturity, rust/NCLB resistance and regional maturity bands."},{"category":"Disease/pest pressure","trend":"Husk quality and foliar disease management are direct marketability issues","evidence":"Cornell notes NCLB and common rust can develop on husks and affect marketability; ear-feeding pests often dominate fresh-market losses.","impact":8,"velocity":"Medium","score":16,"seed_implication":"Disease resistance, tight husk cover, tip fill and integrated pest-management compatibility should be explicit claims."}],"climate_profiles":[{"region":"Ontario \u2014 southwestern Ontario / Norfolk / Chatham-Kent / Essex sweet-corn belt","latitude":42.3,"longitude":-82.9,"annual_mean_temp_c":9.18,"july_temp_c":22.4,"annual_precip_mm_day":2.32,"production_role":"Largest production base; 2025 planted area 7,760 ha and 105,290 tonnes total production.","climate_twins":"Great Lakes U.S. sweet-corn belt (Michigan, Ohio, western New York); Erie/Niagara vegetable belt; humid-temperate processing-vegetable regions in northern France/Belgium."},{"region":"Qu\u00e9bec \u2014 Mont\u00e9r\u00e9gie / Montr\u00e9al South Shore / Lanaudi\u00e8re","latitude":45.45,"longitude":-73.45,"annual_mean_temp_c":6.43,"july_temp_c":21.72,"annual_precip_mm_day":2.97,"production_role":"Second-largest production base; 2025 planted area 6,225 ha and 65,103 tonnes total production.","climate_twins":"New York Hudson/Mohawk and Vermont sweet-corn belts; southern Ontario humid field systems; northern France/Belgium fresh-processing vegetable analogs."},{"region":"British Columbia \u2014 Fraser Valley / Lower Mainland","latitude":49.05,"longitude":-122.3,"annual_mean_temp_c":9.57,"july_temp_c":17.84,"annual_precip_mm_day":3.84,"production_role":"Smaller acreage but high farm-gate value per tonne; 2025 planted area 891 ha and C$11.4M farm-gate value.","climate_twins":"Pacific Northwest coastal sweet-corn regions such as western Washington, Skagit Valley and Oregon Willamette Valley; cool maritime vegetable systems."},{"region":"Southern Alberta \u2014 irrigated Taber/Lethbridge corridor","latitude":49.7,"longitude":-112.8,"annual_mean_temp_c":6.33,"july_temp_c":20.71,"annual_precip_mm_day":1.13,"production_role":"Irrigated prairie niche with 2025 planted area 992 ha and 9,380 tonnes production.","climate_twins":"Idaho Snake River and Columbia Basin irrigated processing vegetables; Colorado High Plains irrigated sweet corn; dry high-light prairie analogs requiring irrigation."}],"trade_and_demand":{"frozen_hs071040_2024":{"imports_value_usd":15049300,"imports_quantity_kg":12607100,"imports_top_origins":[{"country":"United States","value_usd":10919290,"quantity_kg":9200860},{"country":"China","value_usd":2989100,"quantity_kg":2578360},{"country":"Vietnam","value_usd":470140,"quantity_kg":347203},{"country":"Poland","value_usd":261780,"quantity_kg":210328},{"country":"India","value_usd":127210,"quantity_kg":116853}],"exports_value_usd":22499540,"exports_quantity_kg":19530900,"exports_top_destinations":[{"country":"United States","value_usd":20411950,"quantity_kg":16420500},{"country":"Colombia","value_usd":1736880,"quantity_kg":2643250},{"country":"Chile","value_usd":262640,"quantity_kg":357854},{"country":"Belgium","value_usd":82990,"quantity_kg":102934}]},"preserved_hs200580_2024":{"imports_value_usd":4178430,"imports_quantity_kg":3067510,"exports_value_usd":3229240,"exports_quantity_kg":2152610},"apparent_domestic_supply_2024_directional_kg":193637100,"note":"Fresh sweet corn cross-border trade is not cleanly isolated in a dedicated HS code; frozen and preserved HS lines are used as directional processed-demand indicators."},"disease_and_trait_priorities":[{"pressure":"Common rust","main_segment":"Fresh market and processing","why_it_matters":"Rust pustules on leaves and husks reduce photosynthetic capacity and can reduce fresh-market appearance.","desired_trait":"Rp-gene or durable common-rust resistance, clean husk presentation and resistance notation aligned with Canadian trial data."},{"pressure":"Northern corn leaf blight (NCLB)","main_segment":"Humid Ontario/Qu\u00e9bec fresh and processing fields","why_it_matters":"Cornell identifies NCLB as increasingly important and market-relevant when symptoms affect husks; humid Great Lakes conditions favour foliar disease.","desired_trait":"NCLB resistance package, strong stay-green, tolerance under high inoculum and fungicide-program compatibility."},{"pressure":"Stewart\u2019s wilt / bacterial leaf blight","main_segment":"Fresh sweet corn, especially susceptible sugary and supersweet types","why_it_matters":"Historically important in northeastern sweet-corn systems; vectored by flea beetles and best mitigated through resistant varieties and IPM.","desired_trait":"Stewart\u2019s wilt resistance/tolerance, flea-beetle aware agronomy, seed-treatment compatibility and clear susceptibility ratings."},{"pressure":"Seed rot and seedling blights under cold soils","main_segment":"Early shoulder-season and organic/local plantings","why_it_matters":"Early planting is commercially valuable but cold/wet soils reduce stand establishment and uniformity.","desired_trait":"Cold germination, seedling vigor, seed-treatment options, uniform emergence and strong early root growth."},{"pressure":"Common smut, head smut, ear rots and Fusarium complex","main_segment":"All field segments; quality-sensitive fresh and processing crops","why_it_matters":"Ear defects and kernel quality losses directly reduce pack-out, processing recovery and buyer acceptance.","desired_trait":"Husk cover, tip fill, ear-rot tolerance, plant stress tolerance, balanced nitrogen response and clean harvest quality."},{"pressure":"Corn earworm, European corn borer, western bean cutworm and bird/wildlife feeding","main_segment":"Fresh market ears and organic/local production","why_it_matters":"Ear-feeding pests often matter more than diseases because they damage the saleable ear; organic/non-GM channels have fewer tools.","desired_trait":"Tight husk, long husk extension, tip coverage, rapid silk drying, IPM-compatible maturity scheduling, and optional Bt/non-Bt portfolio clarity where market-acceptable."},{"pressure":"Emerging radar: tar spot and Goss\u2019s wilt","main_segment":"Ontario/Qu\u00e9bec watchlist due to U.S. Great Lakes spread","why_it_matters":"Cornell flags these as emerging concerns in nearby U.S. regions; field corn inoculum and climate change can alter risk.","desired_trait":"Breeding surveillance, regional disease-screening nurseries and flexible resistance introgression pipeline."}],"strategic_recommendations":["Prioritize southwestern Ontario and Qu\u00e9bec Mont\u00e9r\u00e9gie trials as the commercial gatekeeper regions for FY2026-FY2027.","Lead with bicolor synergistic/augmented-supersweet fresh-market hybrids that combine eating quality, husk appearance, cold emergence and common rust/NCLB resistance.","Build a second processing lane only where processor/distributor access exists; processor hybrids must prove synchronized maturity, kernel recovery and mechanical harvest performance.","Segment the portfolio by maturity band and climate: early cold-soil hybrids, main-season humid Great Lakes/Qu\u00e9bec hybrids, and irrigated western types.","Use climate-twin evidence from the Great Lakes/Northeast U.S. and Pacific Northwest to accelerate disease screening and trial placement.","Commercialize with grower-facing ROI evidence tied to marketable ears per acre, fewer downgraded husks, harvest-window reliability and reduced replant risk."],"sources":[{"source":"Statistics Canada Table 32-10-0365-01","use":"Fresh sweet corn planted area, harvested area, production, marketed production and farm-gate value","file":"data/canada_sources/statcan_field_32100365/32100365.csv"},{"source":"Statistics Canada StatsCAN Plus \u2014 Corn, sweet corn","url":"https://www.statcan.gc.ca/o1/en/plus/1526-corn-sweet-corn","use":"Context on Canadian sweet corn production, Ontario/Qu\u00e9bec concentration and fresh/frozen/canned consumption framing"},{"source":"AAFC/Pest Management Centre \u2014 Crop Profile for Sweet Corn in Canada, 2015","url":"http://www.publications.gc.ca/site/eng/9.851078/publication.html","use":"National crop profile, historic farm-gate value, production range and crop importance"},{"source":"WITS / UN Comtrade HS071040 2024","url":"https://wits.worldbank.org/trade/comtrade/en/country/CAN/year/2024/tradeflow/Imports/partner/ALL/product/071040","use":"Frozen sweet corn import value and volume"},{"source":"WITS / UN Comtrade HS071040 2024","url":"https://wits.worldbank.org/trade/comtrade/en/country/CAN/year/2024/tradeflow/Exports/partner/ALL/product/071040","use":"Frozen sweet corn export value and volume"},{"source":"WITS / UN Comtrade HS200580 2024","url":"https://wits.worldbank.org/trade/comtrade/en/country/CAN/year/2024/tradeflow/Imports/partner/ALL/product/200580","use":"Preserved/canned sweet corn import value and volume"},{"source":"Ontario Crop IPM \u2014 Sweet corn","url":"https://cropipm.omafra.gov.on.ca/en-ca/crops/sweet-corn/diseases/4de4d760-b6a2-49c4-ae3e-98a949b517bc","use":"Ontario IPM/disease framing for sweet corn"},{"source":"Cornell Vegetables \u2014 Sweet Corn Diseases and Control Measures","url":"https://www.vegetables.cornell.edu/pest-management/disease-factsheets/sweet-corn-diseases-and-control-measures/","use":"Disease-pressure and resistant-variety evidence relevant to Great Lakes/Northeastern climate twins"},{"source":"NASA POWER climatology via SeedPath MCP","use":"Climate profiles for Ontario, Qu\u00e9bec, British Columbia and Alberta production analogs"},{"source":"SeedPath Exa search/content outputs","files":["data/canada_sweet_corn_exa_search_results.json","data/canada_sweet_corn_exa_contents.json","data/canada_sweet_corn_trade_2024_exa_contents.json"],"use":"Source discovery and normalized web evidence"}],"limitations":["Sweet corn seed is not separately disclosed in Canadian seed trade statistics; market sizing is bottom-up using planted area and seed spend per acre assumptions.","StatCan field vegetable farm-gate values are reported in thousands of Canadian dollars in the source table and converted to CAD actual values here.","Fresh sweet corn trade is not isolated in a dedicated HS code; frozen HS071040 and preserved HS200580 are used as processed-demand indicators.","Segment shares for fresh vs processing vs specialty seed are analyst estimates; actual shares vary by processor contracts, region and season."],"executive_summary":{"thesis":"Canada is a moderate-acreage but strategically concentrated sweet corn seed market. Ontario and Qu\u00e9bec control ~86% of planted area and ~90% of production. The strongest near-term wedge is a fresh-market bicolor synergistic/augmented-supersweet portfolio validated in southwestern Ontario and Mont\u00e9r\u00e9gie \u2014 where seed genetics protect marketable ears per acre, sugar retention, husk appearance, cold emergence and harvest-window reliability."},"competitors":[{"company":"Syngenta / Rogers / Attribute","position":"Deep sweet corn breeding and trait portfolio, including fresh and processing types","risk":"High incumbent"},{"company":"Bayer / Seminis / DeKalb","position":"Broad vegetable seed distribution and corn genetics capability in Ontario/Qu\u00e9bec","risk":"High"},{"company":"Crookham, Harris Moran/Sakata, Rupp, Seedway","position":"Fresh-market and processing sweet corn variety depth in dealer channels","risk":"High"},{"company":"Canadian distributors and local seed houses","position":"Route-to-market, grower trust and local maturity-band advice","risk":"Medium \u2014 partnership lane"},{"company":"Processor-approved variety lists","position":"Gatekeeper for freezer/canner contract acreage","risk":"High gatekeeper"}]};
+
+const fmtUSD = n => n == null || isNaN(Number(n)) ? 'n.a.' : '$' + (Number(n)/1e6).toFixed(1) + 'M';
+const fmtCAD = n => n == null || isNaN(Number(n)) ? 'n.a.' : 'C$' + (Number(n)/1e6).toFixed(1) + 'M';
+const fmtT = n => n == null || isNaN(Number(n)) ? 'n.a.' : Number(n).toLocaleString(undefined,{maximumFractionDigits:0}) + ' t';
+const fmtHa = n => n == null || isNaN(Number(n)) ? 'n.a.' : Number(n).toLocaleString(undefined,{maximumFractionDigits:0}) + ' ha';
+const fmtAc = n => n == null || isNaN(Number(n)) ? 'n.a.' : Number(n).toLocaleString(undefined,{maximumFractionDigits:0}) + ' ac';
+const fmtKgM = n => n == null || isNaN(Number(n)) ? 'n.a.' : (Number(n)/1e6).toFixed(1) + 'M kg';
+const fmtPct = n => (Number(n)*100).toFixed(1) + '%';
+const esc = s => String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const plotCfg = {responsive:true, displaylogo:false, modeBarButtonsToAdd:['toImage'], toImageButtonOptions:{format:'png', filename:'canada_sweet_corn_dashboard', height:900, width:1400, scale:2}};
+const layoutBase = {paper_bgcolor:'#fff', plot_bgcolor:'#fff', font:{family:'-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif', color:'#1C2430'}, margin:{t:55,l:72,r:35,b:80}, colorway:['#D48806','#E9A319','#2D6A4F','#174A7C','#BC4749','#F18F01'], hoverlabel:{bgcolor:'#0B1F33', font:{color:'#fff'}}};
+function riskScore(risk){const r=String(risk||'').toLowerCase();if(r.includes('high'))return 9;if(r.includes('medium'))return 5;return 6;}
+function segLabel(s){return s.segment.replace(' sweet corn seed','').replace(' seed','');}
+function initHeader(){
+  const m=DATA.metadata;
+  document.getElementById('headerPills').innerHTML=[m.crop,m.geography,'FY '+m.fiscal_period,'Confidence '+m.confidence_score+'/10'].map(x=>`<span class="pill">${esc(x)}</span>`).join('');
+  document.getElementById('thesis').textContent=DATA.executive_summary.thesis;
+}
+function initCards(){
+  const ms=DATA.market_sizing,p=DATA.production,c=p.regional_concentration_2025,t=DATA.trade_and_demand;
+  const y2025=p.annual.at(-1);
+  const frozen=t.frozen_hs071040_2024;
+  const cards=[
+    ['Seed TAM',fmtUSD(ms.tam_usd),'Full Canadian sweet corn seed value pool, FY2026–FY2027'],
+    ['SAM',fmtUSD(ms.sam_usd),'Serviceable proprietary/hybrid pool'],
+    ['SOM',fmtUSD(ms.som_usd),'Near-term obtainable at 5% of SAM'],
+    ['ON/QC Area Share',fmtPct(c.ontario_quebec_planted_area_share),'2025 planted area concentration'],
+    ['2025 Production',fmtT(y2025.total_production_tonnes),'National fresh sweet corn'],
+    ['2025 Farm Gate',fmtCAD(y2025.farm_gate_value_cad),'Canadian farm-gate value'],
+    ['2025 Planted',fmtHa(y2025.planted_ha),'Statistics Canada Table 32-10-0365-01'],
+    ['Frozen Trade Surplus',fmtUSD(frozen.exports_value_usd-frozen.imports_value_usd),'HS071040 net exports, 2024']
+  ];
+  document.getElementById('summary').innerHTML=cards.map(c=>`<article class="card"><div class="label">${esc(c[0])}</div><div class="value">${esc(c[1])}</div><div class="note">${esc(c[2])}</div></article>`).join('');
+}
+function drawSizing(){
+  const ms=DATA.market_sizing;
+  Plotly.newPlot('funnelChart',[{type:'funnel',y:['TAM','SAM','SOM'],x:[ms.tam_usd,ms.sam_usd,ms.som_usd],textinfo:'value+percent initial',marker:{color:['#D48806','#E9A319','#2D6A4F']}}],{...layoutBase,title:'TAM → SAM → SOM funnel',margin:{t:50,l:100,r:35,b:55}},plotCfg);
+  const segs=ms.segments;
+  Plotly.newPlot('segmentValueChart',[{type:'pie',labels:segs.map(segLabel),values:segs.map(s=>s.tam_usd),hole:.45,textinfo:'label+percent',marker:{colors:['#D48806','#E9A319','#2D6A4F']}}],{...layoutBase,title:'FY2026–2027 seed TAM by segment'},plotCfg);
+  const sens=[
+    {scenario:'Low (-15%)',...ms.sensitivity.low_seed_price_minus_15_pct},
+    {scenario:'Base',...ms.sensitivity.base},
+    {scenario:'High (+15%)',...ms.sensitivity.high_seed_price_plus_15_pct}
+  ];
+  Plotly.newPlot('sensitivityChart',[
+    {type:'bar',name:'TAM',x:sens.map(s=>s.scenario),y:sens.map(s=>s.tam_usd),marker:{color:'#D48806'}},
+    {type:'bar',name:'SAM',x:sens.map(s=>s.scenario),y:sens.map(s=>s.sam_usd),marker:{color:'#E9A319'}},
+    {type:'bar',name:'SOM',x:sens.map(s=>s.scenario),y:sens.map(s=>s.som_usd),marker:{color:'#2D6A4F'}}
+  ],{...layoutBase,barmode:'group',yaxis:{title:'USD'},title:'Seed-spend sensitivity'},plotCfg);
+  Plotly.newPlot('segmentAcresChart',[{type:'bar',x:segs.map(segLabel),y:segs.map(s=>s.base_acres_2023_2025_avg),text:segs.map(s=>fmtAc(s.base_acres_2023_2025_avg)),textposition:'outside',marker:{color:['#D48806','#E9A319','#2D6A4F']},hovertemplate:'%{x}<br>Acres: %{y:,.0f}<br>$/acre: $%{customdata}<extra></extra>',customdata:segs.map(s=>s.seed_cost_usd_per_acre)}],{...layoutBase,yaxis:{title:'Acres (3-yr avg)'},title:'Planted acres by seed segment'},plotCfg);
+  const a=ms.assumptions;
+  document.getElementById('assumptionsTable').innerHTML='<thead><tr><th>Assumption</th><th>Value</th></tr></thead><tbody>'+Object.entries(a).map(([k,v])=>`<tr><td>${esc(k.replaceAll('_',' '))}</td><td><b>${esc(typeof v==='number'?Number(v).toLocaleString(undefined,{maximumFractionDigits:4}):v)}</b></td></tr>`).join('')+'</tbody>';
+}
+function drawProduction(){
+  const ann=DATA.production.annual;
+  const years=ann.map(x=>x.year);
+  Plotly.newPlot('productionChart',[
+    {type:'bar',name:'Total production',x:years,y:ann.map(x=>x.total_production_tonnes),marker:{color:'#D48806'}},
+    {type:'bar',name:'Marketed production',x:years,y:ann.map(x=>x.marketed_production_tonnes),marker:{color:'#E9A319'}}
+  ],{...layoutBase,barmode:'group',yaxis:{title:'Tonnes'},title:'Production volume trend'},plotCfg);
+  Plotly.newPlot('valueChart',[{type:'scatter',mode:'lines+markers',name:'Farm-gate value',x:years,y:ann.map(x=>x.farm_gate_value_cad/1e6),line:{width:4,color:'#2D6A4F'},fill:'tozeroy', fillcolor:'rgba(45,106,79,.12)'}],{...layoutBase,yaxis:{title:'C$M'},title:'Farm-gate value trend'},plotCfg);
+  Plotly.newPlot('areaChart',[
+    {type:'scatter',mode:'lines+markers',name:'Planted ha',x:years,y:ann.map(x=>x.planted_ha),line:{width:3,color:'#D48806'}},
+    {type:'scatter',mode:'lines+markers',name:'Harvested ha',x:years,y:ann.map(x=>x.harvested_ha),line:{width:3,color:'#174A7C',dash:'dot'}}
+  ],{...layoutBase,yaxis:{title:'Hectares'},title:'Area trend'},plotCfg);
+  Plotly.newPlot('yieldChart',[{type:'scatter',mode:'lines+markers',name:'Yield',x:years,y:ann.map(x=>x.yield_tonnes_per_harvested_ha),line:{width:4,color:'#E9A319'},text:ann.map(x=>x.yield_tonnes_per_harvested_ha.toFixed(1)+' t/ha'),textposition:'top center'}],{...layoutBase,yaxis:{title:'t/ha harvested'},title:'Yield trend'},plotCfg);
+  const avg=DATA.production.avg_2023_2025;
+  document.getElementById('productionStats').innerHTML=[
+    ['Avg planted',fmtHa(avg.planted_ha),'2023–2025 average'],
+    ['Avg harvested',fmtHa(avg.harvested_ha),'2023–2025 average'],
+    ['Avg production',fmtT(avg.total_production_tonnes),'Total tonnes'],
+    ['Avg farm gate',fmtCAD(avg.farm_gate_value_cad),'Canadian dollars'],
+    ['Avg yield',avg.yield_tonnes_per_harvested_ha.toFixed(1)+' t/ha','Per harvested hectare'],
+    ['Value trend','+14%','Farm-gate 2023→2025 while area fell ~6%']
+  ].map(x=>`<div class="mini"><div class="label">${esc(x[0])}</div><div class="big">${esc(x[1])}</div><p class="note">${esc(x[2])}</p></div>`).join('');
+}
+function drawRegions(){
+  const r=DATA.production.regional_2025.filter(x=>x.total_production_tonnes!=null);
+  Plotly.newPlot('regionalChart',[{type:'bar',x:r.map(x=>x.region),y:r.map(x=>x.total_production_tonnes),text:r.map(x=>fmtT(x.total_production_tonnes)),textposition:'outside',marker:{color:'#D48806'}}],{...layoutBase,yaxis:{title:'Tonnes'},title:'2025 production by region'},plotCfg);
+  const rv=DATA.production.regional_2025.filter(x=>x.farm_gate_value_cad);
+  Plotly.newPlot('regionalValueChart',[{type:'bar',x:rv.map(x=>x.region),y:rv.map(x=>x.farm_gate_value_cad/1e6),text:rv.map(x=>fmtCAD(x.farm_gate_value_cad)),textposition:'outside',marker:{color:'#174A7C'}}],{...layoutBase,yaxis:{title:'C$M'},title:'2025 farm-gate value by region'},plotCfg);
+  const c=DATA.production.regional_concentration_2025;
+  Plotly.newPlot('concentrationChart',[{type:'bar',x:['Planted area','Production'],y:[c.ontario_quebec_planted_area_share,c.ontario_quebec_production_share],text:[fmtPct(c.ontario_quebec_planted_area_share),fmtPct(c.ontario_quebec_production_share)],textposition:'outside',marker:{color:['#D48806','#2D6A4F']}}],{...layoutBase,yaxis:{title:'Share',tickformat:'.0%'},title:'Ontario + Québec concentration, 2025'},plotCfg);
+  const cp=DATA.climate_profiles;
+  Plotly.newPlot('climateChart',[
+    {type:'bar',name:'Annual mean °C',x:cp.map(c=>c.region.split('—')[0].trim()),y:cp.map(c=>c.annual_mean_temp_c),marker:{color:'#D48806'}},
+    {type:'bar',name:'July °C',x:cp.map(c=>c.region.split('—')[0].trim()),y:cp.map(c=>c.july_temp_c),marker:{color:'#E9A319'}},
+    {type:'bar',name:'Precip mm/day',x:cp.map(c=>c.region.split('—')[0].trim()),y:cp.map(c=>c.annual_precip_mm_day),marker:{color:'#174A7C'},yaxis:'y2'}
+  ],{...layoutBase,barmode:'group',yaxis:{title:'Temperature °C'},yaxis2:{title:'mm/day',overlaying:'y',side:'right'},title:'Regional climate signals (NASA POWER)'},plotCfg);
+  document.getElementById('climateCards').innerHTML=DATA.climate_profiles.map(c=>`<details open><summary>${esc(c.region)}</summary><p><b>Role:</b> ${esc(c.production_role)}</p><p><b>Climate:</b> Annual ${c.annual_mean_temp_c}°C · July ${c.july_temp_c}°C · Precip ${c.annual_precip_mm_day} mm/day · (${c.latitude}, ${c.longitude})</p><p><b>Twins:</b> ${c.climate_twins.split(';').map(t=>`<span class="tag">${esc(t.trim())}</span>`).join('')}</p></details>`).join('');
+}
+function drawTrade(){
+  const t=DATA.trade_and_demand;
+  const f=t.frozen_hs071040_2024,p=t.preserved_hs200580_2024;
+  Plotly.newPlot('tradeChart',[
+    {type:'bar',name:'Frozen imports',x:['Frozen HS071040','Preserved HS200580'],y:[f.imports_value_usd,p.imports_value_usd],marker:{color:'#BC4749'}},
+    {type:'bar',name:'Frozen exports',x:['Frozen HS071040','Preserved HS200580'],y:[f.exports_value_usd,p.exports_value_usd],marker:{color:'#2D6A4F'}}
+  ],{...layoutBase,barmode:'group',yaxis:{title:'USD'},title:'Processed sweet corn trade, 2024'},plotCfg);
+  const tbl=(title,arr)=>`<h3>${esc(title)}</h3><div class="scroll"><table><thead><tr><th>Country</th><th>Value</th><th>Volume</th></tr></thead><tbody>${arr.map(x=>`<tr><td>${esc(x.country)}</td><td>${fmtUSD(x.value_usd)}</td><td>${fmtKgM(x.quantity_kg)}</td></tr>`).join('')}</tbody></table></div>`;
+  document.getElementById('tradeTables').innerHTML=`<p><b>Directional apparent domestic supply (2024):</b> ${fmtKgM(t.apparent_domestic_supply_2024_directional_kg)}</p><p class="note">${esc(t.note)}</p>`+tbl('Frozen import origins (HS071040)',f.imports_top_origins)+tbl('Frozen export destinations (HS071040)',f.exports_top_destinations);
+}
+function drawTrends(){
+  const trends=DATA.trends.slice().sort((a,b)=>b.score-a.score);
+  document.getElementById('trendTable').innerHTML='<thead><tr><th>Rank</th><th>Category</th><th>Trend</th><th>Impact</th><th>Velocity</th><th>Score</th><th>Seed implication</th></tr></thead><tbody>'+trends.map((t,i)=>{const cls=t.score>=24?'tag':(t.score>=20?'tag warn-tag':'tag');return `<tr><td><b>${i+1}</b></td><td>${esc(t.category)}</td><td>${esc(t.trend)}</td><td>${t.impact}/10</td><td>${esc(t.velocity)}</td><td><span class="${cls}">${t.score}</span></td><td>${esc(t.seed_implication)}</td></tr>`;}).join('')+'</tbody>';
+}
+function drawSegments(){
+  document.getElementById('segmentCards').innerHTML=DATA.typology_segments.map((s,i)=>`<details ${i<2?'open':''}><summary>${esc(s.segment)}</summary><p><b>System:</b> ${esc(s.system)}</p><p><b>Buyer need:</b> ${esc(s.buyer_need)}</p><p><b>Seed traits:</b> ${s.traits.split(',').map(v=>`<span class="tag">${esc(v.trim())}</span>`).join('')}</p></details>`).join('');
+}
+function drawDisease(){
+  const ds=DATA.disease_and_trait_priorities;
+  const filters=['All','Fresh','Processing','Early'];
+  document.getElementById('diseaseBtns').innerHTML=filters.map((f,i)=>`<button class="btn ${i===0?'active':''}" onclick="filterDisease('${f}', this)">${f}</button>`).join('');
+  window._disease=ds; filterDisease('All',document.querySelector('#diseaseBtns .btn'));
+}
+function filterDisease(filter,el){
+  document.querySelectorAll('#diseaseBtns .btn').forEach(b=>b.classList.remove('active')); if(el) el.classList.add('active');
+  const filtered=window._disease.filter(d=>{
+    if(filter==='All') return true;
+    const seg=d.main_segment.toLowerCase();
+    if(filter==='Fresh') return seg.includes('fresh')||seg.includes('organic');
+    if(filter==='Processing') return seg.includes('processing');
+    if(filter==='Early') return seg.includes('early')||seg.includes('organic')||seg.includes('shoulder');
+    return true;
+  });
+  document.getElementById('diseaseCards').innerHTML=filtered.map(d=>`<div class="mini"><div class="label">${esc(d.main_segment)}</div><h3>${esc(d.pressure)}</h3><p>${esc(d.why_it_matters)}</p><p><b>Desired trait:</b> ${esc(d.desired_trait)}</p></div>`).join('');
+}
+function drawCompetitors(){
+  const c=DATA.competitors;
+  Plotly.newPlot('competitorChart',[{type:'bar',orientation:'h',y:c.map(x=>x.company),x:c.map(x=>riskScore(x.risk)),marker:{color:c.map(x=>riskScore(x.risk)>=9?'#BC4749':'#F18F01')},text:c.map(x=>x.risk),textposition:'outside',hovertemplate:'%{y}<br>Risk: %{text}<extra></extra>'}],{...layoutBase,xaxis:{title:'Qualitative displacement risk',range:[0,10]},margin:{l:220},title:'Incumbent strength snapshot'},plotCfg);
+  document.getElementById('competitorCards').innerHTML=c.map(x=>`<details><summary>${esc(x.company)}</summary><p>${esc(x.position)}</p><p><span class="tag ${x.risk.toLowerCase().includes('high')?'red-tag':'warn-tag'}">${esc(x.risk)}</span></p></details>`).join('');
+}
+function drawStrategy(){
+  document.getElementById('recommendations').innerHTML=DATA.strategic_recommendations.map(r=>`<li>${esc(r)}</li>`).join('');
+  document.getElementById('limitations').innerHTML=`<div class="big">${DATA.metadata.confidence_score}/10 confidence</div><ul>${DATA.limitations.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>`;
+  document.getElementById('sourcesList').innerHTML=DATA.sources.map(s=>{
+    const link=s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener"><b>${esc(s.source)}</b></a>`:`<b>${esc(s.source)}</b>`;
+    const files=s.files?`<br><span class="note">${s.files.map(f=>esc(f)).join(', ')}</span>`:(s.file?`<br><span class="note">${esc(s.file)}</span>`:'');
+    return `<li>${link}<br><span class="note">${esc(s.use)}</span>${files}</li>`;
+  }).join('');
+}
+function init(){initHeader();initCards();drawSizing();drawProduction();drawRegions();drawTrade();drawTrends();drawSegments();drawDisease();drawCompetitors();drawStrategy();}
+window.addEventListener('load', init);
+</script>
+</body>
+</html>
