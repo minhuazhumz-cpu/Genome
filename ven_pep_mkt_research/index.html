@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SeedPath | Venezuela Pepper Seed Market Dashboard</title>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <style>
+    :root {
+      --navy:#0B1F33; --ember:#C2410C; --chili:#DC2626; --gold:#D97706; --forest:#14532D;
+      --bg:#F6F4F1; --line:#E2DDD4; --text:#1C1917; --muted:#57534E; --card:#FFFFFF;
+      --cream:#FFF7ED; --shadow:0 18px 48px rgba(28,25,23,.09);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.45}
+    header{position:relative;overflow:hidden;background:linear-gradient(125deg,#422006 0%,var(--ember) 42%,#7F1D1D 100%);color:#fff;padding:36px 46px 32px}
+    header:before{content:"";position:absolute;inset:-22%;background:radial-gradient(circle at 14% 18%,rgba(251,191,36,.45),transparent 26%),radial-gradient(circle at 88% 8%,rgba(220,38,38,.4),transparent 22%),radial-gradient(circle at 72% 88%,rgba(255,255,255,.12),transparent 20%);opacity:.85}
+    header>*{position:relative}
+    h1{margin:0;font-size:36px;letter-spacing:-.03em;line-height:1.06}
+    header p{max-width:1160px;color:#FFEDD5;font-size:15px;margin:12px 0 0}
+    .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .pill{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.12);border-radius:999px;padding:8px 12px;font-size:12px;font-weight:850;letter-spacing:.03em}
+    .layout{display:grid;grid-template-columns:252px minmax(0,1fr);gap:22px;max-width:1540px;margin:0 auto;padding:24px 34px 64px}
+    nav{position:sticky;top:18px;align-self:start;background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:0 8px 24px rgba(28,25,23,.06)}
+    nav h3{margin:4px 8px 10px;font-size:11px;color:var(--ember);text-transform:uppercase;letter-spacing:.18em}
+    nav a{display:block;color:#44403C;text-decoration:none;font-size:13px;font-weight:760;padding:9px 10px;border-radius:12px}
+    nav a:hover{background:var(--cream);color:var(--ember)}
+    main{min-width:0}
+    .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .triple{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .wide{grid-column:1/-1}
+    .card,.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 22px rgba(28,25,23,.05);padding:18px;margin-bottom:18px}
+    .panel{padding:20px}
+    .card:hover{transform:translateY(-2px);box-shadow:var(--shadow);transition:.18s ease}
+    .label{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:900;letter-spacing:.10em}
+    .value{font-size:28px;font-weight:950;color:var(--navy);margin-top:7px}
+    .note{color:var(--muted);font-size:12.5px;margin-top:8px}
+    h2{margin:0 0 12px;color:var(--navy);font-size:21px}
+    .sub{color:var(--muted);font-size:13px;margin-top:-5px;margin-bottom:14px}
+    .callout{border-left:5px solid var(--ember);background:var(--cream);padding:14px 16px;border-radius:12px;margin:14px 0}
+    .risk{border-left-color:var(--gold);background:#FFFBEB}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{border-bottom:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}
+    th{background:#F5F0E8;color:var(--navy);text-transform:uppercase;font-size:11px;letter-spacing:.05em}
+    .scroll{overflow-x:auto;width:100%;max-width:100%}
+    #segmentAreaTable tbody th{background:transparent;color:var(--text);text-transform:none;font-weight:650;font-size:13px}
+    #segmentAreaTable td:nth-child(2),#segmentAreaTable td:nth-child(3){text-align:right;font-variant-numeric:tabular-nums}
+    .tag{display:inline-block;background:#FEE2E2;color:#991B1B;border-radius:999px;padding:4px 9px;margin:2px;font-size:12px;font-weight:850}
+    .green-tag{background:#DCFCE7;color:#166534}
+    .btns{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 14px}
+    .btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-weight:850;color:#44403C;cursor:pointer;font-size:12px}
+    .btn.active,.btn:hover{background:var(--ember);color:#fff;border-color:var(--ember)}
+    details{border:1px solid var(--line);background:#fff;border-radius:16px;padding:13px;margin:10px 0}
+    summary{cursor:pointer;font-weight:950;color:var(--navy)}
+    details p{margin:8px 0;color:#44403C}
+    .chart{height:400px}
+    .two-col-list{columns:2;column-gap:28px}
+    .source-list li{break-inside:avoid;margin-bottom:9px}
+    .footer{border-top:1px solid var(--line);background:#fff;text-align:center;padding:22px;color:var(--muted);font-size:12px}
+    ol.strat{padding-left:1.2rem}
+    ol.strat li{margin:10px 0;color:#44403C}
+    @media(max-width:1180px){.layout{grid-template-columns:1fr}nav{position:relative;top:auto}.cards,.grid,.triple{grid-template-columns:1fr 1fr}}
+    @media(max-width:760px){header{padding:28px 20px}.layout{padding:18px}.cards,.grid,.triple{grid-template-columns:1fr}h1{font-size:28px}.two-col-list{columns:1}.chart{height:340px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="label" style="color:#FED7AA">SeedPath Agriculture Intelligence</div>
+  <h1>Venezuela Pepper Seed Market Opportunity Dashboard</h1>
+  <p><b>FY2026–FY2027 deep-dive.</b> Interactive view of the Capsicum seed opportunity in Venezuela: production base, regional climate twins, trend radar, ají dulce typology, disease pressure and strategic recommendations — aligned with the Markdown report.</p>
+  <div class="meta" id="headerPills"></div>
+</header>
+<div class="layout">
+  <nav>
+    <h3>Navigate</h3>
+    <a href="#thesis">Thesis</a>
+    <a href="#production">Production</a>
+    <a href="#segment-area-split">Segment area split</a>
+    <a href="#regions">Regions & Climate</a>
+    <a href="#trends">Trend Radar</a>
+    <a href="#typology">Typology</a>
+    <a href="#disease">Disease & Traits</a>
+    <a href="#strategy">Strategy</a>
+    <a href="#sources">Sources</a>
+  </nav>
+  <main>
+    <section id="thesis" class="panel">
+      <h2>Strategic Thesis</h2>
+      <p id="thesisText" style="color:#44403C;margin:0 0 12px"></p>
+      <div class="callout"><b>Strategic read:</b></div>
+      <ul id="strategicRead" style="margin:0;color:#44403C"></ul>
+    </section>
+    <section id="production" class="panel">
+      <h2>Production base (2021)</h2>
+      <p class="sub">FAOSTAT-cited figures from Rodríguez-Román et al. 2023.</p>
+      <div id="productionBars" class="triple"></div>
+      <p class="sub" id="productionSourceNote" style="margin-top:12px"></p>
+    </section>
+    <section id="segment-area-split" class="panel">
+      <h2>Segment area split</h2>
+      <p class="sub" style="color:#44403C;max-width:none">Because Venezuela does not publish accessible recent pepper acreage by type, I split the 10,126 ha national base into commercial typology buckets using local agronomy evidence, culinary demand, and production-system logic:</p>
+      <div class="scroll">
+        <table id="segmentAreaTable">
+          <thead>
+            <tr>
+              <th scope="col">Segment</th>
+              <th scope="col">Area share</th>
+              <th scope="col">Area (ha)</th>
+              <th scope="col">Why this share</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Ají dulce open-field / semi-commercial <i>C. chinense</i></th>
+              <td>35%</td>
+              <td>3,544</td>
+              <td>Ají dulce is culturally central in Venezuelan cuisine and widely referenced locally; Rosita, Pepón, Llanero/Llanerón and Oriental types anchor domestic demand.</td>
+            </tr>
+            <tr>
+              <th scope="row">Open-field pimentón / sweet bell / blocky pepper</th>
+              <td>30%</td>
+              <td>3,038</td>
+              <td>Pimentón/sweet pepper is a major commercial fresh-market segment and likely the main standardized commercial pepper bucket.</td>
+            </tr>
+            <tr>
+              <th scope="row">Hot/chili and specialty fresh <i>Capsicum</i></th>
+              <td>15%</td>
+              <td>1,519</td>
+              <td>Smaller but relevant specialty/hot pepper channel; includes non-ají-dulce hot and condiment peppers.</td>
+            </tr>
+            <tr>
+              <th scope="row">Protected / greenhouse pimentón and specialty peppers</th>
+              <td>10%</td>
+              <td>1,013</td>
+              <td>Small area, high seed value; justified by Miranda/Altos Mirandinos greenhouse evidence and protected pepper disease outbreaks.</td>
+            </tr>
+            <tr>
+              <th scope="row">Local OP/saved-seed / low-input smallholder channel</th>
+              <td>10%</td>
+              <td>1,013</td>
+              <td>Important food-security and informal channel but low premium seed monetization.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section id="regions">
+      <div class="panel">
+        <h2>Regional ranking & climate</h2>
+        <p class="sub">Mean annual temperature (NASA POWER) vs rank.</p>
+        <div id="regionScatter" class="chart"></div>
+      </div>
+      <div class="panel">
+        <h2>Production regions & climate twins</h2>
+        <div id="regionCards"></div>
+      </div>
+    </section>
+    <section id="trends" class="panel">
+      <h2>Market trends — impact score</h2>
+      <p class="sub">Trait-to-table radar from the report.</p>
+      <div class="scroll"><table id="trendTable"></table></div>
+    </section>
+    <section id="typology" class="panel">
+      <h2>Typology & buyer needs</h2>
+      <p class="sub">Named ají dulce types and commercial Capsicum segments.</p>
+      <div id="typologyCards" class="grid"></div>
+    </section>
+    <section id="disease" class="panel">
+      <h2>Disease pressure & desired traits</h2>
+      <div class="btns" id="diseaseBtns"></div>
+      <div id="diseaseCards" class="grid"></div>
+      <div class="callout risk"><b>Trait priority stack:</b> virus package and seed health; ají dulce identity (non-pungency, purity); heat and water resilience; soilborne resilience; market quality for pimentón and ají dulce.</div>
+    </section>
+    <section id="strategy" class="grid">
+      <div class="panel"><h2>Recommendations</h2><ol class="strat" id="recommendations"></ol></div>
+      <div class="panel"><h2>Confidence & limitations</h2>
+        <p id="confidenceLine" style="font-weight:800;color:var(--navy)"></p>
+        <p id="confidenceNote" style="color:#44403C;font-size:14px"></p>
+        <ul id="limitationsList" style="color:#44403C"></ul>
+      </div>
+    </section>
+    <section id="sources" class="panel">
+      <h2>Source register</h2>
+      <ul id="sourcesList" class="source-list two-col-list"></ul>
+    </section>
+  </main>
+</div>
+<div class="footer">Built from <code>venezuela_pepper_seed_market_opportunity_2026_2027.md</code> · SeedPath standalone HTML · Plotly: hover, zoom, PNG export</div>
+
+<script>
+const DATA = {"metadata":{"report_title":"Venezuela Pepper Seed Market Opportunity Deep-Dive","role_lens":"Senior Market Research Analyst specializing in the LATAM agricultural sector","crop":"Pepper seed / Capsicum spp. — sweet pepper, hot pepper, pimentón, ají dulce and specialty Capsicum","geography":"Venezuela","period":"FY2026–FY2027 opportunity outlook with latest official production base available from FAOSTAT/UNdata mirror and literature","currency":"USD unless noted","confidence_score":6.6,"confidence_note":"Production area/yield are supported by a 2023 MDPI paper citing FAOSTAT 2021 and UNdata item 401 availability; region/disease evidence is strong for Lara and Miranda but national sub-state acreage shares are inferred because Venezuela does not publish recent pepper-by-state acreage in accessible public tables. Seed market value is bottom-up and assumption-led."},"executive_summary":{"thesis":"Venezuela is a domestically oriented, disease-constrained pepper seed market. The best opportunity is not export-led fresh pepper scale; it is reliable hybrid and clean local seed for ají dulce, pimentón/sweet bell, protected pepper pockets and hot/specialty types that can hold marketable yield under virus, thrips/whitefly, heat, water and soilborne disease pressure.","tam_2026_2027_usd":16489604,"sam_2026_2027_usd":8798810,"som_2026_2027_usd":527929,"farm_gate_value_proxy_usd_base":95431050,"farm_gate_value_proxy_usd_range":[66067650,139476150],"base_area_ha":10126,"base_area_acres":25021,"base_production_t":146817,"base_yield_t_per_ha":14.5,"strategic_read":["Prioritize Lara/Quíbor-Tintorero and Miranda/Altos Mirandinos greenhouse and field clusters for proof trials because they are documented pepper virus hotspots and production centers.","Build a two-lane portfolio: ají dulce/local fruit-type improvement plus pimentón/protected sweet pepper hybrids with virus and soilborne disease packages.","Lead with clean seed, seedling/nursery protocol, virus resistance/tolerance and fruit-type purity, especially non-pungency stability in ají dulce."]},"methodology":{"market_sizing_formula":"Σ(segment area × seed density × seed buffer × seed price × FY2026–2027 uplift)","base_area_source":"FAOSTAT 2021 figures cited in Rodríguez-Román et al. 2023: 10,126 ha harvested area, 146,817 t production, 144,996 hg/ha yield for pepper in Venezuela.","seed_density_basis":"Agro Tecnología Tropical recommends 25,000–35,000 plants/ha for ají dulce; segment model uses 28,000–35,000 seeds/ha before buffer depending on production system.","forecast_uplift":1.05,"farm_gate_proxy":"Production × $650/t base, with $450–$950/t range; retail ají dulce pages show $3.15–$4.76/kg, but farm-gate is expected to be materially lower."},"production_statistics":{"latest_official_or_literature_point":{"year":2021,"area_harvested_ha":10126,"area_harvested_acres":25021,"production_t":146817,"yield_hg_per_ha":144996,"yield_t_per_ha":14.5,"source":"Rodríguez-Román et al., Sustainability 2023, citing FAOSTAT; UNdata item 401 is the FAOSTAT mirror for green chillies and peppers."},"secondary_reference_point":{"production_t":138000,"area_harvested_ha":10342,"yield_kg_per_ha":13368,"source":"Open Agriculture Journal snippet surfaced in SeedPath Exa search; used only as triangulation because primary 2021 FAOSTAT-cited point is clearer."},"fy2026_2027_outlook":{"area_range_ha":[9800,10800],"production_range_t":[140000,155000],"yield_range_t_per_ha":[13.5,15.5],"interpretation":"Base case assumes broadly stable area with modest recovery constrained by water, input access, virus pressure, seed quality and distribution friction."}},"market_sizing":{"assumptions":{"base_area_ha":10126,"forecast_uplift":1.05,"seed_buffer":"1.08–1.12 depending on segment","som_capture_rate_of_sam":0.06},"segments":[{"segment":"Ají dulce open-field and semi-commercial C. chinense","area_share":0.35,"area_ha":3544.1,"seed_density_per_ha":30000,"seed_buffer":1.1,"seed_price_usd":0.025,"tam_usd":3069532,"sam_filter":0.45,"sam_usd":1381289,"strategic_read":"Culinary and culturally anchored demand; key seed needs are non-pungency stability, fruit-type purity, virus tolerance and clean nursery seed."},{"segment":"Open-field pimentón / sweet bell / blocky pepper","area_share":0.3,"area_ha":3037.8,"seed_density_per_ha":28000,"seed_buffer":1.1,"seed_price_usd":0.055,"tam_usd":5404286,"sam_filter":0.6,"sam_usd":3242572,"strategic_read":"Commercial fresh-market pimentón wedge for firmness, fruit wall, bacterial/Phytophthora tolerance, heat set and marketable pack-out."},{"segment":"Hot/chili and specialty fresh Capsicum","area_share":0.15,"area_ha":1518.9,"seed_density_per_ha":30000,"seed_buffer":1.1,"seed_price_usd":0.035,"tam_usd":1842082,"sam_filter":0.5,"sam_usd":921041,"strategic_read":"Smaller but differentiated; value depends on pungency consistency, dry/fresh versatility, disease tolerance and processor/foodservice fit."},{"segment":"Protected / greenhouse pimentón and specialty peppers","area_share":0.1,"area_ha":1012.6,"seed_density_per_ha":35000,"seed_buffer":1.08,"seed_price_usd":0.145,"tam_usd":5823313,"sam_filter":0.85,"sam_usd":4949816,"strategic_read":"Small area but high seed value; Miranda/Altos Mirandinos and other greenhouse pockets need PMMoV/TSWV clarity, uniform fruit and protected-system technical support."},{"segment":"Local OP/saved-seed and low-input smallholder channel","area_share":0.1,"area_ha":1012.6,"seed_density_per_ha":30000,"seed_buffer":1.1,"seed_price_usd":0.01,"tam_usd":350391,"sam_filter":0.1,"sam_usd":35039,"strategic_read":"Important for food security and trust building, but limited premium seed economics unless served through low-cost packs, NGO/public programs or local seed multiplication."}],"totals":{"tam_usd":16489604,"sam_usd":10529757,"commercially_adjusted_sam_usd":8798810,"som_usd":527929,"sensitivity":{"low_tam_usd":11760000,"base_tam_usd":16800000,"high_tam_usd":22800000}}},"typology_and_segments":[{"segment":"Ají dulce Rosita","species":"Capsicum chinense","fruit_type":"Globose/flower-like apex, red intense when mature, non-pungent expected","market_role":"Core Venezuelan culinary ingredient for guisos, hallacas, empanadas and arepas","seed_need":"Fruit-type identity, no-pungency stability, clean seed and virus tolerance."},{"segment":"Ají dulce Pepón","species":"Capsicum chinense","fruit_type":"Globose, green immature, red/purple/yellow when mature; widely preferred in Caracas and Maracaibo","market_role":"High-recognition fresh market type","seed_need":"Thrips/mites and virus tolerance; genetic purity to avoid pungency drift."},{"segment":"Ají dulce Llanero / Llanerón","species":"Capsicum chinense","fruit_type":"Elongated orange/red fruits, accepted with slight pungency but excess pungency is rejected","market_role":"Llanos-linked type; accepted in Caracas channels","seed_need":"Pungency control, fruit uniformity, heat tolerance and stable yield."},{"segment":"Ají dulce Oriental","species":"Capsicum chinense","fruit_type":"Globose, intense red, aromatic, non-pungent; historically eastern Venezuela and now also central zone","market_role":"Flavor-driven traditional segment","seed_need":"Local adaptation and fruit aroma/flavor preservation."},{"segment":"Pimentón / sweet bell","species":"Capsicum annuum","fruit_type":"Blocky/bell sweet pepper, green-to-red and colored types","market_role":"Fresh market and protected greenhouse value pool","seed_need":"Firmness, wall thickness, blockiness, heat set, PMMoV/TSWV and soilborne tolerance."},{"segment":"Hot/specialty ají / chile","species":"Capsicum annuum, C. frutescens and other Capsicum","fruit_type":"Hot/spicy fresh or processing peppers","market_role":"Smaller specialty and condiment channel","seed_need":"Pungency consistency, fruit count, earliness and dry/fresh versatility."}],"market_trends":[{"trend":"Virus pressure is the primary trait trigger","impact_score":10,"evidence":"Lara and Miranda surveys recorded 70–100% symptomatic virus incidence and TSWV/PMMoV dominance in later outbreaks.","implication":"Resistance/tolerance claims and seed health documentation should lead the value proposition."},{"trend":"Ají dulce cultural demand anchors domestic consumption","impact_score":9,"evidence":"Agro Tecnología Tropical and retail pages describe ají dulce as indispensable in Venezuelan cuisine.","implication":"Seed portfolios must protect local fruit types rather than only introduce generic international pepper hybrids."},{"trend":"Greenhouse/protected pockets create high-value but disease-intense beachheads","impact_score":8,"evidence":"Miranda is cited as a major greenhouse-development pole for pepper production; greenhouse outbreaks had 21–62% incidence and up to 90% losses linked to TSWV.","implication":"Protected pepper trials should emphasize PMMoV/TSWV, clean transplants and technical service."},{"trend":"Water deficit and irrigation management constrain productivity","impact_score":8,"evidence":"Local agronomy sources emphasize drip/fertigation and careful irrigation; Monagas deficit irrigation research highlights water constraints.","implication":"Root vigor, heat set and water-use efficiency are commercially relevant."},{"trend":"Official trade is negligible; demand is domestic","impact_score":7,"evidence":"WITS pages show Venezuela did not import/export HS070960 fresh Capsicum/Pimenta in 2023–2024 and did not import HS120991 vegetable seed in 2024.","implication":"Market sizing should use planted area, not customs data; GTM must handle informal/low-transparency seed channels."}],"major_regions_and_field_map":[{"rank":1,"region":"Lara — Quíbor / Tintorero / Jiménez / Barquisimeto horticultural belt","field_map_signal":"Rodríguez-Román et al. mapped Lara pepper farms F1–F13 around Tintorero/Quíbor using GPS/QGIS; paper states Lara is the leading pepper producer and almost 70% of production is achieved in Quíbor Valley.","lat":9.93,"lon":-69.62,"annual_temp_c":24.35,"annual_precip_mm_day":2.2,"climate_twins":["Comayagua Honduras dry-season vegetable valleys","La Guajira/Valledupar Colombia irrigated dry valleys","Sinaloa shoulder-season irrigated vegetable valleys","north-coast Peru dry irrigated horticulture"],"seed_positioning":"Core demonstration market; heat set, virus package, non-pungency purity for ají dulce, root vigor and drip/fertigation compatibility."},{"rank":2,"region":"Miranda — Altos Mirandinos / Pozo de Rosas / San Pedro / El Jarillo / Hoyo de La Puerta / La Reinosa","field_map_signal":"Virus study mapped Miranda farms F1–F10; Miranda is described as Venezuela's largest development pole of greenhouses dedicated to pepper production.","lat":10.42,"lon":-66.88,"annual_temp_c":24,"annual_precip_mm_day":2.3,"climate_twins":["Antioquia/Cundinamarca Colombia protected pepper zones","Morelos/Michoacán Mexico protected vegetable pockets","Central Valley Venezuela protected systems"],"seed_positioning":"Protected pimentón and specialty pepper; PMMoV/TSWV, sanitation, greenhouse vigor, uniform blockiness and humidity disease tolerance."},{"rank":3,"region":"Monagas / Maturín and eastern ají dulce belt","field_map_signal":"Agro Tecnología Tropical says Oriental ají was historically grown in Sucre, Anzoátegui and Monagas; deficit-irrigation research was conducted in San Vicente, Maturín, Monagas.","lat":9.75,"lon":-63.18,"annual_temp_c":26.58,"annual_precip_mm_day":2.88,"climate_twins":["Caribbean lowland vegetable belts","Tabasco/Veracruz Mexico humid lowland Capsicum","Colombian Caribbean humid lowlands"],"seed_positioning":"Humid-hot ají dulce/oriental types; bacterial/foliar tolerance, Phytophthora/Ralstonia caution, fruit quality and water management."},{"rank":4,"region":"Guárico / Llanos dry-season irrigated systems","field_map_signal":"Agro Tecnología Tropical states Llanerón is mainly cultivated in the Venezuelan Llanos, especially Guárico, and commercialized in Caracas.","lat":8.92,"lon":-67.43,"annual_temp_c":28.44,"annual_precip_mm_day":2.89,"climate_twins":["Brazil Cerrado irrigated vegetables","Colombian Llanos","Sinaloa lowland heat blocks"],"seed_positioning":"Extreme heat set, sunscald tolerance, earliness, root vigor and pungency control for Llanerón."},{"rank":5,"region":"Zulia / Maracaibo consumption and irrigated western lowlands","field_map_signal":"Agro Tecnología Tropical notes Pepón is appreciated in Maracaibo; western dry irrigated horticulture is a relevant distribution and consumption node.","lat":10.65,"lon":-71.63,"annual_temp_c":29.07,"annual_precip_mm_day":1.86,"climate_twins":["La Guajira Colombia","north-coast Peru dry valleys","Valledupar/Cesar Colombia hot irrigated valleys"],"seed_positioning":"Heat, salinity and drought resilience; firmness and shelf life for hot transport chains."},{"rank":6,"region":"Andean highlands — Mérida / Táchira / Trujillo","field_map_signal":"Venezuelan horticultural highlands are relevant for cool-season vegetable supply; basal rot of ají dulce has been reported in Mérida literature cited by Quevedo & Laurentin.","lat":8.6,"lon":-71.15,"annual_temp_c":17.4,"annual_precip_mm_day":3.57,"climate_twins":["Boyacá/Cundinamarca Colombia highlands","Ecuador Sierra","Guatemala highland vegetables"],"seed_positioning":"Cooler fruit set, foliar disease tolerance, nursery quality and protected systems; less heat stress but higher humidity disease risk."}],"domestic_demand_and_trade":{"apparent_demand":"Domestic production is the best proxy because official WITS reporter pages show no HS070960 imports or exports in 2023–2024.","production_per_capita_proxy_kg":5.1,"retail_price_signals":[{"source":"Mi Bodega Express","product":"Ají dulce","price_usd_per_kg":4.76,"availability":"out of stock at crawl"},{"source":"Gran Feria PZO","product":"Ají dulce","price_usd_per_kg":3.15,"availability":"30.826 kg listed available at crawl"}],"trade_evidence":[{"flow":"HS070960 fresh/chilled Capsicum/Pimenta imports","year":2024,"status":"Venezuela did not import from All Countries"},{"flow":"HS070960 fresh/chilled Capsicum/Pimenta exports","year":2024,"status":"Venezuela did not export to All Countries"},{"flow":"HS070960 fresh/chilled Capsicum/Pimenta imports","year":2023,"status":"Venezuela did not import from All Countries"},{"flow":"HS070960 fresh/chilled Capsicum/Pimenta exports","year":2023,"status":"Venezuela did not export to All Countries"},{"flow":"HS120991 vegetable seed imports","year":2024,"status":"Venezuela did not import from All Countries"}],"interpretation":"Pepper seed demand should be modeled from area and seed use, not reported customs. Absence of formal trade reporting does not mean absence of seed movement; it signals opaque/import-substitution channels and likely informal distribution."},"disease_pressure_and_desired_traits":[{"disease_or_pressure":"TSWV — Tomato spotted wilt virus","hotspots":"Lara and Miranda; especially greenhouse/protected systems","evidence":"2014 Lara samples: TSWV 62.6%; Miranda 2014: 54.62%; outbreaks associated with losses up to 90% and field abandonment before harvest.","desired_traits":"TSWV resistance/tolerance where available, thrips-management compatibility, strong early vigor and clean transplant chain."},{"disease_or_pressure":"PMMoV / Tobamovirus complex","hotspots":"Lara and Miranda","evidence":"PMMoV was 35% in 2008 Lara, 21.6% in 2014 Lara and 34.25% in 2014 Miranda; seed origin and hybrid seed adoption affected incidence.","desired_traits":"L-gene/tobamovirus resistance clarity, PMMoV pathotype notation, tested clean seed and sanitation protocols."},{"disease_or_pressure":"PVY, CMV, AMV, TRV and PepSMoV / potyvirus complex","hotspots":"Lara and Miranda","evidence":"2008 Lara: PVY 66.25%, CMV 57.50%, AMV 23.75%, TRV 17.50%; new pepper severe mottle virus was described from Venezuelan pepper samples.","desired_traits":"Broad virus tolerance, vector tolerance, aphid/thrips/whitefly management fit and diagnostic support."},{"disease_or_pressure":"Ralstonia solanacearum","hotspots":"Warm wet or over-irrigated soils","evidence":"Agro Tecnología Tropical warns ají is very susceptible to Ralstonia, especially with excessive irrigation/rainy conditions.","desired_traits":"Root vigor, drainage/wet-feet resilience, nursery sanitation and rotation recommendations."},{"disease_or_pressure":"Phytophthora and Pythium","hotspots":"Poor drainage, over-irrigated and rainy-season systems","evidence":"Agro Tecnología Tropical flags Phytophthora and Pythium risk under excess irrigation/asphyxia.","desired_traits":"Phytophthora/Pythium tolerance, robust root system and drip/fertigation compatibility."},{"disease_or_pressure":"Powdery mildew and bacterial leaf spots","hotspots":"Powdery mildew in dry season; bacterial spots in rainy season","evidence":"Agro Tecnología Tropical identifies powdery mildew in dry season and bacterial leaf spots in rainy season.","desired_traits":"Foliar disease tolerance, open canopy, fungicide-program compatibility and leaf retention."},{"disease_or_pressure":"Thrips, mites, whiteflies and aphids","hotspots":"All major production regions","evidence":"Local source identifies thrips and mites as key pests and notes viruses transmitted by whiteflies and aphids; Peppers under Siege links TSWV spread partly to high thrips densities.","desired_traits":"Plant vigor after vector feeding, early maturity, thick foliage balance and integrated pest-management compatibility."},{"disease_or_pressure":"Pungency drift in ají dulce","hotspots":"Saved-seed systems and mixed plantings near hot peppers","evidence":"Agro Tecnología Tropical emphasizes capsaicin/pungency as hereditary and warns cross-pollination can transfer pungency character; excessively pungent fruit is rejected by market.","desired_traits":"Genetic purity, isolation protocols, low-pungency stability, fruit-type QC and seed certification."}],"recommendations":["Start with Lara/Quíbor-Tintorero as the first proof-market because it combines production concentration, documented disease pressure and nursery/distributor relevance.","Run a second protected-system trial in Miranda/Altos Mirandinos to validate TSWV/PMMoV, clean seed and greenhouse fruit uniformity claims.","Create an ají dulce local-identity portfolio around Rosita, Pepón, Llanero/Llanerón and Oriental fruit types; avoid generic hybrids that do not match Venezuelan culinary expectations.","Use seed-health documentation, demo plots and nursery partnerships as the GTM wedge because official HS120991 seed trade is opaque and growers face virus losses from uncertified seed.","Position value as risk reduction per marketable kilogram: virus tolerance, non-pungency purity, heat/water resilience, fruit firmness, shelf life and reduced crop abandonment risk."],"source_register":[{"name":"Rodríguez-Román et al. 2023, Peppers under Siege, Sustainability","url_or_path":"data/venezuela_sources/peppers_under_siege_pdf.pdf","use":"FAOSTAT 2021 production base; Lara/Miranda virus prevalence; GPS/QGIS field-map evidence; disease trait priorities."},{"name":"UNdata FAOSTAT item 401 — Chillies and peppers, green","url_or_path":"https://data.un.org/Data.aspx?d=FAO&f=itemCode%3A401","use":"Official FAOSTAT mirror for pepper production/area/yield context."},{"name":"Agro Tecnología Tropical — Cultivo del ají dulce","url_or_path":"data/venezuela_sources/agro_tecnologia_aji_dulce.html","use":"Ají dulce typology, density, production practices, pests/diseases, harvest and greenhouse observations."},{"name":"Quevedo & Laurentin 2020 — Caracterización fenotípica de tres cultivares de ají dulce","url_or_path":"data/venezuela_sources/scielo_rosita_pepon_llanero_pdf.pdf","use":"Rosita/Pepón/Llanero characterization, Quíbor nursery source, fruit trait improvement potential."},{"name":"Jiménez & Laurentin 2025 — Characterization of Sweet Pepper Collected in Venezuela","url_or_path":"https://ojs.bilpub.com/index.php/nc/article/view/394","use":"Capsicum chinense diversity and future breeding potential in Venezuela."},{"name":"WITS / UN Comtrade HS070960 Venezuela pages","url_or_path":"https://wits.worldbank.org/trade/comtrade/en/country/VEN/year/2024/tradeflow/Imports/partner/ALL/product/070960","use":"Fresh/chilled Capsicum/Pimenta import/export status."},{"name":"WITS / UN Comtrade HS120991 Venezuela page","url_or_path":"https://wits.worldbank.org/trade/comtrade/en/country/VEN/year/2024/tradeflow/Imports/partner/ALL/product/120991","use":"Vegetable seed import status; confirms need for bottom-up seed sizing."},{"name":"Mi Bodega Express ají dulce page","url_or_path":"https://mibodega.com.ve/producto/aji-dulce/","use":"Retail price and cultural demand signal."},{"name":"Gran Feria PZO ají dulce page","url_or_path":"https://granferiapzo.com/producto/aji-dulce/","use":"Retail price and availability signal."},{"name":"NASA POWER via SeedPath MCP","url_or_path":"SeedPath agriculture_nasa_power MCP outputs","use":"Climatology for Lara, Miranda, Monagas, Guárico and Zulia; climate-twin mapping."},{"name":"MapsofWorld Lara map / Venezuela state map discovery","url_or_path":"https://www.mapsofworld.com/venezuela/states/lara.html","use":"Supplemental state-map reference for field-region mapping; agronomic field evidence primarily from QGIS maps in peer-reviewed virus study."}],"limitations":["Recent FAOSTAT API calls returned an HTTP 521 error locally and the cached UNdata CSV was malformed; the report therefore uses the FAOSTAT values quoted in the peer-reviewed 2023 paper and UNdata item-page evidence rather than a freshly downloaded complete time series.","Venezuela sub-state pepper acreage by region is not available in accessible official tables; regional ranking is inferred from peer-reviewed field surveys, agronomy sources, and known horticultural belts.","HS070960 is fresh/chilled fruit, not seed; HS120991 is all vegetable seeds, not pepper-specific. The seed market is therefore sized bottom-up from area, density and seed-price assumptions.","Retail price pages are not farm-gate prices and may be stale or stock-limited; farm-gate value uses conservative proxy ranges.","Ají dulce, pimentón, hot pepper and protected pepper shares are inferred because public production data aggregate Capsicum types."]};
+const esc = s => String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const fmtT = n => Number(n).toLocaleString(undefined,{maximumFractionDigits:0}) + ' t';
+const fmtHa = n => Number(n).toLocaleString(undefined,{maximumFractionDigits:0}) + ' ha';
+const plotCfg = {responsive:true, displaylogo:false, modeBarButtonsToAdd:['toImage'], toImageButtonOptions:{format:'png', filename:'venezuela_pepper_dashboard', height:900, width:1400, scale:2}};
+const layoutBase = {paper_bgcolor:'#fff', plot_bgcolor:'#fff', font:{family:'-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif', color:'#1C1917'}, margin:{t:48,l:64,r:28,b:64}, colorway:['#C2410C','#14532D','#D97706','#7F1D1D','#0D9488','#92400E'], hoverlabel:{bgcolor:'#0C0A09', font:{color:'#fff'}}};
+
+function initHeader() {
+  const m = DATA.metadata;
+  document.getElementById('headerPills').innerHTML = [
+    m.crop.split('—')[0].trim(),
+    m.geography,
+    'FY2026–FY2027',
+    'Confidence ' + m.confidence_score + '/10'
+  ].map(x => '<span class="pill">' + esc(x) + '</span>').join('');
+}
+
+function initSummary() {
+  const ex = DATA.executive_summary;
+  document.getElementById('thesisText').textContent = ex.thesis;
+  document.getElementById('strategicRead').innerHTML = (ex.strategic_read || []).map(s => '<li>' + esc(s) + '</li>').join('');
+}
+
+function drawProduction() {
+  const p = DATA.production_statistics.latest_official_or_literature_point;
+  const cards = [
+    ['Harvested area', fmtHa(p.area_harvested_ha), Number(DATA.executive_summary.base_area_acres).toLocaleString() + ' acres'],
+    ['Production', fmtT(p.production_t), 'Green chillies & peppers, item 401'],
+    ['Yield', p.yield_t_per_ha + ' t/ha', 'From ' + p.yield_hg_per_ha.toLocaleString() + ' hg/ha']
+  ];
+  document.getElementById('productionBars').innerHTML = cards.map(c =>
+    '<div class="card" style="margin:0"><div class="label">' + esc(c[0]) + '</div><div class="value">' + esc(c[1]) + '</div><div class="note">' + esc(c[2]) + '</div></div>'
+  ).join('');
+  document.getElementById('productionSourceNote').textContent = p.source || '';
+}
+
+function drawRegions() {
+  const regs = DATA.major_regions_and_field_map;
+  Plotly.newPlot('regionScatter', [{
+    type: 'scatter',
+    mode: 'markers+text',
+    x: regs.map(r => r.rank),
+    y: regs.map(r => r.annual_temp_c),
+    text: regs.map(r => '#' + r.rank),
+    textposition: 'top center',
+    marker: {size: regs.map(r => 12 + r.annual_precip_mm_day * 4), color: regs.map(r => r.annual_precip_mm_day), colorscale: 'YlOrRd', showscale: true, colorbar: {title: 'mm/day'}},
+    hovertemplate: '<b>%{customdata}</b><br>Mean T: %{y:.1f}°C<extra></extra>',
+    customdata: regs.map(r => r.region.slice(0, 48))
+  }], Object.assign({}, layoutBase, {xaxis: {title: 'Priority rank'}, yaxis: {title: 'Mean annual temp (°C)'} }), plotCfg);
+  document.getElementById('regionCards').innerHTML = regs.map(r => {
+    const twins = (r.climate_twins || []).map(t => '<span class="tag green-tag">' + esc(t) + '</span>').join(' ');
+    return '<details><summary><b>#' + r.rank + '</b> ' + esc(r.region.slice(0, 90)) + (r.region.length > 90 ? '…' : '') + '</summary>' +
+      '<p><b>Field signal:</b> ' + esc(r.field_map_signal) + '</p>' +
+      '<p><b>Climate:</b> ' + r.annual_temp_c + '°C mean; precip ' + r.annual_precip_mm_day + ' mm/day</p>' +
+      '<p><b>Twins:</b> ' + twins + '</p>' +
+      '<p><b>Seed positioning:</b> ' + esc(r.seed_positioning) + '</p></details>';
+  }).join('');
+}
+
+function fillTrends() {
+  const rows = DATA.market_trends.map(t =>
+    '<tr><td>' + esc(t.trend) + '</td><td><span class="tag">' + t.impact_score + '/10</span></td><td>' + esc(t.evidence) + '</td><td>' + esc(t.implication) + '</td></tr>'
+  ).join('');
+  document.getElementById('trendTable').innerHTML =
+    '<thead><tr><th>Trend</th><th>Impact</th><th>Evidence</th><th>Seed implication</th></tr></thead><tbody>' + rows + '</tbody>';
+}
+
+function fillTypology() {
+  document.getElementById('typologyCards').innerHTML = DATA.typology_and_segments.map(seg =>
+    '<details><summary><b>' + esc(seg.segment) + '</b> · <span class="green-tag">' + esc(seg.species) + '</span></summary>' +
+    '<p><b>Fruit / type:</b> ' + esc(seg.fruit_type) + '</p>' +
+    '<p><b>Market role:</b> ' + esc(seg.market_role) + '</p>' +
+    '<p><b>Seed need:</b> ' + esc(seg.seed_need) + '</p></details>'
+  ).join('');
+}
+
+let diseaseIdx = 0;
+function renderDisease() {
+  const list = DATA.disease_pressure_and_desired_traits;
+  const d = list[diseaseIdx];
+  document.getElementById('diseaseCards').innerHTML =
+    '<div class="card wide"><div class="label">' + esc(d.disease_or_pressure) + '</div>' +
+    '<p><b>Hotspots:</b> ' + esc(d.hotspots) + '</p>' +
+    '<p><b>Evidence:</b> ' + esc(d.evidence) + '</p>' +
+    '<p><b>Desired traits:</b> ' + esc(d.desired_traits) + '</p></div>';
+}
+function initDisease() {
+  const list = DATA.disease_pressure_and_desired_traits;
+  document.getElementById('diseaseBtns').innerHTML = list.map((d, i) =>
+    '<button type="button" class="btn' + (i === 0 ? ' active' : '') + '" data-i="' + i + '">' + esc(d.disease_or_pressure.slice(0, 36)) + (d.disease_or_pressure.length > 36 ? '…' : '') + '</button>'
+  ).join('');
+  document.querySelectorAll('#diseaseBtns .btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      diseaseIdx = +btn.dataset.i;
+      document.querySelectorAll('#diseaseBtns .btn').forEach(b => b.classList.toggle('active', b === btn));
+      renderDisease();
+    });
+  });
+  renderDisease();
+}
+
+function initStrategy() {
+  document.getElementById('recommendations').innerHTML = DATA.recommendations.map(r => '<li>' + esc(r) + '</li>').join('');
+  const m = DATA.metadata;
+  document.getElementById('confidenceLine').textContent = 'Confidence: ' + m.confidence_score + '/10';
+  document.getElementById('confidenceNote').textContent = m.confidence_note || '';
+  document.getElementById('limitationsList').innerHTML = DATA.limitations.map(l => '<li>' + esc(l) + '</li>').join('');
+}
+
+function initSources() {
+  const skip = /WITS|Mi Bodega|Gran Feria/i;
+  document.getElementById('sourcesList').innerHTML = DATA.source_register.filter(s => !skip.test(s.name)).map(s => {
+    const u = s.url_or_path || '';
+    const isHttp = /^https?:\/\//i.test(u);
+    const link = isHttp ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(u) + '</a>' : '<code>' + esc(u) + '</code>';
+    return '<li><b>' + esc(s.name) + '</b> — ' + link + '<br><span style="color:#57534E;font-size:12px">' + esc(s.use) + '</span></li>';
+  }).join('');
+}
+
+function boot() {
+  initHeader();
+  initSummary();
+  drawProduction();
+  drawRegions();
+  fillTrends();
+  fillTypology();
+  initDisease();
+  initStrategy();
+  initSources();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+else boot();
+</script>
+</body>
+</html>
