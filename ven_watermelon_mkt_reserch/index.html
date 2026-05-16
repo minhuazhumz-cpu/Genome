@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SeedPath | Venezuela Watermelon Seed Market Dashboard</title>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <style>
+    :root {
+      --rind:#14532D; --deep:#0F2918; --flesh:#E11D48; --seed:#1C1917; --cream:#FFF1F2;
+      --bg:#F4FAF6; --line:#D8E8DD; --text:#1C1917; --muted:#57534E; --card:#FFFFFF;
+      --shadow:0 18px 48px rgba(20,83,45,.08);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.45}
+    header{position:relative;overflow:hidden;background:linear-gradient(118deg,var(--deep) 0%,var(--rind) 38%,#166534 72%,#9F1239 100%);color:#fff;padding:36px 46px 32px}
+    header:before{content:"";position:absolute;inset:-22%;background:radial-gradient(circle at 12% 20%,rgba(225,29,72,.35),transparent 28%),radial-gradient(circle at 88% 12%,rgba(255,255,255,.14),transparent 22%),radial-gradient(circle at 70% 90%,rgba(34,197,94,.2),transparent 24%);opacity:.9}
+    header>*{position:relative}
+    h1{margin:0;font-size:34px;letter-spacing:-.03em;line-height:1.08}
+    header p{max-width:1160px;color:#DCFCE7;font-size:15px;margin:12px 0 0}
+    .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .pill{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.12);border-radius:999px;padding:8px 12px;font-size:12px;font-weight:850;letter-spacing:.03em}
+    .layout{display:grid;grid-template-columns:252px minmax(0,1fr);gap:22px;max-width:1540px;margin:0 auto;padding:24px 34px 64px}
+    nav{position:sticky;top:18px;align-self:start;background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:0 8px 24px rgba(20,83,45,.06)}
+    nav h3{margin:4px 8px 10px;font-size:11px;color:var(--flesh);text-transform:uppercase;letter-spacing:.18em}
+    nav a{display:block;color:#44403C;text-decoration:none;font-size:13px;font-weight:760;padding:9px 10px;border-radius:12px}
+    nav a:hover{background:var(--cream);color:var(--rind)}
+    main{min-width:0}
+    .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .triple{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .wide{grid-column:1/-1}
+    .card,.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 22px rgba(20,83,45,.05);padding:18px;margin-bottom:18px}
+    .panel{padding:20px}
+    .card:hover{transform:translateY(-2px);box-shadow:var(--shadow);transition:.18s ease}
+    .label{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:900;letter-spacing:.10em}
+    .value{font-size:26px;font-weight:950;color:var(--rind);margin-top:7px}
+    .note{color:var(--muted);font-size:12.5px;margin-top:8px}
+    h2{margin:0 0 12px;color:var(--rind);font-size:21px}
+    .sub{color:var(--muted);font-size:13px;margin-top:-5px;margin-bottom:14px}
+    .callout{border-left:5px solid var(--flesh);background:var(--cream);padding:14px 16px;border-radius:12px;margin:14px 0}
+    .callout.muted{border-left-color:var(--rind);background:#ECFDF5}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{border-bottom:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}
+    th{background:#E8F5EC;color:var(--rind);text-transform:uppercase;font-size:11px;letter-spacing:.05em}
+    #segmentTable tbody th{background:transparent;color:var(--text);text-transform:none;font-weight:650;font-size:13px}
+    #segmentTable td:nth-child(n+2){text-align:right;font-variant-numeric:tabular-nums}
+    .scroll{overflow-x:auto;width:100%;max-width:100%}
+    .tag{display:inline-block;background:#FEE2E2;color:#991B1B;border-radius:999px;padding:4px 9px;margin:2px;font-size:12px;font-weight:850}
+    .green-tag{background:#DCFCE7;color:#166534}
+    .btns{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 14px}
+    .btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-weight:850;color:#44403C;cursor:pointer;font-size:12px}
+    .btn.active,.btn:hover{background:var(--rind);color:#fff;border-color:var(--rind)}
+    details{border:1px solid var(--line);background:#fff;border-radius:16px;padding:13px;margin:10px 0}
+    summary{cursor:pointer;font-weight:950;color:var(--rind)}
+    details p{margin:8px 0;color:#44403C}
+    .chart{height:380px}
+    .chart.tall{height:420px}
+    .two-col-list{columns:2;column-gap:28px}
+    .source-list li{break-inside:avoid;margin-bottom:9px}
+    .footer{border-top:1px solid var(--line);background:#fff;text-align:center;padding:22px;color:var(--muted);font-size:12px}
+    ol.strat{padding-left:1.2rem}
+    ol.strat li{margin:10px 0;color:#44403C}
+    ul.compact li{margin:6px 0;color:#44403C}
+    @media(max-width:1180px){.layout{grid-template-columns:1fr}nav{position:relative;top:auto}.cards,.grid,.triple{grid-template-columns:1fr 1fr}}
+    @media(max-width:760px){header{padding:28px 20px}.layout{padding:18px}.cards,.grid,.triple{grid-template-columns:1fr}h1{font-size:26px}.two-col-list{columns:1}.chart,.chart.tall{height:320px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="label" style="color:#BBF7D0">SeedPath Agriculture Intelligence</div>
+  <h1>Venezuela Watermelon Seed Market Opportunity Dashboard</h1>
+  <p><b>FY2026–FY2027 deep-dive.</b> Interactive view of the <i>Citrullus lanatus</i> (patilla / sandía) seed opportunity: FAO-derived production baseline, TAM–SAM–SOM sizing, regional climate twins, trend radar, typology, trade signals, disease–trait mapping and go-to-market guidance aligned with the Markdown report.</p>
+  <div class="meta" id="headerPills"></div>
+</header>
+<div class="layout">
+  <nav>
+    <h3>Navigate</h3>
+    <a href="#thesis">Thesis</a>
+    <a href="#sizing">Market sizing</a>
+    <a href="#production">Production</a>
+    <a href="#segments">Segments</a>
+    <a href="#regions">Regions &amp; climate</a>
+    <a href="#trends">Trend radar</a>
+    <a href="#typology">Typology</a>
+    <a href="#trade">Trade &amp; demand</a>
+    <a href="#disease">Disease &amp; traits</a>
+    <a href="#method">Method</a>
+    <a href="#strategy">Strategy</a>
+    <a href="#sources">Sources</a>
+  </nav>
+  <main>
+    <section id="thesis" class="panel">
+      <h2>Executive thesis</h2>
+      <p id="thesisText" style="color:#44403C;margin:0 0 12px"></p>
+      <div class="cards" id="summaryCards" style="margin-bottom:14px"></div>
+      <div class="callout muted"><b>Strategic read</b></div>
+      <ul id="strategicRead" style="margin:0;color:#44403C"></ul>
+      <p id="confidenceStrip" class="note" style="margin-top:16px"></p>
+    </section>
+
+    <section id="sizing" class="panel">
+      <h2>Market sizing — TAM / SAM / SOM</h2>
+      <p class="sub">Bottom-up seed-value pool with FY2026–FY2027 uplift; farm-gate proxy from production × price sensitivity.</p>
+      <div class="grid">
+        <div id="chartTamSam" class="chart"></div>
+        <div id="chartSegmentPie" class="chart"></div>
+      </div>
+      <div id="chartSensitivity" class="chart tall" style="margin-top:8px"></div>
+      <p class="sub" id="sensitivityDrivers"></p>
+    </section>
+
+    <section id="production" class="panel">
+      <h2>Production baseline &amp; outlook</h2>
+      <p class="sub">FAO-derived 2023 national figures (AtlasBig / UNdata item 567) plus historical triangulation and FY2026–FY2027 scenario band.</p>
+      <div id="productionCards" class="triple"></div>
+      <div id="chartProductionHist" class="chart" style="margin-top:8px"></div>
+      <p class="sub" id="productionOutlook"></p>
+    </section>
+
+    <section id="segments" class="panel">
+      <h2>Segment-level sizing</h2>
+      <p class="sub">Area shares on 8,194 ha base; hover charts for TAM vs SAM.</p>
+      <div id="chartSegmentBars" class="chart tall"></div>
+      <div class="scroll">
+        <table id="segmentTable">
+          <thead>
+            <tr>
+              <th scope="col">Segment</th>
+              <th scope="col">Share</th>
+              <th scope="col">Area (ha)</th>
+              <th scope="col">Density / ha</th>
+              <th scope="col">$/seed</th>
+              <th scope="col">TAM</th>
+              <th scope="col">SAM</th>
+            </tr>
+          </thead>
+          <tbody id="segmentTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="regions">
+      <div class="panel">
+        <h2>Regional priority &amp; climate signal</h2>
+        <p class="sub">NASA POWER climatology (mean annual temperature vs rank; marker color = precip mm/day).</p>
+        <div id="chartRegionScatter" class="chart"></div>
+      </div>
+      <div class="panel">
+        <h2>Production regions &amp; climate twins</h2>
+        <div id="regionCards"></div>
+      </div>
+    </section>
+
+    <section id="trends" class="panel">
+      <h2>Market trends — trait-to-table radar</h2>
+      <p class="sub">PESTEL-style categories from the report; bar length = impact score (1–10).</p>
+      <div id="chartTrendImpact" class="chart"></div>
+      <div class="scroll"><table id="trendTable"></table></div>
+    </section>
+
+    <section id="typology" class="panel">
+      <h2>Typology &amp; buyer needs</h2>
+      <p class="sub">Patilla / sandía segments: diploid seeded, seedless triploid, export-grade and grafted packages.</p>
+      <div id="typologyCards" class="grid"></div>
+    </section>
+
+    <section id="trade" class="panel">
+      <h2>Domestic demand &amp; formal trade</h2>
+      <p id="demandRead" class="sub" style="color:#44403C"></p>
+      <div class="scroll"><table id="tradeTable"></table></div>
+      <p class="note" id="tradeCaveat"></p>
+    </section>
+
+    <section id="disease" class="panel">
+      <h2>Disease pressure &amp; desired traits</h2>
+      <div class="btns" id="diseaseBtns"></div>
+      <div id="diseaseCards" class="grid"></div>
+      <div class="callout"><b>Trait priority stack (report):</b> heat set and drought/root vigor; rind toughness and shelf life; 10+ °Brix with controlled dry-down; Fusarium/nematode/soilborne mitigation; clean seed documentation; triploid germination and pollinizer protocol for premium channels.</div>
+    </section>
+
+    <section id="method" class="panel">
+      <h2>Scope and method</h2>
+      <p style="color:#44403C;margin-top:0">Commercial and semi-commercial watermelon seed for Venezuela, including diploid hybrids, OP/local seeded types, seedless triploid with pollinizer, coastal export-optionality blocks and smallholder low-input channels.</p>
+      <p class="sub" id="methodFormula"></p>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Variable</th><th>Base assumption</th><th>Rationale</th></tr></thead>
+          <tbody>
+            <tr><td>Area basis</td><td><b>8,194 ha</b> (20,248 acres)</td><td>FAO-derived 2023 country table; UNdata item 567 confirms FAOSTAT watermelon elements.</td></tr>
+            <tr><td>Seed density</td><td><b>5,500–6,500</b> seeds/ha</td><td>Lower density than tomato/pepper; FAO spacing ranges and direct seeding/thinning.</td></tr>
+            <tr><td>Seed buffer</td><td><b>1.12×–1.20×</b></td><td>Germination, direct-seeding loss, replanting and transplant stand loss.</td></tr>
+            <tr><td>Seed price</td><td><b>$0.008–$0.170</b>/seed</td><td>Saved/OP to hybrid diploid to high-value triploid gradient.</td></tr>
+            <tr><td>Forecast uplift</td><td><b>1.05×</b></td><td>FY2026–FY2027 price/channel recovery adjustment.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="strategy" class="grid">
+      <div class="panel">
+        <h2>Go-to-market — portfolio lanes</h2>
+        <ul class="compact">
+          <li><b>Lane 1 — core diploid hybrid:</b> Crimson/Charleston-type fruit, 9–12 kg target, rind toughness, 10+ °Brix, heat/drought set and foliar disease tolerance.</li>
+          <li><b>Lane 2 — premium seedless:</b> mini/medium triploid plus pollinizer sold as a protocol package for Caracas, Valencia and Maracaibo retail channels.</li>
+          <li><b>Lane 3 — risk-management package:</b> rootstock/grafted option for repeated cucurbit soils, nematode/Fusarium/MNSV-watchlist fields and high-value coastal blocks.</li>
+          <li><b>Lane 4 — OP trust-builder:</b> low-cost treated OP packs for smallholder channels where saved seed dominates.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h2>Trial priorities &amp; success metrics</h2>
+        <p class="sub">From the report’s execution playbook.</p>
+        <ol class="strat">
+          <li><b>Guárico</b> dry-season irrigated heat-set trial — stress flowering, set and rind quality.</li>
+          <li><b>Anzoátegui</b> central-pivot / eastern plains trial — benchmark against Charleston Gray / Crimson-style references.</li>
+          <li><b>Falcón/Paraguaná</b> pack-out trial — only with an active packhouse or distributor partner.</li>
+          <li><b>Lara/Portuguesa</b> drip/fertigation trial — Brix, uniformity and root vigor.</li>
+        </ol>
+        <p class="label" style="margin-top:14px">Commercial success metrics</p>
+        <ul class="compact" style="font-size:13px">
+          <li>Marketable yield (t/ha) and pack-out %</li>
+          <li>°Brix and flesh quality; hollow heart / cracking / sunburn incidence</li>
+          <li>Emergence and stand uniformity; disease incidence through harvest cycles</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Strategic conclusion</h2>
+      <p style="color:#44403C;margin:0">The Venezuela watermelon seed market is <b>commercially real but execution-sensitive</b>. A realistic FY2026–FY2027 entrant should underwrite a <b>~$3.1M TAM</b>, <b>~$2.16M SAM</b> and <b>~$129k near-term SOM</b> rather than an export-led upside story. Enter with local trials, clean seed, heat/drought and rind-quality claims, and a distributor/nursery playbook — not reliance on formal trade data alone.</p>
+    </section>
+
+    <section id="sources" class="panel">
+      <h2>Source register</h2>
+      <ul id="sourcesList" class="source-list two-col-list"></ul>
+    </section>
+  </main>
+</div>
+<div class="footer">Built from <code>venezuela_watermelon_seed_market_opportunity_2026_2027.md</code> and <code>data/venezuela_watermelon_seed_market_opportunity_2026_2027.json</code> · SeedPath standalone HTML · Plotly: hover, zoom, PNG export</div>
+
+<script>
+const DATA = {"metadata":{"report_title":"Venezuela Watermelon Seed Market Opportunity Deep-Dive","role_lens":"Senior Market Research Analyst specializing in the LATAM agricultural sector","crop":"Watermelon seed / Citrullus lanatus — patilla, sandía, melón de agua","geography":"Venezuela","period":"FY2026–FY2027","currency":"USD unless noted","confidence_score":6.4,"confidence_note":"National production is supported by FAO-derived 2023 data and UNdata item 567. State-level acreage is not publicly current; production regions are directional from Venezuelan agronomy literature plus melon-watermelon cluster evidence. Seed-market sizing is bottom-up due official seed-trade opacity."},"executive_summary":{"thesis":"Venezuela is a mid-sized, domestically absorbed watermelon seed opportunity. The strongest FY2026–FY2027 wedge is reliable open-field hybrid diploid seed for irrigated dry-season belts, with selective premium seedless and rootstock packages where growers can execute transplant, pollinizer and disease-management protocols.","tam_2026_2027_usd":3124542,"sam_2026_2027_usd":2157386,"som_2026_2027_usd":129443,"farm_gate_value_proxy_usd_base":48451711,"farm_gate_value_proxy_usd_range":[32301140,68191300],"strategic_read":["Lead with diploid hybrid reliability in Guárico, Anzoátegui, Portuguesa, Lara and Trujillo before pushing seedless premiums.","Use Falcón/Paraguaná as export optionality and a packhouse-trait trial zone, not as core TAM until formal exports reappear.","Bundle seed with germination, transplant/direct-seeding, irrigation, pollinizer and clean-seed documentation support."]},"production_statistics":{"latest_baseline_year":2023,"production_t":179450.78,"harvested_area_ha":8194,"harvested_area_acres":20248,"yield_t_per_ha":21.9,"yield_t_per_acre":8.86,"production_per_person_kg":5.638,"historical_triangulation":{"2019_production_t":225924,"2018_production_t":213014,"2017_production_t":136143,"2016_production_t":184307,"2015_production_t":199482,"interpretation":"Output is volatile but structurally meaningful; 2023 remains below 2019 while area and yield show an established domestic crop base."},"fy2026_2027_outlook":{"area_range_ha":[8000,8800],"production_range_t":[175000,205000],"yield_range_t_per_ha":[21,24],"method":"Stable/recovery scenario constrained by water, input access, seed quality and channel reliability."}},"market_sizing":{"formula":"Σ(segment area × seed density × seed buffer × seed price × FY2026–FY2027 uplift)","base_area_ha":8194,"forecast_uplift":1.05,"som_capture_rate_of_sam":0.06,"sensitivity":{"low_tam_usd":1900000,"base_tam_usd":3100000,"high_tam_usd":5100000,"key_drivers":["Triploid seedless adoption","Hybrid versus OP/saved-seed share","Formal route-to-market recovery","Export packhouse revival in dry coastal belts"]},"segments":[{"segment":"Open-field diploid hybrid large-fruit — Crimson Sweet / Charleston Gray style","area_share":0.45,"area_ha":3687.3,"seed_density_per_ha":6000,"seed_buffer":1.15,"seed_price_usd_per_seed":0.045,"tam_usd":1202152,"sam_filter":0.7,"sam_usd":841506,"strategic_read":"Largest commercial wedge; uniform fruit set, rind toughness, Brix, transportability and heat performance."},{"segment":"Local OP / semi-commercial seeded round dark-rind and Sugar Baby-type","area_share":0.25,"area_ha":2048.5,"seed_density_per_ha":6500,"seed_buffer":1.2,"seed_price_usd_per_seed":0.018,"tam_usd":301990,"sam_filter":0.35,"sam_usd":105696,"strategic_read":"Affordability and local-market continuity; premium economics are limited."},{"segment":"Seedless triploid + diploid pollinizer premium / urban retail","area_share":0.12,"area_ha":983.3,"seed_density_per_ha":6200,"seed_buffer":1.12,"seed_price_usd_per_seed":0.17,"tam_usd":1218779,"sam_filter":0.8,"sam_usd":975024,"strategic_read":"Small area but highest seed value; requires germination, nursery/transplant, pollinizer and retail support."},{"segment":"Export/packhouse-oriented coastal melon-watermelon programs","area_share":0.08,"area_ha":655.5,"seed_density_per_ha":6000,"seed_buffer":1.15,"seed_price_usd_per_seed":0.075,"tam_usd":356193,"sam_filter":0.65,"sam_usd":231526,"strategic_read":"Episodic and infrastructure-dependent; requires pack-out, shelf life, size uniformity and phytosanitary documentation."},{"segment":"Smallholder saved-seed / low-input channel","area_share":0.1,"area_ha":819.4,"seed_density_per_ha":5500,"seed_buffer":1.2,"seed_price_usd_per_seed":0.008,"tam_usd":45428,"sam_filter":0.08,"sam_usd":3634,"strategic_read":"Low monetization but important for trust, food security and low-cost OP packs."}]},"typology_and_segments":[{"type":"Diploid seeded large oval/oblong","examples":"Charleston Gray, Crimson Sweet-style","buyer_need":"Large domestic fruit with rind strength and predictable size","priority_traits":"Uniform fruit shape, rind toughness, heat set, strong emergence, Fusarium/anthracnose/gummy stem blight tolerance."},{"type":"Diploid seeded round / dark rind","examples":"Sugar Baby-style, local OP round types","buyer_need":"Household-friendly fruit and affordability","priority_traits":"Earliness, concentrated set, sweetness, low cracking and seed affordability."},{"type":"Seedless triploid","examples":"Mini/medium seedless with diploid pollinizer","buyer_need":"Urban retail and foodservice convenience","priority_traits":"High germination, transplant vigor, pollinizer compatibility, 10+ °Brix, uniform mini/medium sizes and hollow-heart control."},{"type":"Export / packhouse grade","examples":"Uniform 1–5 kg fruit depending on buyer","buyer_need":"Sortability, cold-chain durability and phytosanitary reliability","priority_traits":"Pack-out, firm rind/flesh, shelf life, low size CV and disease-free seed documentation."},{"type":"Grafted watermelon / rootstock package","examples":"Cucurbita maxima × C. moschata rootstocks such as RS-841/Ercole analogues","buyer_need":"Soilborne disease, nematode, heat and salinity risk mitigation","priority_traits":"Scion-rootstock compatibility, root vigor, Fusarium/nematode/MNSV risk management and quality preservation."}],"market_trends":[{"category":"Economic","trend":"Domestic-market recovery, not export scale, is the near-term base case","impact_score":9,"velocity":"Medium","evidence":"2023 FAO-derived production is 179,451 t and WITS shows no 2023 HS080710 imports/exports by Venezuela.","seed_implication":"Size seed pool from planted area and channel adoption, not customs data."},{"category":"Product","trend":"Seedless and smaller fruit formats create a premium wedge","impact_score":8,"velocity":"Medium","evidence":"Local typology still includes seeded Charleston/Crimson/Sugar Baby types while global markets move toward triploids.","seed_implication":"Introduce seedless only with nursery, germination and pollinizer technical service."},{"category":"Environmental","trend":"Hot-dry windows are favorable but irrigation-dependent","impact_score":9,"velocity":"High","evidence":"FAO: watermelon prefers hot, dry climate and 400–600 mm water over 80–110 days; NASA climatology confirms suitable dry-season belts.","seed_implication":"Position drought-root vigor, drip/fertigation compatibility, heat set and Brix management."},{"category":"Phytosanitary","trend":"Clean seed and soilborne disease mitigation are hidden value drivers","impact_score":8,"velocity":"Medium","evidence":"LATAM research highlights Fusarium, nematodes and MNSV as serious watermelon issues; WITS seed-import data are opaque.","seed_implication":"Lead with seed health certificates, treated seed, local trials and rootstock packages."},{"category":"Trade","trend":"Falcón/Paraguaná export potential is real but stage-gated","impact_score":6,"velocity":"Low","evidence":"Paraguaná packhouse ambitions exist, but WITS shows no formal HS080710 exports in 2023–2024.","seed_implication":"Use Falcón as optionality only if packhouse/cold-chain partners are active."}],"major_regions_and_climate_twins":[{"rank":1,"region":"Guárico / Llanos irrigated cucurbit belt","lat":8.92,"lon":-67.43,"annual_temp_c":28.44,"annual_precip_mm_day":2.89,"production_signal":"Major patilla state and major melon/cucurbit cluster.","climate_twins":["Sinaloa/Sonora Mexico winter watermelon-melon districts","Comayagua Honduras dry-season vegetables","Colombian Llanos irrigated cucurbits","Brazil Cerrado irrigated systems"],"seed_positioning":"Heat set, rind toughness, Brix retention, drip/fertigation compatibility."},{"rank":2,"region":"Falcón / Paraguaná dry coastal export-optionality zone","lat":11.95,"lon":-69.92,"annual_temp_c":27.6,"annual_precip_mm_day":1.51,"production_signal":"Packhouse/export ambition; 1,200 ha potential and planned 500 ha melon-watermelon program cited.","climate_twins":["La Guajira Colombia dry coast","Piura/Olmos Peru desert horticulture","Rio Grande do Norte/Ceará Brazil melon belt","Sonora/Sinaloa Mexico coast"],"seed_positioning":"Size uniformity, rind/flesh firmness, shelf life, clean seed."},{"rank":3,"region":"Anzoátegui / Mesa de los Hachos–Soledad eastern plains","lat":8.89,"lon":-64.25,"annual_temp_c":27.47,"annual_precip_mm_day":2.29,"production_signal":"UDO field research used Charleston Gray 133 under central-pivot irrigation.","climate_twins":["Eastern Colombia/Meta irrigated lowlands","Tabasco/Veracruz Mexico dry-season cucurbits","Honduras lowland melon-watermelon systems"],"seed_positioning":"Open-field diploid trials, weed/canopy management, disease tolerance."},{"rank":4,"region":"Portuguesa / Acarigua–Turén agricultural corridor","lat":9.33,"lon":-69.12,"annual_temp_c":25.2,"annual_precip_mm_day":2.83,"production_signal":"Listed among major patilla states; irrigated agricultural corridor.","climate_twins":["Cauca/Magdalena Colombia irrigated valleys","Guanacaste Costa Rica dry-season cucurbits","Central Mexico Bajío cucurbit windows"],"seed_positioning":"Balanced heat/disease package and fruit uniformity."},{"rank":5,"region":"Lara / Barquisimeto–Quíbor dry horticultural belt","lat":10.15,"lon":-69.73,"annual_temp_c":23.39,"annual_precip_mm_day":2.46,"production_signal":"Listed among major patilla states; known dry horticultural belt.","climate_twins":["Comayagua Honduras elevated dry valleys","Jalisco/Colima Mexico shoulder-season cucurbits","North-coast Peru irrigated valleys"],"seed_positioning":"High Brix, drip-compatible hybrids and early windows."},{"rank":6,"region":"Trujillo / Andean foothill valleys","lat":9.32,"lon":-70.6,"annual_temp_c":25.33,"annual_precip_mm_day":2.94,"production_signal":"Listed among concentrated patilla states; likely valley/foothill seasonal production.","climate_twins":["Colombian Andean foothill cucurbits","Ecuador coastal foothill cucurbits","Guatemala Pacific foothill watermelon windows"],"seed_positioning":"Disease tolerance under higher humidity, earliness and regional fruit quality."}],"domestic_demand_and_trade":{"apparent_availability_2023_t":179450.78,"production_per_person_kg_2023":5.638,"demand_read":"Domestic demand absorbs nearly all formal supply; formal trade is negligible/opaque.","import_export":[{"flow":"HS080710 fresh melons and watermelons imports","year":2023,"result":"Venezuela did not import from World"},{"flow":"HS080710 fresh melons and watermelons exports","year":2023,"result":"Venezuela did not export to World"},{"flow":"HS080710 fresh melons and watermelons exports","year":2024,"result":"Venezuela did not export to World"},{"flow":"HS120991 vegetable seed imports","year":2023,"result":"Venezuela did not import from World"},{"flow":"HS120991 vegetable seed imports","year":2024,"result":"Venezuela did not import from World"}],"caveat":"WITS accessible pages use HS1988/92 code 080710 combining melons and watermelons; HS080711-specific pages returned errors. Conclusion: formal trade is negligible/opaque rather than every possible modern 6-digit shipment being conclusively zero."},"disease_and_desired_traits":[{"pressure":"Fusarium wilt / soilborne vine decline","risk_context":"Sandy and repeatedly cropped cucurbit soils","desired_trait":"Fusarium race-aware tolerance, root vigor, grafting compatibility and seedling vigor."},{"pressure":"Root-knot nematodes","risk_context":"Warm sandy coastal and dry-valley soils","desired_trait":"Nematode-tolerant rootstock package, vigorous roots and Brix preservation."},{"pressure":"MNSV / Olpidium vector watchlist","risk_context":"LATAM soilborne-virus analogue for intensifying cucurbit systems","desired_trait":"Rootstock screening, clean transplants, substrate hygiene and monitoring."},{"pressure":"Gummy stem blight / anthracnose / foliar fungal complex","risk_context":"Rainy-season and humid foothill/eastern zones","desired_trait":"Foliar disease tolerance, open canopy and rind lesion resistance."},{"pressure":"Powdery mildew and downy mildew","risk_context":"Dry-to-humid transitions and irrigated valleys","desired_trait":"PM package where available and canopy durability."},{"pressure":"WMV / ZYMV / PRSV-W and vector pressure","risk_context":"Mixed cucurbit/vegetable landscapes and informal plant movement","desired_trait":"Virus tolerance, vector-management compatibility, early vigor and clean seed traceability."},{"pressure":"Bacterial fruit blotch / seedborne quality risk","risk_context":"High reputational risk for seed companies","desired_trait":"Tested clean seed lots, treatment options and nursery hygiene protocol."},{"pressure":"Heat, drought, salinity, sunburn, cracking and hollow heart","risk_context":"Llanos and Falcón hot/dry windows","desired_trait":"Heat set, rind toughness, drought/salinity resilience, Brix retention and uniform fruit shape."}],"sources":[{"id":"atlasbig_fao_2023","url":"https://ca.atlasbig.com/countries-by-watermelon-production"},{"id":"undata_faostat_item_567","url":"https://data.un.org/Data.aspx?d=FAO&f=itemCode%3A567"},{"id":"nationmaster_venezuela_2019","url":"https://www.nationmaster.com/nmx/timeseries/venezuela-watermelons-production"},{"id":"fao_watermelon_crop_water","url":"https://www.fao.org/land-water/databases-and-software/crop-information/watermelon/en/"},{"id":"monografias_patilla_venezuela","url":"https://www.monografias.com/trabajos70/generalidades-cultivo-patilla/generalidades-cultivo-patilla"},{"id":"udo_watermelon_anzoategui","url":"http://saber.udo.edu.ve/index.php/saber/article/view/953"},{"id":"freshplaza_paraguana","url":"https://www.freshplaza.com/north-america/article/2145179/venezuela-melon-watermelon-exports-in-paraguana-opens-economic-diversification/"},{"id":"wits_hs080710","url":"https://wits.worldbank.org/trade/comtrade/en/country/VEN/year/2023/tradeflow/Imports/partner/WLD/product/080710"},{"id":"wits_hs120991","url":"https://wits.worldbank.org/trade/comtrade/en/country/VEN/year/2024/tradeflow/Imports/partner/WLD/product/120991"},{"id":"scielo_mnsv_rootstocks","url":"http://www.scielo.org.mx/scielo.php?pid=S2007-09342018000300578&script=sci_arttext"}]};
+
+const esc = s => String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const fmtUSD = n => '$' + Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 });
+const fmtT = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' t';
+const fmtHa = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' ha';
+const plotCfg = { responsive: true, displaylogo: false, modeBarButtonsToAdd: ['toImage'], toImageButtonOptions: { format: 'png', filename: 'venezuela_watermelon_dashboard', height: 900, width: 1400, scale: 2 } };
+const layoutBase = { paper_bgcolor: '#fff', plot_bgcolor: '#fff', font: { family: "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif", color: '#1C1917' }, margin: { t: 48, l: 72, r: 28, b: 64 }, colorway: ['#14532D', '#E11D48', '#166534', '#BE123C', '#15803D', '#9D174D'], hoverlabel: { bgcolor: '#0C0A09', font: { color: '#fff' } } };
+
+function initHeader() {
+  const m = DATA.metadata;
+  document.getElementById('headerPills').innerHTML = [
+    m.crop.split('—')[0].trim(),
+    m.geography,
+    'FY2026–FY2027',
+    'Confidence ' + m.confidence_score + '/10'
+  ].map(x => '<span class="pill">' + esc(x) + '</span>').join('');
+}
+
+function initThesis() {
+  const ex = DATA.executive_summary;
+  document.getElementById('thesisText').textContent = ex.thesis;
+  const fg = ex.farm_gate_value_proxy_usd_range;
+  document.getElementById('summaryCards').innerHTML = [
+    ['TAM (seed pool)', fmtUSD(ex.tam_2026_2027_usd), 'Full seed-value pool'],
+    ['SAM', fmtUSD(ex.sam_2026_2027_usd), 'After channel & adoption filters'],
+    ['SOM (6% SAM)', fmtUSD(ex.som_2026_2027_usd), 'Near-term differentiated capture'],
+    ['Farm-gate proxy', fmtUSD(ex.farm_gate_value_proxy_usd_base), fmtUSD(fg[0]) + '–' + fmtUSD(fg[1]) + ' range']
+  ].map(c => '<div class="card" style="margin:0"><div class="label">' + esc(c[0]) + '</div><div class="value">' + esc(c[1]) + '</div><div class="note">' + esc(c[2]) + '</div></div>').join('');
+  document.getElementById('strategicRead').innerHTML = (ex.strategic_read || []).map(s => '<li>' + esc(s) + '</li>').join('');
+  const m = DATA.metadata;
+  document.getElementById('confidenceStrip').innerHTML = '<b>Confidence ' + m.confidence_score + '/10.</b> ' + esc(m.confidence_note || '');
+}
+
+function drawSizingCharts() {
+  const ex = DATA.executive_summary;
+  Plotly.newPlot('chartTamSam', [{
+    type: 'bar',
+    x: ['TAM', 'SAM', 'SOM'],
+    y: [ex.tam_2026_2027_usd, ex.sam_2026_2027_usd, ex.som_2026_2027_usd],
+    marker: { color: ['#14532D', '#166534', '#E11D48'] },
+    text: [fmtUSD(ex.tam_2026_2027_usd), fmtUSD(ex.sam_2026_2027_usd), fmtUSD(ex.som_2026_2027_usd)],
+    textposition: 'outside',
+    hovertemplate: '%{x}<br>%{y:$,.0f}<extra></extra>'
+  }], Object.assign({}, layoutBase, { yaxis: { title: 'USD', tickformat: '$,.0s' }, title: { text: 'Seed market layers (USD)', font: { size: 15 } } }), plotCfg);
+
+  const segs = DATA.market_sizing.segments;
+  const labels = segs.map(s => s.segment.length > 42 ? s.segment.slice(0, 40) + '…' : s.segment);
+  Plotly.newPlot('chartSegmentPie', [{
+    type: 'pie',
+    labels: labels,
+    values: segs.map(s => s.tam_usd),
+    hole: 0.38,
+    textinfo: 'label+percent',
+    textposition: 'outside',
+    hovertemplate: '%{label}<br>TAM: %{value:$,.0f}<extra></extra>'
+  }], Object.assign({}, layoutBase, { showlegend: false, title: { text: 'TAM mix by segment', font: { size: 15 } } }), plotCfg);
+
+  const sens = DATA.market_sizing.sensitivity;
+  Plotly.newPlot('chartSensitivity', [{
+    type: 'bar',
+    x: ['Low scenario', 'Base scenario', 'High scenario'],
+    y: [sens.low_tam_usd, sens.base_tam_usd, sens.high_tam_usd],
+    marker: { color: ['#94A3B8', '#14532D', '#E11D48'] },
+    text: [fmtUSD(sens.low_tam_usd), fmtUSD(sens.base_tam_usd), fmtUSD(sens.high_tam_usd)],
+    textposition: 'outside',
+    hovertemplate: '%{x}<br>%{y:$,.0f}<extra></extra>'
+  }], Object.assign({}, layoutBase, { yaxis: { title: 'TAM (USD)', tickformat: '$,.0s' }, title: { text: 'TAM sensitivity (report scenarios)', font: { size: 15 } } }), plotCfg);
+
+  document.getElementById('sensitivityDrivers').textContent = 'Key drivers: ' + (sens.key_drivers || []).join(' · ');
+}
+
+function drawSegmentBars() {
+  const segs = DATA.market_sizing.segments;
+  const short = segs.map(s => (s.segment.length > 48 ? s.segment.slice(0, 46) + '…' : s.segment));
+  Plotly.newPlot('chartSegmentBars', [
+    { type: 'bar', name: 'TAM', y: short, x: segs.map(s => s.tam_usd), orientation: 'h', marker: { color: '#14532D' }, hovertemplate: '%{y}<br>TAM %{x:$,.0f}<extra></extra>' },
+    { type: 'bar', name: 'SAM', y: short, x: segs.map(s => s.sam_usd), orientation: 'h', marker: { color: '#E11D48' }, hovertemplate: '%{y}<br>SAM %{x:$,.0f}<extra></extra>' }
+  ], Object.assign({}, layoutBase, { barmode: 'group', xaxis: { title: 'USD', tickformat: '$,.0s' }, yaxis: { automargin: true }, legend: { orientation: 'h', y: 1.08 }, title: { text: 'Segment TAM vs SAM', font: { size: 15 } } }), plotCfg);
+}
+
+function fillSegmentTable() {
+  const segs = DATA.market_sizing.segments;
+  document.getElementById('segmentTableBody').innerHTML = segs.map(s =>
+    '<tr><th scope="row">' + esc(s.segment) + '</th><td>' + (s.area_share * 100).toFixed(0) + '%</td><td>' + Number(s.area_ha).toLocaleString(undefined, { maximumFractionDigits: 0 }) + '</td><td>' + s.seed_density_per_ha.toLocaleString() + '</td><td>$' + s.seed_price_usd_per_seed + '</td><td>' + fmtUSD(s.tam_usd) + '</td><td>' + fmtUSD(s.sam_usd) + '</td></tr>'
+  ).join('');
+}
+
+function initProduction() {
+  const p = DATA.production_statistics;
+  const ht = p.historical_triangulation;
+  document.getElementById('productionCards').innerHTML = [
+    ['Production (' + p.latest_baseline_year + ')', fmtT(p.production_t), 'FAO-derived baseline'],
+    ['Harvested area', fmtHa(p.harvested_area_ha), p.harvested_area_acres.toLocaleString() + ' acres'],
+    ['Yield', p.yield_t_per_ha + ' t/ha', p.yield_t_per_acre + ' t/acre · ' + p.production_per_person_kg + ' kg/person']
+  ].map(c => '<div class="card" style="margin:0"><div class="label">' + esc(c[0]) + '</div><div class="value">' + esc(c[1]) + '</div><div class="note">' + esc(c[2]) + '</div></div>').join('');
+
+  const years = [2015, 2016, 2017, 2018, 2019, 2023];
+  const tons = [ht['2015_production_t'], ht['2016_production_t'], ht['2017_production_t'], ht['2018_production_t'], ht['2019_production_t'], p.production_t];
+  Plotly.newPlot('chartProductionHist', [{
+    type: 'bar',
+    x: years.map(String),
+    y: tons,
+    marker: { color: years.map(y => y === 2023 ? '#E11D48' : '#86EFAC') },
+    text: tons.map(t => fmtT(t)),
+    textposition: 'outside',
+    hovertemplate: '%{x}<br>%{y:,.0f} t<extra></extra>'
+  }], Object.assign({}, layoutBase, { yaxis: { title: 'Production (t)' }, title: { text: 'National production — triangulation vs 2023 baseline', font: { size: 15 } } }), plotCfg);
+
+  const o = p.fy2026_2027_outlook;
+  document.getElementById('productionOutlook').textContent =
+    'FY2026–FY2027 outlook: production ' + fmtT(o.production_range_t[0]) + '–' + fmtT(o.production_range_t[1]) +
+    ', area ' + o.area_range_ha[0].toLocaleString() + '–' + o.area_range_ha[1].toLocaleString() + ' ha, yield ' +
+    o.yield_range_t_per_ha[0] + '–' + o.yield_range_t_per_ha[1] + ' t/ha. ' + o.method + ' ' + ht.interpretation;
+}
+
+function drawRegions() {
+  const regs = DATA.major_regions_and_climate_twins;
+  Plotly.newPlot('chartRegionScatter', [{
+    type: 'scatter',
+    mode: 'markers+text',
+    x: regs.map(r => r.rank),
+    y: regs.map(r => r.annual_temp_c),
+    text: regs.map(r => '#' + r.rank),
+    textposition: 'top center',
+    marker: {
+      size: regs.map(r => 14 + r.annual_precip_mm_day * 5),
+      color: regs.map(r => r.annual_precip_mm_day),
+      colorscale: 'YlGnBu',
+      showscale: true,
+      colorbar: { title: 'mm/day' }
+    },
+    hovertemplate: '<b>%{customdata[0]}</b><br>Temp %{y:.1f}°C<br>Precip %{customdata[1]} mm/day<extra></extra>',
+    customdata: regs.map(r => [r.region, r.annual_precip_mm_day])
+  }], Object.assign({}, layoutBase, { xaxis: { title: 'Priority rank' }, yaxis: { title: 'Mean annual temp (°C)' }, title: { text: 'Regional climate signal (NASA POWER)', font: { size: 15 } } }), plotCfg);
+
+  document.getElementById('regionCards').innerHTML = regs.map(r => {
+    const twins = (r.climate_twins || []).map(t => '<span class="tag green-tag">' + esc(t) + '</span>').join(' ');
+    return '<details><summary><b>#' + r.rank + '</b> ' + esc(r.region) + '</summary>' +
+      '<p><b>Production signal:</b> ' + esc(r.production_signal) + '</p>' +
+      '<p><b>Climate:</b> ' + r.annual_temp_c + '°C mean; precip ' + r.annual_precip_mm_day + ' mm/day · lat ' + r.lat + ', lon ' + r.lon + '</p>' +
+      '<p><b>Climate twins:</b> ' + twins + '</p>' +
+      '<p><b>Seed positioning:</b> ' + esc(r.seed_positioning) + '</p></details>';
+  }).join('');
+}
+
+function fillTrends() {
+  const rows = DATA.market_trends.map(t =>
+    '<tr><td><span class="tag">' + esc(t.category) + '</span> ' + esc(t.trend) + '</td><td>' + t.impact_score + '/10</td><td>' + esc(t.velocity) + '</td><td>' + esc(t.evidence) + '</td><td>' + esc(t.seed_implication) + '</td></tr>'
+  ).join('');
+  document.getElementById('trendTable').innerHTML =
+    '<thead><tr><th>Trend</th><th>Impact</th><th>Velocity</th><th>Evidence</th><th>Seed implication</th></tr></thead><tbody>' + rows + '</tbody>';
+
+  const t = DATA.market_trends;
+  Plotly.newPlot('chartTrendImpact', [{
+    type: 'bar',
+    x: t.map(r => r.impact_score),
+    y: t.map(r => esc(r.category) + ': ' + (r.trend.length > 56 ? r.trend.slice(0, 54) + '…' : r.trend)),
+    orientation: 'h',
+    marker: { color: t.map(r => r.impact_score >= 9 ? '#E11D48' : r.impact_score >= 8 ? '#14532D' : '#64748B') },
+    customdata: t.map(r => r.velocity),
+    hovertemplate: '%{y}<br>Impact %{x}/10<br>Velocity: %{customdata}<extra></extra>'
+  }], Object.assign({}, layoutBase, { xaxis: { title: 'Impact score', range: [0, 10.5] }, margin: { t: 48, l: 220, r: 28, b: 48 }, title: { text: 'Trend impact scores', font: { size: 15 } } }), plotCfg);
+}
+
+function fillTypology() {
+  document.getElementById('typologyCards').innerHTML = DATA.typology_and_segments.map(seg =>
+    '<details><summary><b>' + esc(seg.type) + '</b></summary>' +
+    '<p><b>Examples:</b> ' + esc(seg.examples) + '</p>' +
+    '<p><b>Buyer need:</b> ' + esc(seg.buyer_need) + '</p>' +
+    '<p><b>Priority traits:</b> ' + esc(seg.priority_traits) + '</p></details>'
+  ).join('');
+}
+
+let diseaseIdx = 0;
+function renderDisease() {
+  const list = DATA.disease_and_desired_traits;
+  const d = list[diseaseIdx];
+  document.getElementById('diseaseCards').innerHTML =
+    '<div class="card wide"><div class="label">' + esc(d.pressure) + '</div>' +
+    '<p><b>Risk context:</b> ' + esc(d.risk_context) + '</p>' +
+    '<p><b>Desired trait / claim:</b> ' + esc(d.desired_trait) + '</p></div>';
+}
+function initDisease() {
+  const list = DATA.disease_and_desired_traits;
+  document.getElementById('diseaseBtns').innerHTML = list.map((d, i) =>
+    '<button type="button" class="btn' + (i === 0 ? ' active' : '') + '" data-i="' + i + '">' + esc(d.pressure.slice(0, 40)) + (d.pressure.length > 40 ? '…' : '') + '</button>'
+  ).join('');
+  document.querySelectorAll('#diseaseBtns .btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      diseaseIdx = +btn.dataset.i;
+      document.querySelectorAll('#diseaseBtns .btn').forEach(b => b.classList.toggle('active', b === btn));
+      renderDisease();
+    });
+  });
+  renderDisease();
+}
+
+function initTrade() {
+  const t = DATA.domestic_demand_and_trade;
+  document.getElementById('demandRead').textContent = t.demand_read + ' Apparent availability ~' + fmtT(t.apparent_availability_2023_t) + ' (' + t.production_per_person_kg_2023 + ' kg/person).';
+  const rows = t.import_export.map(r =>
+    '<tr><td>' + esc(r.flow) + '</td><td>' + r.year + '</td><td>' + esc(r.result) + '</td></tr>'
+  ).join('');
+  document.getElementById('tradeTable').innerHTML =
+    '<thead><tr><th>Flow</th><th>Year</th><th>WITS signal</th></tr></thead><tbody>' + rows + '</tbody>';
+  document.getElementById('tradeCaveat').textContent = t.caveat;
+}
+
+function initMethod() {
+  const ms = DATA.market_sizing;
+  document.getElementById('methodFormula').innerHTML = '<code style="background:#ECFDF5;padding:4px 8px;border-radius:8px">' + esc(ms.formula) + '</code> · Base area <b>' + ms.base_area_ha.toLocaleString() + ' ha</b> · Uplift <b>×' + ms.forecast_uplift + '</b> · SOM = <b>' + (ms.som_capture_rate_of_sam * 100) + '%</b> of SAM.';
+}
+
+function initSources() {
+  const labels = {
+    atlasbig_fao_2023: 'AtlasBig / FAO-derived 2023 watermelon table',
+    undata_faostat_item_567: 'UNdata FAOSTAT item 567 — Watermelons',
+    nationmaster_venezuela_2019: 'NationMaster — Venezuela watermelon production series',
+    fao_watermelon_crop_water: 'FAO Land & Water — Watermelon crop information',
+    monografias_patilla_venezuela: 'Monografias — generalidades cultivo patilla',
+    udo_watermelon_anzoategui: 'UDO SABER — watermelon Soledad, Anzoátegui',
+    freshplaza_paraguana: 'FreshPlaza / AVN — Paraguaná melon-watermelon exports',
+    wits_hs080710: 'WITS — HS080710 melon/watermelon trade',
+    wits_hs120991: 'WITS — HS120991 vegetable seed imports',
+    scielo_mnsv_rootstocks: 'SciELO Mexico — watermelon rootstocks / MNSV context'
+  };
+  document.getElementById('sourcesList').innerHTML = DATA.sources.map(s => {
+    const name = labels[s.id] || s.id;
+    return '<li><b>' + esc(name) + '</b> — <a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.url) + '</a></li>';
+  }).join('');
+}
+
+function boot() {
+  initHeader();
+  initThesis();
+  drawSizingCharts();
+  drawSegmentBars();
+  fillSegmentTable();
+  initProduction();
+  drawRegions();
+  fillTrends();
+  fillTypology();
+  initDisease();
+  initTrade();
+  initMethod();
+  initSources();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+else boot();
+</script>
+</body>
+</html>
