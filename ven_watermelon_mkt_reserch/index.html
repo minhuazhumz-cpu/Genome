@@ -78,7 +78,6 @@
   <nav>
     <h3>Navigate</h3>
     <a href="#thesis">Thesis</a>
-    <a href="#sizing">Market sizing</a>
     <a href="#production">Production</a>
     <a href="#segments">Segments</a>
     <a href="#regions">Regions &amp; climate</a>
@@ -98,17 +97,6 @@
       <div class="callout muted"><b>Strategic read</b></div>
       <ul id="strategicRead" style="margin:0;color:#44403C"></ul>
       <p id="confidenceStrip" class="note" style="margin-top:16px"></p>
-    </section>
-
-    <section id="sizing" class="panel">
-      <h2>Market sizing — TAM / SAM / SOM</h2>
-      <p class="sub">Bottom-up seed-value pool with FY2026–FY2027 uplift; farm-gate proxy from production × price sensitivity.</p>
-      <div class="grid">
-        <div id="chartTamSam" class="chart"></div>
-        <div id="chartSegmentPie" class="chart"></div>
-      </div>
-      <div id="chartSensitivity" class="chart tall" style="margin-top:8px"></div>
-      <p class="sub" id="sensitivityDrivers"></p>
     </section>
 
     <section id="production" class="panel">
@@ -155,8 +143,7 @@
 
     <section id="trends" class="panel">
       <h2>Market trends — trait-to-table radar</h2>
-      <p class="sub">PESTEL-style categories from the report; bar length = impact score (1–10).</p>
-      <div id="chartTrendImpact" class="chart"></div>
+      <p class="sub">PESTEL-style categories from the report.</p>
       <div class="scroll"><table id="trendTable"></table></div>
     </section>
 
@@ -274,44 +261,6 @@ function initThesis() {
   document.getElementById('confidenceStrip').innerHTML = '<b>Confidence ' + m.confidence_score + '/10.</b> ' + esc(m.confidence_note || '');
 }
 
-function drawSizingCharts() {
-  const ex = DATA.executive_summary;
-  Plotly.newPlot('chartTamSam', [{
-    type: 'bar',
-    x: ['TAM', 'SAM', 'SOM'],
-    y: [ex.tam_2026_2027_usd, ex.sam_2026_2027_usd, ex.som_2026_2027_usd],
-    marker: { color: ['#14532D', '#166534', '#E11D48'] },
-    text: [fmtUSD(ex.tam_2026_2027_usd), fmtUSD(ex.sam_2026_2027_usd), fmtUSD(ex.som_2026_2027_usd)],
-    textposition: 'outside',
-    hovertemplate: '%{x}<br>%{y:$,.0f}<extra></extra>'
-  }], Object.assign({}, layoutBase, { yaxis: { title: 'USD', tickformat: '$,.0s' }, title: { text: 'Seed market layers (USD)', font: { size: 15 } } }), plotCfg);
-
-  const segs = DATA.market_sizing.segments;
-  const labels = segs.map(s => s.segment.length > 42 ? s.segment.slice(0, 40) + '…' : s.segment);
-  Plotly.newPlot('chartSegmentPie', [{
-    type: 'pie',
-    labels: labels,
-    values: segs.map(s => s.tam_usd),
-    hole: 0.38,
-    textinfo: 'label+percent',
-    textposition: 'outside',
-    hovertemplate: '%{label}<br>TAM: %{value:$,.0f}<extra></extra>'
-  }], Object.assign({}, layoutBase, { showlegend: false, title: { text: 'TAM mix by segment', font: { size: 15 } } }), plotCfg);
-
-  const sens = DATA.market_sizing.sensitivity;
-  Plotly.newPlot('chartSensitivity', [{
-    type: 'bar',
-    x: ['Low scenario', 'Base scenario', 'High scenario'],
-    y: [sens.low_tam_usd, sens.base_tam_usd, sens.high_tam_usd],
-    marker: { color: ['#94A3B8', '#14532D', '#E11D48'] },
-    text: [fmtUSD(sens.low_tam_usd), fmtUSD(sens.base_tam_usd), fmtUSD(sens.high_tam_usd)],
-    textposition: 'outside',
-    hovertemplate: '%{x}<br>%{y:$,.0f}<extra></extra>'
-  }], Object.assign({}, layoutBase, { yaxis: { title: 'TAM (USD)', tickformat: '$,.0s' }, title: { text: 'TAM sensitivity (report scenarios)', font: { size: 15 } } }), plotCfg);
-
-  document.getElementById('sensitivityDrivers').textContent = 'Key drivers: ' + (sens.key_drivers || []).join(' · ');
-}
-
 function drawSegmentBars() {
   const segs = DATA.market_sizing.segments;
   const short = segs.map(s => (s.segment.length > 48 ? s.segment.slice(0, 46) + '…' : s.segment));
@@ -392,17 +341,6 @@ function fillTrends() {
   ).join('');
   document.getElementById('trendTable').innerHTML =
     '<thead><tr><th>Trend</th><th>Impact</th><th>Velocity</th><th>Evidence</th><th>Seed implication</th></tr></thead><tbody>' + rows + '</tbody>';
-
-  const t = DATA.market_trends;
-  Plotly.newPlot('chartTrendImpact', [{
-    type: 'bar',
-    x: t.map(r => r.impact_score),
-    y: t.map(r => esc(r.category) + ': ' + (r.trend.length > 56 ? r.trend.slice(0, 54) + '…' : r.trend)),
-    orientation: 'h',
-    marker: { color: t.map(r => r.impact_score >= 9 ? '#E11D48' : r.impact_score >= 8 ? '#14532D' : '#64748B') },
-    customdata: t.map(r => r.velocity),
-    hovertemplate: '%{y}<br>Impact %{x}/10<br>Velocity: %{customdata}<extra></extra>'
-  }], Object.assign({}, layoutBase, { xaxis: { title: 'Impact score', range: [0, 10.5] }, margin: { t: 48, l: 220, r: 28, b: 48 }, title: { text: 'Trend impact scores', font: { size: 15 } } }), plotCfg);
 }
 
 function fillTypology() {
@@ -476,7 +414,6 @@ function initSources() {
 function boot() {
   initHeader();
   initThesis();
-  drawSizingCharts();
   drawSegmentBars();
   fillSegmentTable();
   initProduction();
