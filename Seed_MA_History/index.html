@@ -1,0 +1,846 @@
+<title>Seed, Data, Goodwill — 30 Years of Ag M&amp;A</title>
+<style>
+  :root {
+    color-scheme: light;
+    --paper:      #F2F3F1;
+    --paper-2:    #E9EBE6;
+    --ink:        #14181A;
+    --ink-2:      #4A544F;
+    --ink-3:      #7C867F;
+    --rule:       #D8DCD4;
+    --rule-soft:  #E4E7E0;
+    --accent:     #1B5745;
+    --accent-ink: #16493A;
+    --signal:     #A83C36;
+    --c-goodwill: #5FA98D;
+    --c-intang:   #1B5745;
+    --on-goodwill:#14181A;
+    --on-intang:  #F2F3F1;
+    --serif: "Iowan Old Style", Charter, "Bitstream Charter", "Source Serif 4", Georgia, "Times New Roman", serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, "Cascadia Mono", "Roboto Mono", "Liberation Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --paper:      #14181A;
+      --paper-2:    #1C2124;
+      --ink:        #EDEFEA;
+      --ink-2:      #A9B2AC;
+      --ink-3:      #78827C;
+      --rule:       #2C3335;
+      --rule-soft:  #232A2C;
+      --accent:     #7FCFAE;
+      --accent-ink: #9FDCC4;
+      --signal:     #E08078;
+      --c-goodwill: #2A6B55;
+      --c-intang:   #9FDCC4;
+      --on-goodwill:#EDEFEA;
+      --on-intang:  #14181A;
+    }
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --paper:#F2F3F1; --paper-2:#E9EBE6; --ink:#14181A; --ink-2:#4A544F; --ink-3:#7C867F;
+    --rule:#D8DCD4; --rule-soft:#E4E7E0; --accent:#1B5745; --accent-ink:#16493A; --signal:#A83C36;
+    --c-goodwill:#5FA98D; --c-intang:#1B5745; --on-goodwill:#14181A; --on-intang:#F2F3F1;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --paper:#14181A; --paper-2:#1C2124; --ink:#EDEFEA; --ink-2:#A9B2AC; --ink-3:#78827C;
+    --rule:#2C3335; --rule-soft:#232A2C; --accent:#7FCFAE; --accent-ink:#9FDCC4; --signal:#E08078;
+    --c-goodwill:#2A6B55; --c-intang:#9FDCC4; --on-goodwill:#EDEFEA; --on-intang:#14181A;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px 120px; }
+  .measure { max-width: 41rem; }
+
+  /* ---------- masthead ---------- */
+  header.masthead {
+    padding: 72px 0 40px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    display: flex; flex-wrap: wrap; gap: 8px 22px;
+  }
+  h1 {
+    font-size: clamp(2.4rem, 6vw, 4.1rem);
+    line-height: 1.02;
+    letter-spacing: -.025em;
+    font-weight: 600;
+    margin: 26px 0 0;
+    text-wrap: balance;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  .standfirst {
+    font-size: 1.24rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+    margin-top: 22px;
+    max-width: 40rem;
+    text-wrap: pretty;
+  }
+
+  /* ---------- key figures strip ---------- */
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+    gap: 0;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 8px;
+  }
+  .fig { padding: 26px 22px 26px 0; border-right: 1px solid var(--rule-soft); }
+  .fig:last-child { border-right: 0; }
+  .fig .n {
+    font-family: var(--mono);
+    font-size: 1.85rem;
+    font-weight: 500;
+    letter-spacing: -.03em;
+    font-variant-numeric: tabular-nums;
+    display: block;
+    line-height: 1.1;
+  }
+  .fig .n.hot { color: var(--signal); }
+  .fig .l {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .11em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-top: 10px;
+    display: block;
+    line-height: 1.5;
+  }
+
+  /* ---------- sections ---------- */
+  section { padding-top: 64px; }
+  .sec-head { display: flex; align-items: baseline; gap: 16px; border-bottom: 1px solid var(--ink); padding-bottom: 10px; margin-bottom: 30px; }
+  .sec-num {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em;
+    color: var(--accent); text-transform: uppercase; flex: none;
+  }
+  h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    letter-spacing: -.018em; font-weight: 600; line-height: 1.15; margin: 0;
+    text-wrap: balance;
+  }
+  h3 {
+    font-size: 1.16rem; font-weight: 600; letter-spacing: -.01em;
+    margin: 40px 0 12px; text-wrap: balance;
+  }
+  p { margin: 0 0 1.05em; text-wrap: pretty; }
+  .measure p:last-child { margin-bottom: 0; }
+  a { color: var(--accent-ink); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  strong { font-weight: 600; }
+  .lede { font-size: 1.1rem; color: var(--ink-2); }
+
+  /* ---------- pull ---------- */
+  .pull {
+    border-left: 3px solid var(--signal);
+    padding: 4px 0 4px 22px;
+    margin: 32px 0;
+    font-size: 1.2rem;
+    line-height: 1.42;
+    letter-spacing: -.012em;
+    max-width: 38rem;
+  }
+  .pull .src {
+    display: block; font-family: var(--mono); font-size: 11px;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-top: 14px;
+  }
+
+  /* ---------- chart ---------- */
+  .figure { margin: 38px 0 8px; }
+  .fig-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
+  .fig-sub { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); letter-spacing: .04em; margin-bottom: 22px; line-height: 1.6; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-bottom: 20px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .swatch { width: 11px; height: 11px; border-radius: 2px; flex: none; }
+
+  .chart { position: relative; padding-top: 20px; }
+  .row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .row { display: grid; grid-template-columns: minmax(120px, 190px) 1fr; gap: 18px; align-items: center; padding: 7px 0; }
+  .row-name { font-family: var(--mono); font-size: 11.5px; line-height: 1.35; color: var(--ink-2); text-align: right; letter-spacing: .01em; }
+  .row-name b { display: block; color: var(--ink); font-weight: 500; font-size: 12px; }
+  .track { position: relative; height: 30px; }
+  .bar { position: absolute; inset: 0 auto 0 0; display: flex; height: 100%; }
+  .seg {
+    height: 100%; display: flex; align-items: center; justify-content: flex-end;
+    padding-right: 8px; box-sizing: border-box;
+    font-family: var(--mono); font-size: 10.5px; font-variant-numeric: tabular-nums;
+    letter-spacing: .02em; overflow: hidden; white-space: nowrap;
+    transition: filter .12s ease;
+  }
+  .seg.s-goodwill { background: var(--c-goodwill); color: var(--on-goodwill); border-radius: 3px 0 0 3px; }
+  .seg.s-intang   { background: var(--c-intang);   color: var(--on-intang);   border-radius: 0 3px 3px 0; margin-left: 2px; }
+  .seg.only { border-radius: 3px; }
+  .row:hover .seg { filter: brightness(1.08); }
+  .ref100 {
+    position: absolute; top: 0; bottom: 0; width: 0;
+    border-left: 1px dashed var(--ink-3);
+    pointer-events: none;
+  }
+  .ref-label {
+    position: absolute; font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-3); white-space: nowrap;
+  }
+  .tip {
+    position: fixed; z-index: 40; pointer-events: none; opacity: 0;
+    background: var(--paper); border: 1px solid var(--ink);
+    padding: 11px 13px; max-width: 270px;
+    font-family: var(--mono); font-size: 11.5px; line-height: 1.55; color: var(--ink);
+    box-shadow: 0 6px 22px rgba(0,0,0,.14);
+    transition: opacity .1s ease;
+  }
+  .tip b { display: block; font-size: 12px; margin-bottom: 6px; font-weight: 600; }
+  .tip .kv { display: flex; justify-content: space-between; gap: 18px; font-variant-numeric: tabular-nums; }
+  .tip .kv span:last-child { color: var(--ink-2); }
+
+  /* ---------- controls ---------- */
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 26px; align-items: center; }
+  .chip {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
+    padding: 6px 12px; border: 1px solid var(--rule); background: transparent; color: var(--ink-2);
+    cursor: pointer; border-radius: 2px; transition: background .12s, color .12s, border-color .12s;
+  }
+  .chip:hover { border-color: var(--ink-3); color: var(--ink); }
+  .chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .ctl-label {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink-3); margin-right: 4px;
+  }
+
+  /* ---------- ledger ---------- */
+  .ledger { border-top: 1px solid var(--ink); }
+  .entry {
+    display: grid;
+    grid-template-columns: 62px 1fr minmax(96px, auto);
+    gap: 0 20px;
+    padding: 15px 0 15px;
+    border-bottom: 1px solid var(--rule-soft);
+    align-items: baseline;
+  }
+  .entry .yr {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-3);
+    font-variant-numeric: tabular-nums; letter-spacing: .02em; padding-top: 2px;
+  }
+  .entry .body h4 { font-size: 1rem; font-weight: 600; margin: 0 0 3px; letter-spacing: -.008em; }
+  .entry .body p { font-size: .93rem; color: var(--ink-2); margin: 0; line-height: 1.5; }
+  .entry .val {
+    font-family: var(--mono); font-size: 12.5px; text-align: right;
+    font-variant-numeric: tabular-nums; letter-spacing: -.01em; padding-top: 2px; white-space: nowrap;
+  }
+  .entry .val.na { color: var(--ink-3); }
+  .tag {
+    display: inline-block; font-family: var(--mono); font-size: 9.5px; letter-spacing: .11em;
+    text-transform: uppercase; padding: 2px 6px; border: 1px solid var(--rule);
+    color: var(--ink-3); border-radius: 2px; margin-left: 8px; vertical-align: 2px;
+  }
+  .tag.t-digital { border-color: var(--accent); color: var(--accent-ink); }
+  .tag.t-reg { border-color: var(--signal); color: var(--signal); }
+  .entry.hide { display: none; }
+  .count { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: .08em; text-transform: uppercase; margin-top: 18px; }
+
+  /* ---------- tables ---------- */
+  .tablewrap { overflow-x: auto; margin: 26px 0; border-top: 1px solid var(--ink); }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; font-family: var(--mono); font-size: 12px; }
+  th, td { padding: 10px 14px 10px 0; text-align: left; border-bottom: 1px solid var(--rule-soft); vertical-align: top; }
+  th {
+    font-size: 10px; letter-spacing: .11em; text-transform: uppercase; color: var(--ink-3);
+    font-weight: 500; border-bottom: 1px solid var(--rule);
+  }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.name { font-family: var(--serif); font-size: 14px; }
+  tr.emph td { background: var(--paper-2); }
+  .hidden { display: none; }
+
+  /* ---------- wave cards ---------- */
+  .waves { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin: 30px 0; }
+  @media (min-width: 800px) { .waves { grid-template-columns: repeat(4, 1fr); } }
+  .wave { background: var(--paper); padding: 22px 20px 24px; }
+  .wave .rn { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; color: var(--accent); }
+  .wave .yrs { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); margin-top: 3px; font-variant-numeric: tabular-nums; }
+  .wave h4 { font-size: 1.05rem; margin: 12px 0 7px; font-weight: 600; letter-spacing: -.01em; }
+  .wave p { font-size: .9rem; color: var(--ink-2); margin: 0; line-height: 1.5; }
+
+  /* ---------- theses ---------- */
+  ol.theses { list-style: none; padding: 0; margin: 26px 0 0; counter-reset: t; }
+  ol.theses li {
+    counter-increment: t; padding: 20px 0 20px 46px; border-bottom: 1px solid var(--rule-soft);
+    position: relative; max-width: 44rem;
+  }
+  ol.theses li::before {
+    content: counter(t, upper-roman); position: absolute; left: 0; top: 21px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: .1em; color: var(--accent);
+  }
+  ol.theses li b { display: block; margin-bottom: 4px; font-weight: 600; }
+  ol.theses li span { color: var(--ink-2); font-size: .96rem; }
+
+  ul.watch { list-style: none; padding: 0; margin: 24px 0 0; max-width: 44rem; }
+  ul.watch li { padding: 14px 0 14px 20px; border-bottom: 1px solid var(--rule-soft); position: relative; font-size: .98rem; color: var(--ink-2); }
+  ul.watch li::before { content: ""; position: absolute; left: 0; top: 23px; width: 8px; height: 1px; background: var(--accent); }
+  ul.watch li b { color: var(--ink); font-weight: 600; }
+
+  footer { margin-top: 78px; padding-top: 26px; border-top: 1px solid var(--ink); font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); line-height: 1.75; }
+  footer a { color: var(--ink-2); }
+  .note { font-family: var(--mono); font-size: 11px; color: var(--ink-3); line-height: 1.65; margin-top: 14px; letter-spacing: .01em; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  @media (max-width: 640px) {
+    body { font-size: 16px; }
+    .wrap { padding: 0 18px 80px; }
+    .row { grid-template-columns: 1fr; gap: 5px; }
+    .row-name { text-align: left; }
+    .entry { grid-template-columns: 52px 1fr; }
+    .entry .val { grid-column: 2; text-align: left; padding-top: 6px; }
+  }
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <div class="eyebrow">
+    <span>Sector map</span><span>Seeds &amp; crop inputs</span><span>1996 — 2026</span><span>Compiled 4 Aug 2026</span>
+  </div>
+  <h1>Seed, data, and <em>goodwill</em></h1>
+  <p class="standfirst">
+    Thirty years of consolidation in the agricultural seed industry, read through the one document
+    that forces a buyer to say what it thinks it bought: the purchase price allocation.
+  </p>
+</header>
+
+<div class="figures">
+  <div class="fig"><span class="n hot">84%</span><span class="l">of the Climate Corp price booked as goodwill</span></div>
+  <div class="fig"><span class="n">$142M</span><span class="l">identifiable intangibles in a $932M deal</span></div>
+  <div class="fig"><span class="n">56%</span><span class="l">global seed market held by four firms</span></div>
+  <div class="fig"><span class="n">$16B</span><span class="l">agrifoodtech VC in 2024, from $51B in 2021</span></div>
+  <div class="fig"><span class="n">2026</span><span class="l">Corteva splits seed from crop protection</span></div>
+</div>
+
+<section id="thesis">
+  <div class="sec-head"><span class="sec-num">01</span><h2>The short version</h2></div>
+  <div class="measure">
+    <p class="lede">
+      The industry consolidated in four waves, and only the third was about data. What the majors bought
+      changed each time: germplasm, then traits, then software, and now biology and discovery AI.
+    </p>
+    <p>
+      Digitalization was defensive from the beginning. Monsanto's $930M purchase of The Climate Corporation
+      in October 2013 was the trigger event, and within four years every peer had bought or built a farm
+      management platform. None of them were building a software business. They were preventing a neutral
+      data layer from forming between the seed bag and the field — because whoever owns the recommendation
+      owns the sale.
+    </p>
+    <p>
+      Every attempt to charge farmers for that software failed. Corteva sold Granular Business to Traction Ag
+      and shut down Granular Agronomy on 31 August 2022, exiting SaaS four years after paying $300M for it.
+      The platforms that survived — FieldView, Cropwise, xarvio — are free, bundled, and exist to steer
+      product choice and harvest agronomic data back into breeding.
+    </p>
+  </div>
+
+  <div class="waves">
+    <div class="wave">
+      <div class="rn">WAVE I</div><div class="yrs">1996 — 2002</div>
+      <h4>Germplasm</h4>
+      <p>Buy the seed companies; rent the genomics. Monsanto licensed Millennium's platform for $218M; Syngenta paid Myriad to sequence rice. Both units were closed within a few years.</p>
+    </div>
+    <div class="wave">
+      <div class="rn">WAVE II</div><div class="yrs">2003 — 2012</div>
+      <h4>Traits &amp; vegetables</h4>
+      <p>Seminis, Delta &amp; Pine Land, De Ruiter. Then the hinge: Precision Planting in 2012 gave a seed company planter-level telemetry for the first time.</p>
+    </div>
+    <div class="wave">
+      <div class="rn">WAVE III</div><div class="yrs">2013 — 2019</div>
+      <h4>Software, then each other</h4>
+      <p>The digital land grab, followed immediately by Big Six → Big Four. Regulators treated farm data as a market, not a feature.</p>
+    </div>
+    <div class="wave">
+      <div class="rn">WAVE IV</div><div class="yrs">2020 — 2026</div>
+      <h4>Biology &amp; discovery AI</h4>
+      <p>Biologicals bought at scale, AI moved upstream into molecule discovery, and Corteva announced the first structural reversal of the merger era.</p>
+    </div>
+  </div>
+</section>
+
+<section id="ppa">
+  <div class="sec-head"><span class="sec-num">02</span><h2>What the buyers actually booked</h2></div>
+  <div class="measure">
+    <p>
+      Press releases report a headline number. Purchase price allocation reports what a buyer's own valuers
+      could identify, name, and assign a useful life to. Everything they could not identify becomes goodwill.
+      Across nine deals pulled from primary filings, the goodwill share ranges from 17% to 84% — and the
+      spread maps precisely onto what was being bought.
+    </p>
+  </div>
+
+  <div class="figure">
+    <div class="fig-title">Goodwill and identifiable intangibles as a share of consideration</div>
+    <div class="fig-sub">
+      Bars are scaled to the consideration paid. Where a bar crosses the 100% line, the buyer also assumed
+      net liabilities — most often deferred tax on the acquired intangibles.
+    </div>
+    <div class="legend" aria-hidden="true">
+      <span><i class="swatch" style="background:var(--c-goodwill)"></i> Goodwill — unidentifiable</span>
+      <span><i class="swatch" style="background:var(--c-intang)"></i> Identifiable intangibles</span>
+    </div>
+    <div class="controls">
+      <span class="ctl-label">View</span>
+      <button class="chip" id="viewChart" aria-pressed="true">Chart</button>
+      <button class="chip" id="viewTable" aria-pressed="false">Table</button>
+    </div>
+
+    <div class="chart" id="chart"></div>
+
+    <div class="tablewrap hidden" id="ppaTable">
+      <table>
+        <caption class="sr-only">Purchase price allocation by deal, sorted by goodwill share</caption>
+        <thead>
+          <tr>
+            <th>Deal</th><th>Closed</th><th class="num">Consideration</th>
+            <th class="num">Goodwill</th><th class="num">Goodwill %</th>
+            <th class="num">Intangibles</th><th class="num">Other net assets</th>
+          </tr>
+        </thead>
+        <tbody id="ppaBody"></tbody>
+      </table>
+    </div>
+    <p class="note">
+      Sources: Monsanto 10-K FY2014 Note 4 · AGCO 10-K FY2017 · Deere 10-K FY2017 Note 4 ·
+      Corteva 10-K FY2023 Note 4 · BASF Online Report 2018 · Bayer interim report Q3 2018.
+    </p>
+  </div>
+
+  <h3>The number that reframes the story</h3>
+  <div class="measure">
+    <p>
+      Of the $932M fair value Monsanto assigned to The Climate Corporation, <strong>$783M was goodwill</strong>.
+      The identifiable intangibles came to $142M, and they were exactly two things:
+      acquired intellectual property of $138M on a ten-year life, and customer relationships of $4M
+      on a <strong>one-year</strong> life.
+    </p>
+    <p>
+      There is no data asset on that list. No database, no weather archive, no agronomic model library.
+      The most celebrated data acquisition in the history of agriculture produced $138M of amortizable
+      technology and a customer relationship written off inside twelve months. The rest was, in Monsanto's
+      own words, the premium paid "for the right to control the acquired business and technology" — and it
+      was not deductible for tax.
+    </p>
+  </div>
+
+  <blockquote class="pull">
+    Farm data was never a separable, capitalizable asset. It was an option on future product placement,
+    and options get booked as goodwill.
+    <span class="src">The accounting reading of the digital land grab</span>
+  </blockquote>
+
+  <h3>Three things the filings say that the press never did</h3>
+  <div class="measure">
+    <p>
+      <strong>Bayer is the only company that has ever put a farm data platform on a balance sheet.</strong>
+      In the Monsanto allocation, Bayer separately identified <em>digital platforms</em> as an intangible
+      asset class with a 15-year useful life, alongside seeds and traits (9–30 years), herbicides (20 years),
+      and brands (10–30 years). IFRS 3 forced a disclosure that voluntary reporting has never produced —
+      though Bayer disclosed the class and the life, not the amount.
+    </p>
+    <p>
+      <strong>Granular effectively never existed in the financial record.</strong> A full-text search of
+      EDGAR returns it only inside Exhibit 21 — the subsidiaries list. A $300M acquisition received no
+      purchase price allocation, no segment disclosure, no impairment note, and no gain or loss on
+      divestiture when it was sold to Traction Ag. Monsanto's entire digital bolt-on programme — 640 Labs,
+      Solum, HydroBio, VitalFields — produced no business-combination disclosure at all. The land grab that
+      reshaped the industry's competitive narrative was, in accounting terms, a rounding error attached to
+      one $932M anchor deal.
+    </p>
+    <p>
+      <strong>Several "undisclosed" prices were disclosed all along.</strong> The FY2014 Monsanto 10-K
+      carries fair values for deals the trade press reported without numbers: Beeologics at $113M,
+      Agradis at $85M, Rosetta Green at $35M, Dieckmann at $30M, GrassRoots Biotechnology at $15M.
+      Beeologics alone is far larger than the tuck-in it was described as, and it makes Monsanto's
+      2011–13 biologicals programme a roughly $280M bet placed a decade before Corteva paid $1.59B
+      for Stoller and Symborg.
+    </p>
+  </div>
+</section>
+
+<section id="ledger">
+  <div class="sec-head"><span class="sec-num">03</span><h2>The deal ledger</h2></div>
+  <div class="measure">
+    <p>
+      Sixty transactions and alliances across four waves. Filter by period or by what the deal was for.
+      Values marked <span style="font-family:var(--mono);font-size:12px">†</span> are widely reported but
+      not verified against a primary filing.
+    </p>
+  </div>
+
+  <div class="controls" role="group" aria-label="Filter by wave">
+    <span class="ctl-label">Wave</span>
+    <button class="chip wv" data-w="all" aria-pressed="true">All</button>
+    <button class="chip wv" data-w="1" aria-pressed="false">I · 96–02</button>
+    <button class="chip wv" data-w="2" aria-pressed="false">II · 03–12</button>
+    <button class="chip wv" data-w="3" aria-pressed="false">III · 13–19</button>
+    <button class="chip wv" data-w="4" aria-pressed="false">IV · 20–26</button>
+  </div>
+  <div class="controls" role="group" aria-label="Filter by deal type">
+    <span class="ctl-label">Type</span>
+    <button class="chip ct" data-c="all" aria-pressed="true">All</button>
+    <button class="chip ct" data-c="digital" aria-pressed="false">Digital &amp; data</button>
+    <button class="chip ct" data-c="seed" aria-pressed="false">Seed &amp; traits</button>
+    <button class="chip ct" data-c="bio" aria-pressed="false">Biology &amp; editing</button>
+    <button class="chip ct" data-c="partner" aria-pressed="false">Partnership</button>
+    <button class="chip ct" data-c="structural" aria-pressed="false">Structural</button>
+  </div>
+
+  <div class="ledger" id="ledger"></div>
+  <div class="count" id="count"></div>
+</section>
+
+<section id="verdict">
+  <div class="sec-head"><span class="sec-num">04</span><h2>Scorecard</h2></div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Bet</th><th class="num">Capital</th><th>Outcome</th></tr></thead>
+      <tbody>
+        <tr class="emph"><td class="name">Climate Corporation → Monsanto</td><td class="num">$932M</td><td>Mixed. Largest installed base in the industry — 250M+ acres, 23 countries — and a real data-science organisation. Never disclosed as a revenue line. Value realised defensively and through breeding and placement.</td></tr>
+        <tr><td class="name">Precision Planting → Monsanto</td><td class="num">$255M</td><td>Positive capability, forced exit. Sold to AGCO for $198.1M after DOJ blocked the Deere deal — roughly 22% below Monsanto's own carrying basis. The telemetry capability stayed behind.</td></tr>
+        <tr><td class="name">Granular → DuPont</td><td class="num">$300M</td><td>Negative as bought, positive as repurposed. SaaS discontinued in 2022; the models now power internal sales and agronomy.</td></tr>
+        <tr class="emph"><td class="name">xarvio → BASF</td><td class="num">in €7.4B</td><td>Positive. Cheapest entry of anyone, and the only digital asset converted into a hardware product line with third-party OEM distribution.</td></tr>
+        <tr><td class="name">Cropio · FarmShots · Strider · MAP → Syngenta</td><td class="num">n/d</td><td>Positive strategically. Bought geography cheaply; now the substrate for Cropwise AI and an open developer platform.</td></tr>
+        <tr><td class="name">Joyn Bio → Bayer / Ginkgo</td><td class="num">$100M JV</td><td>Negative as a JV, restructured. Dissolved in 2022, IP returned, replaced by a $90M three-year services and royalty contract — a cheaper structure for the same objective.</td></tr>
+        <tr><td class="name">CRISPR licensing hub → Corteva</td><td class="num">low</td><td>Strongly positive. Turned a patent thicket into a licensing franchise and a public-good narrative via Simplot and IRRI.</td></tr>
+        <tr><td class="name">AI discovery alliances → Syngenta, Corteva</td><td class="num">low–mid</td><td>Too early, but the right shape. Milestone-gated, minority stakes, non-dilutive to core R&amp;D.</td></tr>
+        <tr class="emph"><td class="name">Farmer-paid digital subscriptions</td><td class="num">—</td><td>Failed universally. No major sustains a paid, farmer-facing standalone software P&amp;L.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="theses">
+  <div class="sec-head"><span class="sec-num">05</span><h2>Five theses</h2></div>
+  <ol class="theses">
+    <li><b>Traits pulled the first consolidation; data pulled the second.</b><span>Wave I was about having crops to put genes into. Wave III was about having fields to put sensors on. Both were about controlling a distribution channel for R&amp;D output.</span></li>
+    <li><b>Vertical data integration was attempted, then dismantled.</b><span>Monsanto's 2012–16 stack — planter hardware, telematics, agronomic modelling, seed — was the most complete vertical integration ever assembled in agriculture. Antitrust took the hardware layer; economics took the subscription layer. What survived is a free data-collection front end attached to a seed business.</span></li>
+    <li><b>The equipment OEMs won the machine layer.</b><span>Deere (Blue River, Bear Flag) and AGCO (Precision Planting, PTx Trimble) own the actuator and the in-cab interface. Seed companies became guests on OEM platforms — which is why FieldView's two-way link to John Deere Operations Center matters more than any feature it ships.</span></li>
+    <li><b>AI moved upstream because that is where willingness-to-pay is.</b><span>A farmer will not pay $3 an acre for an app. A crop-protection business will fund anything that compresses a decade-long active-ingredient discovery cycle. Hence Insilico, Enko, Profluent, Ginkgo.</span></li>
+    <li><b>The scale logic is now contested.</b><span>Corteva's 2025 split says seed and chemistry no longer need each other — a direct repudiation of the 2015–18 thesis. If it closes cleanly and both entities re-rate, expect the same pressure on Bayer.</span></li>
+  </ol>
+</section>
+
+<section id="watch">
+  <div class="sec-head"><span class="sec-num">06</span><h2>Open questions</h2></div>
+  <ul class="watch">
+    <li><b>How Corteva divides its AI and data estate.</b> CARL, the seed-production digital twin, and the Granular models were built across seed and chemistry. The separation allocates them to one side, and nothing has been disclosed. It is a direct valuation input for both entities and the sharpest unanswered question in the sector.</li>
+    <li><b>Bayer's R&amp;D trajectory.</b> Crop Science R&amp;D fell 22.9% to €2.01B in 2025. That is not sustainable alongside an AI-discovery race. Either it reverses, or Bayer becomes a licensor.</li>
+    <li><b>Syngenta's funding path.</b> After the withdrawn $9B Shanghai listing, is the open Cropwise platform genuine ecosystem strategy or a capital-light substitute for building?</li>
+    <li><b>Whether ONE SMART SPRAY scales across OEMs.</b> If BASF's agronomic engine ends up inside Deere, AGCO, and CNH machines, BASF holds the highest-margin digital position in the industry without owning a platform.</li>
+    <li><b>Licensing between majors.</b> The logical endgame is a small number of agronomic foundation models trained on proprietary trial data. Watch for model or data licensing deals between the four — historically unthinkable, now economically rational.</li>
+  </ul>
+</section>
+
+<footer>
+  Compiled from company press releases, SEC filings retrieved directly from EDGAR, and published annual
+  reports. Purchase price allocation figures are drawn from Monsanto 10-K FY2014 and FY2016, AGCO 10-K FY2017,
+  Deere 10-K FY2017, Corteva 10-K FY2023, the BASF Online Report 2018, and Bayer's 2018 interim reporting.
+  Market-structure and venture-funding figures from GRAIN/ETC Group (2025) and AgFunder (2025).
+  Figures marked † are widely reported but not verified against a primary filing.
+</footer>
+
+</div>
+
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------------- purchase price allocation ---------------- */
+  // amounts in reporting currency of the filing; pct computed off consideration
+  var PPA = [
+    { name: "Climate Corporation", buyer: "Monsanto", closed: "Nov 2013", cur: "$",
+      cons: 932, gw: 783, intang: 142, other: 7,
+      note: "Intangibles were acquired IP $138M (10-yr life) and customer relationships $4M (1-yr life). No data asset recognised." },
+    { name: "Blue River Technology", buyer: "Deere", closed: "Sep 2017", cur: "$",
+      cons: 284, gw: 193, intang: 125, other: -34,
+      note: "Intangibles principally in-process R&D, not amortised until the research concludes. Includes $36M deferred tax liability." },
+    { name: "Monsanto", buyer: "Bayer", closed: "Jun 2018", cur: "€",
+      cons: 48029, gw: 24503, intang: null, other: null,
+      note: "Intangible classes disclosed without amounts: seeds & traits 9–30 yr, herbicides 20 yr, digital platforms 15 yr, brands 10–30 yr." },
+    { name: "Symborg", buyer: "Corteva", closed: "Mar 2023", cur: "$",
+      cons: 370, gw: 129, intang: 300, other: -59,
+      note: "Developed technology $238M (12 yr), trademarks $57M, IPR&D $5M. Includes $74M deferred tax liability." },
+    { name: "Precision Planting", buyer: "AGCO", closed: "Sep 2017", cur: "$",
+      cons: 198.1, gw: 67.2, intang: 64.4, other: 66.5,
+      note: "Hardware business: real inventory, receivables and tooling. Monsanto had carried it at $255M fair value in 2012." },
+    { name: "Stoller", buyer: "Corteva", closed: "Mar 2023", cur: "$",
+      cons: 1220, gw: 383, intang: 645, other: 192,
+      note: "Customer-related $495M (13 yr), developed technology $106M (13 yr), trademarks $44M (15 yr)." },
+    { name: "Bayer divested businesses", buyer: "BASF", closed: "Aug 2018", cur: "€",
+      cons: 7421, gw: 1253, intang: 4285, other: 1883,
+      note: "Regulator-forced sale — no control premium. Also €1,404M of plant and €887M of inventory. Included the Digital Farming unit that became xarvio." }
+  ];
+
+  var MAXPCT = 118; // chart scale ceiling in % of consideration
+
+  function pct(v, c) { return v == null ? null : (v / c) * 100; }
+  function fmt(cur, v) {
+    if (v == null) return "n/d";
+    var neg = v < 0, a = Math.abs(v);
+    var s = a >= 1000 ? (a / 1000).toFixed(a >= 10000 ? 1 : 2) + "bn" : a.toFixed(a < 100 ? 1 : 0) + "m";
+    return (neg ? "−" : "") + cur + s;
+  }
+
+  var chart = document.getElementById("chart");
+  var tip = document.getElementById("tip");
+
+  PPA.forEach(function (d) {
+    var gp = pct(d.gw, d.cons), ip = pct(d.intang, d.cons);
+    var row = document.createElement("div");
+    row.className = "row";
+    row.tabIndex = 0;
+
+    var nm = document.createElement("div");
+    nm.className = "row-name";
+    nm.innerHTML = "<b>" + d.name + "</b>" + d.buyer + " · " + d.closed;
+    row.appendChild(nm);
+
+    var track = document.createElement("div");
+    track.className = "track";
+    var bar = document.createElement("div");
+    bar.className = "bar";
+    bar.style.width = "100%";
+
+    var gseg = document.createElement("div");
+    gseg.className = "seg s-goodwill";
+    gseg.style.width = (gp / MAXPCT * 100) + "%";
+    gseg.textContent = Math.round(gp) + "%";
+    bar.appendChild(gseg);
+
+    if (ip != null) {
+      var iseg = document.createElement("div");
+      iseg.className = "seg s-intang";
+      iseg.style.width = (ip / MAXPCT * 100) + "%";
+      iseg.textContent = Math.round(ip) + "%";
+      bar.appendChild(iseg);
+    } else {
+      gseg.classList.add("only");
+    }
+    track.appendChild(bar);
+    row.appendChild(track);
+
+    var body =
+      "<b>" + d.name + " → " + d.buyer + "</b>" +
+      kv("Consideration", fmt(d.cur, d.cons)) +
+      kv("Goodwill", fmt(d.cur, d.gw) + "  (" + Math.round(gp) + "%)") +
+      kv("Identifiable intangibles", d.intang == null ? "not disclosed" : fmt(d.cur, d.intang) + "  (" + Math.round(ip) + "%)") +
+      kv("Other net assets", d.other == null ? "not disclosed" : fmt(d.cur, d.other)) +
+      "<div style='margin-top:8px;color:var(--ink-2);white-space:normal'>" + d.note + "</div>";
+
+    function show(e) {
+      tip.innerHTML = body;
+      tip.style.opacity = "1";
+      place(e);
+    }
+    function place(e) {
+      var x, y;
+      if (e && e.clientX != null) { x = e.clientX + 16; y = e.clientY + 16; }
+      else { var r = row.getBoundingClientRect(); x = r.left + 24; y = r.bottom + 8; }
+      var w = tip.offsetWidth, h = tip.offsetHeight;
+      if (x + w > window.innerWidth - 12) x = window.innerWidth - w - 12;
+      if (y + h > window.innerHeight - 12) y = y - h - 32;
+      tip.style.left = Math.max(12, x) + "px";
+      tip.style.top = Math.max(12, y) + "px";
+    }
+    function hide() { tip.style.opacity = "0"; }
+
+    row.addEventListener("mouseenter", show);
+    row.addEventListener("mousemove", place);
+    row.addEventListener("mouseleave", hide);
+    row.addEventListener("focus", show);
+    row.addEventListener("blur", hide);
+
+    chart.appendChild(row);
+  });
+
+  function kv(k, v) {
+    return "<div class='kv'><span>" + k + "</span><span>" + v + "</span></div>";
+  }
+
+  // 100%-of-consideration reference line
+  var ref = document.createElement("div");
+  ref.className = "ref100";
+  chart.appendChild(ref);
+  var refLabel = document.createElement("div");
+  refLabel.className = "ref-label";
+  refLabel.textContent = "100% of consideration";
+  chart.appendChild(refLabel);
+
+  function positionRef() {
+    var anyTrack = chart.querySelector(".track");
+    if (!anyTrack) return;
+    var cr = chart.getBoundingClientRect(), tr = anyTrack.getBoundingClientRect();
+    var left = (tr.left - cr.left) + tr.width * (100 / MAXPCT);
+    ref.style.left = left + "px";
+    ref.style.top = "20px";
+    ref.style.height = Math.max(0, chart.offsetHeight - 20) + "px";
+    refLabel.style.left = Math.min(left + 8, Math.max(0, chart.offsetWidth - 150)) + "px";
+    refLabel.style.top = "1px";
+    refLabel.style.display = tr.width < 260 ? "none" : "block";
+  }
+  positionRef();
+  window.addEventListener("resize", positionRef);
+
+  // table view
+  var tbody = document.getElementById("ppaBody");
+  PPA.slice().sort(function (a, b) { return (b.gw / b.cons) - (a.gw / a.cons); }).forEach(function (d) {
+    var gp = pct(d.gw, d.cons);
+    var tr = document.createElement("tr");
+    tr.innerHTML =
+      "<td class='name'>" + d.name + " → " + d.buyer + "</td>" +
+      "<td>" + d.closed + "</td>" +
+      "<td class='num'>" + fmt(d.cur, d.cons) + "</td>" +
+      "<td class='num'>" + fmt(d.cur, d.gw) + "</td>" +
+      "<td class='num'>" + Math.round(gp) + "%</td>" +
+      "<td class='num'>" + (d.intang == null ? "n/d" : fmt(d.cur, d.intang)) + "</td>" +
+      "<td class='num'>" + (d.other == null ? "n/d" : fmt(d.cur, d.other)) + "</td>";
+    tbody.appendChild(tr);
+  });
+
+  var bChart = document.getElementById("viewChart"), bTable = document.getElementById("viewTable");
+  var elChart = document.getElementById("chart"), elTable = document.getElementById("ppaTable");
+  function setView(isChart) {
+    bChart.setAttribute("aria-pressed", String(isChart));
+    bTable.setAttribute("aria-pressed", String(!isChart));
+    elChart.classList.toggle("hidden", !isChart);
+    elTable.classList.toggle("hidden", isChart);
+    if (isChart) positionRef();
+  }
+  bChart.addEventListener("click", function () { setView(true); });
+  bTable.addEventListener("click", function () { setView(false); });
+
+  /* ---------------- deal ledger ---------------- */
+  var D = [
+    [1996,1,"seed","Monsanto → Agracetus","Plant transformation IP, bought out of W.R. Grace.","~$150M†"],
+    [1996,1,"seed","Monsanto → Asgrow Agronomics","The #2 US soybean seed franchise.","~$240M†"],
+    [1996,1,"seed","Monsanto → DeKalb Genetics","40% stake in 1996, the remainder in 1998. Entry to US corn seed.","~$2.3B†"],
+    [1997,1,"digital","Monsanto ← Millennium Pharmaceuticals","Technology transfer creating Cereon Genomics — a five-year rental of a pharma-grade genomics platform. $118M upfront plus $100M in milestones.","$218M"],
+    [1997,1,"seed","DuPont → Pioneer Hi-Bred, 20%","An option on the #1 corn seed franchise.","$1.71B"],
+    [1998,1,"seed","Monsanto → Cargill international seed","Ex-US distribution at a stroke.","~$1.4B†"],
+    [1998,1,"structural","Monsanto → Delta &amp; Pine Land (abandoned)","Announced 1998, terminated December 1999 amid antitrust scrutiny and the Pharmacia merger. Completed nine years later.","~$1.9B†"],
+    [1999,1,"seed","DuPont → Pioneer Hi-Bred, remaining 80%","Total outlay across both tranches ≈$9.4B. Creates DuPont Pioneer.","$7.7B"],
+    [2000,1,"structural","Novartis + AstraZeneca → Syngenta","Agribusinesses spun out and merged 61/39. The first pure-play ag major, carved out of pharma.","1998 sales $7.9B"],
+    [2001,1,"digital","Syngenta/TMRI ← Myriad Genetics","Shotgun sequencing of the japonica rice genome — 93% of 420 Mb, delivered six months early, published in Science in 2002.","$33.5M + $3M"],
+    [2002,1,"structural","Bayer → Aventis CropScience","Creates Bayer CropScience; the largest acquisition in Bayer's history at the time.","€7.25B"],
+
+    [2005,2,"seed","Monsanto → Seminis","Becomes the world's largest vegetable seed company. $1.0B cash plus $0.4B debt.","$1.4B"],
+    [2005,2,"seed","Monsanto → Emergent Genetics / Stoneville","The #3 US cotton seed business.","~$300M†"],
+    [2007,2,"partner","Monsanto ↔ BASF","Plant biotech R&amp;D collaboration on yield and stress tolerance, 60/40 profit split to Monsanto.","$1.5B budget"],
+    [2007,2,"seed","Monsanto → Delta &amp; Pine Land","Cotton seed, at the second attempt.","$1.5B"],
+    [2008,2,"seed","Monsanto → De Ruiter Seeds","Greenhouse vegetable genetics.","~€546M†"],
+    [2011,2,"bio","Monsanto → Beeologics","RNAi platform for targeted pest and disease control — reported at the time as undisclosed.","$113M"],
+    [2012,2,"digital","Monsanto → Precision Planting","The hinge of the whole story: planter-level telemetry inside a seed company for the first time.","$255M fair value"],
+
+    [2013,3,"bio","Monsanto → Agradis","Microbial collection and the La Jolla R&amp;D site.","$85M"],
+    [2013,3,"bio","Monsanto → Rosetta Green","microRNA trait discovery, Israel.","$35M"],
+    [2013,3,"bio","Monsanto → GrassRoots Biotechnology","Gene expression platform, Durham NC.","$15M"],
+    [2013,3,"digital","Monsanto → The Climate Corporation","Hyperlocal weather, agronomic modelling and a data-science organisation. 84% of the price booked as goodwill.","$932M"],
+    [2014,3,"digital","Climate Corp → 640 Labs","Machine-data telematics and cloud ingest. No business-combination disclosure — below materiality.","undisclosed"],
+    [2014,3,"digital","Climate Corp → Solum (ag business)","Rapid soil nitrate analytics.","undisclosed"],
+    [2015,3,"partner","Climate Corp ↔ John Deere","The industry's first near-real-time third-party in-cab data link, plus connectivity deals with Agrian, AgStudio, SST Summit, Agvance and others.","—"],
+    [2015,3,"structural","Dow + DuPont","Merger of equals, announced December 2015, closed August 2017, then split three ways by June 2019.","~$130B"],
+    [2016,3,"digital","Climate Corp → HydroBio","Satellite, soil and weather irrigation modelling.","undisclosed"],
+    [2016,3,"digital","Climate Corp → VitalFields","European farm record-keeping — the EU beachhead.","undisclosed"],
+    [2016,3,"structural","ChemChina → Syngenta","The largest Chinese outbound acquisition ever. ChemChina funded roughly $5B of it from its own capital.","$43B"],
+    [2016,3,"structural","Bayer → Monsanto (announced)","Announced September 2016 at $66B; closed June 2018 at ~$63B.","$66B"],
+    [2016,3,"structural","DOJ sues to block Deere → Precision Planting","Farm data recognised in court as a market rather than a feature. Deere walked in May 2017.","—"],
+    [2017,3,"digital","DuPont → Granular","Farm management SaaS. Never received a purchase price allocation in any filing.","$300M"],
+    [2017,3,"digital","Deere → Blue River Technology","Computer vision See &amp; Spray. 68% goodwill; intangibles almost entirely in-process R&amp;D.","$284M net"],
+    [2017,3,"digital","AGCO ← Climate Corp: Precision Planting","Divested after the Deere deal was blocked — roughly 22% below Monsanto's own carrying basis.","$198.1M"],
+    [2017,3,"partner","Bayer ↔ Ginkgo Bioworks → Joyn Bio","Nitrogen-fixation joint venture, Boston and West Sacramento.","$100M JV"],
+    [2018,3,"structural","Bayer → Monsanto (closed)","7 June 2018. Goodwill of €24,503M on a €48,029M purchase price.","~$63B"],
+    [2018,3,"digital","BASF ← Bayer divestitures","Canola, soy and vegetable seed, LibertyLink, and the Digital Farming unit that became xarvio. Only 17% goodwill.","€7,421M"],
+    [2018,3,"bio","Monsanto ↔ Pairwise","Exclusive row-crop gene editing; up to $100M committed over five years, ~$125M programme with Deerfield.","up to $100M"],
+    [2018,3,"digital","Syngenta → FarmShots, then AgConnections","High-resolution satellite imagery into AgriEdge; US retail record-keeping.","undisclosed"],
+    [2018,3,"bio","Corteva ↔ Broad Institute","A joint non-exclusive CRISPR licensing framework for agriculture. First licence to J.R. Simplot, later IRRI.","—"],
+    [2019,3,"structural","Corteva separates from DowDuPont","Listed on NYSE as CTVA on 3 June 2019.","—"],
+    [2019,3,"digital","Syngenta → Cropio","10M hectares under management across the CIS. Completes platforms in all four top ag markets.","undisclosed"],
+
+    [2020,4,"structural","Syngenta Group formed","ChemChina and Sinochem agricultural assets combined — Syngenta AG, ADAMA and China National Seed.","~$23B sales"],
+    [2020,4,"bio","Syngenta → Valagro","Biologicals and biostimulants; ~$175M of 2019 revenue.","undisclosed"],
+    [2020,4,"partner","Bosch + BASF → Smart Farming JV","50:50. xarvio's decision engine plus Bosch camera sensing — becomes ONE SMART SPRAY, ~70% herbicide savings in trials.","—"],
+    [2021,4,"partner","Syngenta ↔ Insilico Medicine","Generative chemistry applied to crop-protection actives.","undisclosed"],
+    [2021,4,"partner","Bayer ↔ Microsoft","Produces Azure Data Manager for Agriculture in 2023. Bayer contributes agronomic models; Microsoft takes the infrastructure layer.","undisclosed"],
+    [2021,4,"partner","Corteva ↔ Indigo Ag","Carbon Initiative — MRV outsourced. 28 states and 19 crop types by 2022; growers keep 75% of credit price with a $20 floor.","—"],
+    [2022,4,"digital","Corteva exits SaaS","Granular Business sold to Traction Ag; Granular Agronomy shut down 31 August 2022. The first public admission that farmer-paid software failed.","—"],
+    [2022,4,"partner","Bayer ↔ Ginkgo restructured","Joyn Bio dissolved, IP returned, Bayer's West Sacramento biologicals site sold to Ginkgo, replaced by a services and royalty contract.","$90M / 3 yr"],
+    [2022,4,"bio","Corteva → Symborg","Microbials. 35% goodwill; $238M of developed technology on a 12-year life.","$370M"],
+    [2023,4,"bio","Corteva → Stoller","One of the largest independent biologicals companies. ~12× 2022 EBITDA.","$1,220M"],
+    [2023,4,"partner","ONE SMART SPRAY reaches series production","First with Dammann in Germany and Hungary; co-development agreement with AGCO follows in April.","—"],
+    [2024,4,"digital","AGCO + Trimble → PTx Trimble","AGCO takes 85%. Precision agriculture consolidates on the equipment side.","~$2B"],
+    [2024,4,"structural","Syngenta withdraws Shanghai IPO","Pulled in March 2024 after informal CSRC instruction, removing the group's equity funding path.","$9B sought"],
+    [2024,4,"bio","Corteva Catalyst launched","Minority stakes replace control acquisitions: Profluent, Micropep, Solasta Bio, Pairwise, Puna Bio, IBI Ag, Ascribe Bio, Hexagon Bio.","5–7 deals/yr"],
+    [2024,4,"digital","Syngenta adds GenAI to Cropwise","Built on 20+ years of weather history and 80,000+ crop-stage observations; targets a 5% yield gain.","—"],
+    [2024,4,"partner","Syngenta ↔ Enko","Novel fungicide chemistry from DNA-encoded libraries screened with ML, then a herbicide agreement.","undisclosed"],
+    [2025,4,"structural","Corteva announces separation","Crop protection (~$7.8B) and seed (~$9.9B) split into two listed companies by 2H 2026. Allocation of AI and data assets undisclosed.","—"],
+    [2025,4,"digital","Syngenta opens Cropwise to developers","Platform becomes ecosystem — an admission that no single major can build it all.","—"]
+  ];
+
+  var TAGS = { digital: "Digital", seed: "Seed", bio: "Biology", partner: "Partner", structural: "Structural" };
+  var ledger = document.getElementById("ledger");
+  var countEl = document.getElementById("count");
+
+  D.forEach(function (d) {
+    var el = document.createElement("article");
+    el.className = "entry";
+    el.dataset.w = d[1];
+    el.dataset.c = d[2];
+    var tagClass = d[2] === "digital" ? " t-digital" : (d[2] === "structural" ? " t-reg" : "");
+    el.innerHTML =
+      "<div class='yr'>" + d[0] + "</div>" +
+      "<div class='body'><h4>" + d[3] + "<span class='tag" + tagClass + "'>" + TAGS[d[2]] + "</span></h4><p>" + d[4] + "</p></div>" +
+      "<div class='val" + (/undisclosed|—/.test(d[5]) ? " na" : "") + "'>" + d[5] + "</div>";
+    ledger.appendChild(el);
+  });
+
+  var fw = "all", fc = "all";
+  function applyFilters() {
+    var n = 0;
+    ledger.querySelectorAll(".entry").forEach(function (el) {
+      var ok = (fw === "all" || el.dataset.w === fw) && (fc === "all" || el.dataset.c === fc);
+      el.classList.toggle("hide", !ok);
+      if (ok) n++;
+    });
+    countEl.textContent = n + " of " + D.length + " entries shown";
+  }
+  function bind(sel, setter) {
+    var btns = document.querySelectorAll(sel);
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        btns.forEach(function (o) { o.setAttribute("aria-pressed", "false"); });
+        b.setAttribute("aria-pressed", "true");
+        setter(b);
+        applyFilters();
+      });
+    });
+  }
+  bind(".chip.wv", function (b) { fw = b.dataset.w; });
+  bind(".chip.ct", function (b) { fc = b.dataset.c; });
+  applyFilters();
+})();
+</script>
