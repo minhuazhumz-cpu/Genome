@@ -1,0 +1,769 @@
+<title>What Thirty Years of Deals Actually Bought — Seed Industry Dashboard</title>
+<style>
+  :root{
+    color-scheme:light;
+    --paper:#F2F3F1; --paper-2:#E9EBE6; --panel:#FFFFFF;
+    --ink:#14181A; --ink-2:#495350; --ink-3:#78827D;
+    --rule:#D8DCD4; --rule-soft:#E4E7E0;
+    --accent:#1B5745; --accent-ink:#16493A;
+    --pos:#00795A; --neg:#A83C36; --warn:#9A6B18; --neutral:#8A938D;
+    --s1:#00795A; --s2:#AE5A92;
+    --gw:#5FA98D; --idn:#1B5745;
+    --on-gw:#14181A; --on-idn:#F2F3F1;
+    --serif:"Iowan Old Style", Charter, "Bitstream Charter", "Source Serif 4", Georgia, "Times New Roman", serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,"Cascadia Mono","Roboto Mono","Liberation Mono",monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      color-scheme:dark;
+      --paper:#14181A; --paper-2:#1C2124; --panel:#1A1F21;
+      --ink:#EDEFEA; --ink-2:#AAB3AD; --ink-3:#79837D;
+      --rule:#2C3335; --rule-soft:#232A2C;
+      --accent:#7FCFAE; --accent-ink:#9FDCC4;
+      --pos:#5FD1A8; --neg:#E08078; --warn:#E0B45C; --neutral:#8A938D;
+      --s1:#5FD1A8; --s2:#BE6DA0;
+      --gw:#2A6B55; --idn:#9FDCC4;
+      --on-gw:#EDEFEA; --on-idn:#14181A;
+    }
+  }
+  :root[data-theme="light"]{color-scheme:light;--paper:#F2F3F1;--paper-2:#E9EBE6;--panel:#FFFFFF;--ink:#14181A;--ink-2:#495350;--ink-3:#78827D;--rule:#D8DCD4;--rule-soft:#E4E7E0;--accent:#1B5745;--accent-ink:#16493A;--pos:#00795A;--neg:#A83C36;--warn:#9A6B18;--s1:#00795A;--s2:#AE5A92;--gw:#5FA98D;--idn:#1B5745;--on-gw:#14181A;--on-idn:#F2F3F1;}
+  :root[data-theme="dark"]{color-scheme:dark;--paper:#14181A;--paper-2:#1C2124;--panel:#1A1F21;--ink:#EDEFEA;--ink-2:#AAB3AD;--ink-3:#79837D;--rule:#2C3335;--rule-soft:#232A2C;--accent:#7FCFAE;--accent-ink:#9FDCC4;--pos:#5FD1A8;--neg:#E08078;--warn:#E0B45C;--s1:#5FD1A8;--s2:#BE6DA0;--gw:#2A6B55;--idn:#9FDCC4;--on-gw:#EDEFEA;--on-idn:#14181A;}
+
+  body{background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:17.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1220px;margin:0 auto;padding:0 28px 120px}
+  .prose{max-width:40rem}
+
+  /* header */
+  header.mast{padding:64px 0 32px;border-bottom:1px solid var(--ink)}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:8px 22px}
+  h1{font-size:clamp(2.1rem,5vw,3.5rem);line-height:1.05;letter-spacing:-.025em;font-weight:600;margin:24px 0 0;text-wrap:balance}
+  h1 em{font-style:italic;color:var(--accent)}
+  .lede{font-size:1.2rem;line-height:1.55;color:var(--ink-2);margin-top:20px;max-width:44rem;text-wrap:pretty}
+
+  /* kpi strip */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--rule);border-bottom:1px solid var(--rule)}
+  .kpi{background:var(--paper);padding:24px 20px 26px}
+  .kpi .n{font-family:var(--mono);font-size:1.9rem;font-weight:500;letter-spacing:-.035em;font-variant-numeric:tabular-nums;display:block;line-height:1.05}
+  .kpi .n.neg{color:var(--neg)} .kpi .n.pos{color:var(--pos)}
+  .kpi .lab{display:block;margin-top:11px;font-size:.9rem;color:var(--ink-2);line-height:1.45}
+
+  /* sections */
+  section{padding-top:66px}
+  .shead{display:flex;align-items:baseline;gap:15px;border-bottom:1px solid var(--ink);padding-bottom:10px;margin-bottom:26px}
+  .snum{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--accent);text-transform:uppercase;flex:none}
+  h2{font-size:clamp(1.4rem,3vw,1.95rem);letter-spacing:-.018em;font-weight:600;line-height:1.18;margin:0;text-wrap:balance}
+  h3{font-size:1.14rem;font-weight:600;letter-spacing:-.01em;margin:36px 0 10px;text-wrap:balance}
+  p{margin:0 0 1.05em;text-wrap:pretty}
+  .prose p:last-child{margin-bottom:0}
+  strong{font-weight:600}
+  a{color:var(--accent-ink);text-underline-offset:3px}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+  /* plain-language callout */
+  .plain{background:var(--paper-2);border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0;max-width:44rem;border-radius:0 3px 3px 0}
+  .plain .t{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-ink);display:block;margin-bottom:8px}
+  .plain p{font-size:1rem;color:var(--ink-2);margin:0 0 .7em}
+  .plain p:last-child{margin-bottom:0}
+  .plain b{color:var(--ink)}
+
+  /* figure */
+  .fig{margin:34px 0 10px}
+  .fig-t{font-size:1.06rem;font-weight:600;margin-bottom:5px}
+  .fig-s{font-size:.95rem;color:var(--ink-2);margin-bottom:18px;max-width:44rem;line-height:1.5}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 22px;margin-bottom:16px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2)}
+  .legend span{display:inline-flex;align-items:center;gap:8px}
+  .sw{width:11px;height:11px;border-radius:2px;flex:none}
+  .chartbox{overflow-x:auto}
+  svg{display:block;max-width:100%}
+  svg text{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .grid-line{stroke:var(--rule-soft);stroke-width:1}
+  .axis-line{stroke:var(--rule);stroke-width:1}
+  .ax{fill:var(--ink-3);font-size:10.5px;letter-spacing:.05em}
+  .dl{font-size:11px;font-weight:600;letter-spacing:.02em}
+  .readout{font-size:.95rem;color:var(--ink-2);margin-top:14px;max-width:44rem;line-height:1.55}
+  .readout b{color:var(--ink)}
+
+  /* tooltip */
+  .tip{position:fixed;z-index:60;pointer-events:none;opacity:0;background:var(--paper);border:1px solid var(--ink);padding:11px 13px;max-width:290px;font-family:var(--mono);font-size:11.5px;line-height:1.55;color:var(--ink);box-shadow:0 6px 22px rgba(0,0,0,.15);transition:opacity .1s ease}
+  .tip b{display:block;font-size:12px;margin-bottom:6px;font-weight:600}
+  .tip .kv{display:flex;justify-content:space-between;gap:18px;font-variant-numeric:tabular-nums}
+  .tip .kv span:last-child{color:var(--ink-2)}
+
+  /* waves */
+  .waves{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);margin:28px 0}
+  @media(min-width:900px){.waves{grid-template-columns:repeat(4,1fr)}}
+  .wave{background:var(--paper);padding:22px 20px 24px}
+  .wave .rn{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--accent)}
+  .wave .yr{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:3px;font-variant-numeric:tabular-nums}
+  .wave h4{font-size:1.04rem;margin:12px 0 8px;font-weight:600;letter-spacing:-.01em}
+  .wave p{font-size:.92rem;color:var(--ink-2);margin:0;line-height:1.5}
+
+  /* scorecard */
+  .cards{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);margin:28px 0}
+  @media(min-width:760px){.cards{grid-template-columns:repeat(2,1fr)}}
+  @media(min-width:1060px){.cards{grid-template-columns:repeat(3,1fr)}}
+  .card{background:var(--paper);padding:22px 20px 24px;display:flex;flex-direction:column}
+  .badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+  .dot{width:8px;height:8px;border-radius:50%;flex:none}
+  .card h4{font-size:1.06rem;margin:13px 0 4px;font-weight:600;letter-spacing:-.01em}
+  .card .verdict{font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;margin-bottom:10px}
+  .card p{font-size:.93rem;color:var(--ink-2);margin:0 0 .7em;line-height:1.5}
+  .card p:last-child{margin-bottom:0}
+  .card .ev{margin-top:auto;padding-top:13px;border-top:1px solid var(--rule-soft);font-family:var(--mono);font-size:11.5px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.65}
+
+  /* tables */
+  .tw{overflow-x:auto;margin:24px 0;border-top:1px solid var(--ink)}
+  table{border-collapse:collapse;width:100%;min-width:620px;font-size:14.5px}
+  th,td{padding:12px 16px 12px 0;text-align:left;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+  th{font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);font-weight:500;border-bottom:1px solid var(--rule);white-space:nowrap}
+  td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;white-space:nowrap}
+  tr.hi td{background:var(--paper-2)}
+  .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+  ul.watch{list-style:none;padding:0;margin:22px 0 0;max-width:44rem}
+  ul.watch li{padding:15px 0 15px 20px;border-bottom:1px solid var(--rule-soft);position:relative;font-size:.98rem;color:var(--ink-2);line-height:1.55}
+  ul.watch li::before{content:"";position:absolute;left:0;top:25px;width:8px;height:1px;background:var(--accent)}
+  ul.watch li b{color:var(--ink);font-weight:600}
+
+  footer{margin-top:74px;padding-top:24px;border-top:1px solid var(--ink);font-family:var(--mono);font-size:11.5px;color:var(--ink-3);line-height:1.8}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  @media (max-width:640px){body{font-size:16.5px}.wrap{padding:0 18px 80px}}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker"><span>Seed industry investigation</span><span>1996 — 2026</span><span>Updated 12 August 2026</span></div>
+  <h1>What thirty years of deals <em>actually bought</em></h1>
+  <p class="lede">
+    The world's biggest seed companies spent three decades buying each other, then buying software
+    companies, then buying biology companies. This dashboard sets out, in plain terms, what they paid,
+    what came back, and which parts of the story the numbers actually support.
+  </p>
+</header>
+
+<div class="kpis">
+  <div class="kpi"><span class="n">~$1.5bn</span><span class="lab">Spent by seed companies buying software and data businesses since 2012</span></div>
+  <div class="kpi"><span class="n neg">$0</span><span class="lab">Revenue from those businesses that any of them reports to investors</span></div>
+  <div class="kpi"><span class="n neg">84%</span><span class="lab">Of the biggest software purchase that couldn't be tied to any identifiable asset</span></div>
+  <div class="kpi"><span class="n">9%</span><span class="lab">Return Corteva earns on the money invested in it — versus about 56% ignoring what it paid to acquire itself</span></div>
+  <div class="kpi"><span class="n neg">−98%</span><span class="lab">What investors lost backing the same idea as an independent company</span></div>
+</div>
+
+<section id="story">
+  <div class="shead"><span class="snum">01</span><h2>The story in four stages</h2></div>
+  <div class="prose">
+    <p>
+      A seed company sells farmers the seed they plant. That business has always been about genetics —
+      breeding plants that yield more, resist disease, or tolerate the weedkillers a farmer uses. Over
+      thirty years the industry consolidated from dozens of companies into essentially four, and what it
+      was buying changed completely at each stage.
+    </p>
+  </div>
+
+  <div class="waves">
+    <div class="wave">
+      <div class="rn">STAGE ONE</div><div class="yr">1996 — 2002</div>
+      <h4>Buying the plants</h4>
+      <p>Companies with new gene technology needed crops to put the genes into. So they bought seed companies for their libraries of plant varieties, built up over decades. DuPont paid $9.4bn for Pioneer; Monsanto bought DeKalb, Asgrow and others.</p>
+    </div>
+    <div class="wave">
+      <div class="rn">STAGE TWO</div><div class="yr">2003 — 2012</div>
+      <h4>Buying traits and vegetables</h4>
+      <p>Next came specific engineered characteristics — insect resistance, herbicide tolerance — plus a push into vegetable seed. Monsanto paid $1.4bn for Seminis in 2005. In 2012 it bought a planting-equipment company, its first purchase of hardware and data.</p>
+    </div>
+    <div class="wave">
+      <div class="rn">STAGE THREE</div><div class="yr">2013 — 2019</div>
+      <h4>Buying software, then each other</h4>
+      <p>Monsanto paid $930m for a weather-and-farm-data company in 2013. Within four years every rival had bought something similar. Then the industry merged into four groups in deals worth over $200bn combined.</p>
+    </div>
+    <div class="wave">
+      <div class="rn">STAGE FOUR</div><div class="yr">2020 — 2026</div>
+      <h4>Buying biology, and breaking up</h4>
+      <p>Attention moved to biological products and to artificial intelligence used in laboratories. Meanwhile Corteva announced it will split itself in two by the end of 2026 — the first reversal of the whole merger era.</p>
+    </div>
+  </div>
+</section>
+
+<section id="goodwill">
+  <div class="shead"><span class="snum">02</span><h2>What the buyers could — and couldn't — point to</h2></div>
+
+  <div class="plain">
+    <span class="t">First, one piece of accounting, explained</span>
+    <p>
+      When a company buys another company, it has to tell its auditors exactly what it bought. Valuers go
+      through the target and put a price on everything they can identify: factories, patents, brands,
+      customer contracts, technology.
+    </p>
+    <p>
+      Whatever's left over — the gap between the price paid and the sum of identifiable things — is
+      recorded as <b>goodwill</b>. Goodwill is not a thing you can sell. It is the accounting record of
+      how much a buyer paid for control and expectation rather than for assets.
+    </p>
+    <p>
+      <b>So the share of a purchase price recorded as goodwill tells you how much the buyer's own valuers
+      could actually put their finger on.</b> A low share means they bought identifiable things. A high
+      share means they mostly bought hope.
+    </p>
+  </div>
+
+  <div class="fig">
+    <div class="fig-t">How each purchase was accounted for</div>
+    <div class="fig-s">
+      Each bar shows one acquisition, scaled to the price paid. The pale portion is goodwill — the part
+      that couldn't be attached to anything specific. The dark portion is identifiable assets like
+      technology, brands and customer relationships. Where a bar goes past the dashed line, the buyer also
+      took on debts along with the business.
+    </div>
+    <div class="legend" aria-hidden="true">
+      <span><i class="sw" style="background:var(--gw)"></i> Goodwill — couldn't be identified</span>
+      <span><i class="sw" style="background:var(--idn)"></i> Identifiable assets</span>
+    </div>
+    <div class="chartbox"><svg id="gwChart" viewBox="0 0 780 330" width="780" height="330" role="img" aria-label="Bar chart of goodwill share by acquisition. Climate Corporation 84 percent goodwill, Blue River 68, Monsanto 51, Symborg 35, Precision Planting 34, Stoller 31, BASF purchase from Bayer 17 percent."></svg></div>
+    <p class="readout">
+      <b>The top bar is the point.</b> When Monsanto paid $932m for The Climate Corporation in 2013 — the
+      deal that started the whole farm-software race — its valuers could identify only $142m of assets.
+      That was $138m of technology and $4m of customer relationships, which they wrote off within a year.
+      <b>No database, no weather archive, no collection of farm data appears anywhere on the list.</b>
+      The remaining 84% was recorded as goodwill.
+    </p>
+    <p class="readout">
+      Compare the bottom bar. When BASF bought seed and software businesses that regulators forced Bayer
+      to sell in 2018, only 17% was goodwill — because a forced sale has no bidding war and no premium.
+      It is the cheapest quality-per-euro deal in the industry's history, and BASF got it by not competing.
+    </p>
+  </div>
+</section>
+
+<section id="segments">
+  <div class="shead"><span class="snum">03</span><h2>Seeds got much more profitable. Chemicals didn't.</h2></div>
+
+  <div class="plain">
+    <span class="t">The measure being used</span>
+    <p>
+      <b>Profit margin</b> here means: of every $100 of sales, how many dollars are left as operating
+      profit before interest, tax, and the accounting charge for equipment wearing out. It's the standard
+      way to compare how much money a business keeps from what it sells.
+    </p>
+    <p>
+      Corteva is the only one of the big four that publishes separate profit figures for its seed business
+      and its crop-chemicals business. That makes it the only clean view anyone has of which half is
+      actually working.
+    </p>
+  </div>
+
+  <div class="fig">
+    <div class="fig-t">Corteva: profit kept from every $100 of sales, 2020–2025</div>
+    <div class="fig-s">Hover or tap the chart to see the underlying sales and profit figures for each year.</div>
+    <div class="legend" aria-hidden="true">
+      <span><i class="sw" style="background:var(--s1)"></i> Seed business</span>
+      <span><i class="sw" style="background:var(--s2)"></i> Crop chemicals business</span>
+    </div>
+    <div class="chartbox"><svg id="marginChart" viewBox="0 0 780 330" width="780" height="330" role="img" aria-label="Line chart. Corteva seed profit margin rises from 15.6 percent in 2020 to 26.6 percent in 2025. Crop protection moves from 15.5 to 18.0 percent."></svg></div>
+    <p class="readout">
+      The two businesses started in the same place in 2020 and have gone in different directions. The seed
+      business now keeps <b>$26.60 of every $100</b> it sells; crop chemicals keeps $18.00. Chemical sales
+      actually peaked in 2022 and are <b>11.5% lower today</b>. Every dollar of Corteva's growth since then
+      has come from seed.
+    </p>
+    <p class="readout">
+      <b>What caused the improvement is not what most people assume.</b> Corteva's own explanation to
+      investors lists price increases, cost cuts, and licensing income — money it now collects from rivals
+      for using its plant technology. Software and data are not mentioned. Not once, in any year.
+    </p>
+  </div>
+</section>
+
+<section id="veg">
+  <div class="shead"><span class="snum">04</span><h2>Vegetables look like the premium business. They aren't.</h2></div>
+  <div class="prose">
+    <p>
+      There is a long-standing belief in the industry that vegetable seed — tomatoes, spinach, broccoli —
+      is a better business than ordinary field crops like corn and soybeans. Vegetable seed sells for
+      50 to 80 times more per seed. The gross profit margins are genuinely higher.
+    </p>
+    <p>
+      Two independent pieces of evidence say the belief is wrong once you look past gross profit.
+    </p>
+  </div>
+
+  <div class="fig">
+    <div class="fig-t">KWS: profit or loss on every €100 of sales, by crop, 2024/25</div>
+    <div class="fig-s">
+      KWS is a German seed company and the only listed business in the world that reports its vegetable
+      operation separately from its field crops. Bars to the right of the line are profits; bars to the
+      left are losses.
+    </div>
+    <div class="chartbox"><svg id="kwsChart" viewBox="0 0 780 250" width="780" height="250" role="img" aria-label="Diverging bar chart. KWS sugarbeet plus 42.1 percent, cereals plus 12.2, corn minus 0.6, vegetables minus 63.5 percent."></svg></div>
+    <p class="readout">
+      KWS bought a profitable Dutch spinach seed company in 2019 with roughly €75m of sales, then invested
+      heavily to build a full vegetable business around it. Six years on, the whole vegetable division has
+      <b>€72.1m of sales and loses €45.8m a year.</b> It is 4.3% of the company's sales and consumes
+      <b>15.5% of its investment spending.</b>
+    </p>
+    <p class="readout">
+      <b>Why it's so hard:</b> vegetable breeding doesn't share anything between crops. Work on tomatoes
+      teaches you nothing about onions or spinach. In corn, one engineered characteristic can be sold
+      across an entire product range. In vegetables you pay the full cost, separately, thirty times over.
+    </p>
+  </div>
+
+  <div class="plain">
+    <span class="t">Second piece of accounting, explained</span>
+    <p>
+      Every year, companies must check whether the businesses on their books are still worth what the
+      books say. They forecast future cash and discount it back to today's money. If the forecast comes
+      out lower than the recorded value, they must <b>write the value down</b> — an impairment. If an
+      earlier write-down now looks too harsh, they can write some of it back up — a reversal.
+    </p>
+    <p>
+      These judgements are reviewed by auditors. They are the closest thing to an honest internal opinion
+      that a company ever publishes about its own divisions.
+    </p>
+  </div>
+
+  <div class="fig">
+    <div class="fig-t">Bayer's own valuation review, 2025</div>
+    <div class="fig-s">
+      In 2025 Bayer re-examined every part of its crop business alongside a full strategy revision. Green
+      bars are write-ups; the red bar is a write-down. Figures in millions of euros.
+    </div>
+    <div class="chartbox"><svg id="impChart" viewBox="0 0 780 190" width="780" height="190" role="img" aria-label="Diverging bar chart. Bayer corn seed and traits plus 647 million euro write-up, cotton seed plus 389 million, vegetable seeds minus 196 million write-down."></svg></div>
+    <p class="readout">
+      In one review, Bayer's own models — checked by its auditors — <b>raised the value of ordinary
+      field-crop seed by €1,036m and cut the value of vegetable seed by €196m.</b> Bayer's vegetable sales
+      then fell 12% in the first quarter of 2026.
+    </p>
+    <p class="readout">
+      Twenty-one years after Monsanto paid $1.4bn for the vegetable company Seminis, that business is
+      €788m of sales — <b>3.6% of Bayer's crop division.</b> On the multiples the market pays for
+      comparable seed companies, it's now worth roughly €1.0–1.2bn, against about $3.5bn in today's money
+      for what was paid.
+    </p>
+  </div>
+</section>
+
+<section id="digital">
+  <div class="shead"><span class="snum">05</span><h2>Did the software and data money achieve anything?</h2></div>
+  <div class="prose">
+    <p>
+      The financial test is easy to state and easy to fail: <b>not one seed company anywhere reports
+      software or data revenue</b> — not as a business line, not as a segment, not even as a figure
+      mentioned in passing. Bayer's platform is used on 250 million acres across 23 countries and
+      contributes no disclosed revenue.
+    </p>
+    <p>
+      But revenue isn't the only thing an investment can deliver. So it's worth testing six things it was
+      supposed to improve, one at a time.
+    </p>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <span class="badge"><i class="dot" style="background:var(--pos)"></i> Best evidence</span>
+      <h4>Running the factories better</h4>
+      <div class="verdict" style="color:var(--pos)">Real improvement — cause unproven</div>
+      <p>Corteva built a "digital twin" — a working computer model of its whole seed operation, from design through production to delivery — to plan better and waste less.</p>
+      <p>Its biggest single source of profit growth in 2025 was cost reduction, ahead of both price increases and higher volumes. But the company doesn't say how much of that came from the software rather than from closing sites and cutting headcount.</p>
+      <div class="ev">Cost savings, 2025 &nbsp;<b>+$335m</b><br>Guided for 2026 &nbsp;<b>~$200m</b></div>
+    </div>
+
+    <div class="card">
+      <span class="badge"><i class="dot" style="background:var(--pos)"></i> Delivered</span>
+      <h4>Licensing income from rivals</h4>
+      <div class="verdict" style="color:var(--pos)">Large and real — but nothing to do with software</div>
+      <p>Corteva used to pay Bayer to use its plant technology. It now collects more than it pays. A settlement with Bayer brought that crossover forward by two years.</p>
+      <p>This is the biggest single improvement of the last five years — and it was produced by lawyers and negotiators, not by any platform or algorithm.</p>
+      <div class="ev">Benefit in 2026 &nbsp;<b>~$120m</b><br>Target by 2035 &nbsp;<b>$1bn/yr</b></div>
+    </div>
+
+    <div class="card">
+      <span class="badge"><i class="dot" style="background:var(--warn)"></i> Promised</span>
+      <h4>Breeding new varieties faster</h4>
+      <div class="verdict" style="color:var(--warn)">A 2030 target, not yet visible</div>
+      <p>Bayer says AI-guided breeding will cut the time to develop a new variety from six years to four months, and more than double the rate of improvement by 2030. If true it would be the biggest change in the history of plant breeding.</p>
+      <p>But it's a target. No company publishes how long its breeding actually takes today. And US corn yields — the ultimate scoreboard — are still improving at the same steady rate they have for decades, with some evidence of slowing.</p>
+      <div class="ev">KWS varieties approved per €1m spent<br>1.72 → <b>1.67</b> &nbsp;(−2.6%)</div>
+    </div>
+
+    <div class="card">
+      <span class="badge"><i class="dot" style="background:var(--neg)"></i> Contradicted</span>
+      <h4>Winning market share</h4>
+      <div class="verdict" style="color:var(--neg)">Won by genetics, not software</div>
+      <p>Corteva shut down its farmer-facing software in 2022 and has since gained share in North American corn.</p>
+      <p>Bayer runs the largest farm platform in the industry and lost share in soybeans (−7.7%) and cotton (−22.9%) in 2025. Neither company credits software for share in anything it tells investors — both credit their plant genetics.</p>
+      <div class="ev">Corteva corn sales 2025 &nbsp;<b>+8%</b><br>Bayer soybean seed &nbsp;<b>−7.7%</b></div>
+    </div>
+
+    <div class="card">
+      <span class="badge"><i class="dot" style="background:var(--neg)"></i> Went backwards</span>
+      <h4>Predicting demand</h4>
+      <div class="verdict" style="color:var(--neg)">The opposite of what was intended</div>
+      <p>If a model of your seed business works, you should plant the right amount, hold less unsold stock, and get paid faster.</p>
+      <p>In 2025 Corteva's unpaid customer bills grew four times faster than its sales. Money tied up in unpaid bills and unsold stock rose from 65.7% to 69.2% of annual sales. Some of this may be deliberate credit to customers in South America — but it is the opposite of what the tool is meant to produce.</p>
+      <div class="ev">Sales &nbsp;<b>+2.9%</b><br>Unpaid customer bills &nbsp;<b>+12.2%</b></div>
+    </div>
+
+    <div class="card">
+      <span class="badge"><i class="dot" style="background:var(--neutral)"></i> Unknown</span>
+      <h4>Helping salespeople sell</h4>
+      <div class="verdict" style="color:var(--ink-3)">Plausible, but nothing is disclosed</div>
+      <p>Corteva rebuilt its failed farmer software into an internal tool for its own sales representatives, and gave them a ChatGPT-style assistant trained on its private agricultural research.</p>
+      <p>This is a sensible use of what it bought. But no company publishes sales conversion rates, customer retention, or rep productivity, so there is no way to check whether it works.</p>
+      <div class="ev">Disclosed metrics &nbsp;<b>none</b></div>
+    </div>
+  </div>
+</section>
+
+<section id="counterparties">
+  <div class="shead"><span class="snum">06</span><h2>The fairest comparison: what happened to everyone else</h2></div>
+  <div class="prose">
+    <p>
+      Judged on their own, the seed companies' software purchases look poor. But the right question isn't
+      "did they make money?" — it's "compared to what?" Several companies tried to build the same thing as
+      independent businesses, funded by investors betting on exactly this idea.
+    </p>
+  </div>
+
+  <div class="fig">
+    <div class="fig-t">Value lost by independent farm-technology companies</div>
+    <div class="fig-s">Fall from peak valuation to final outcome.</div>
+    <div class="chartbox"><svg id="lossChart" viewBox="0 0 780 240" width="780" height="240" role="img" aria-label="Bar chart of value destruction. Benson Hill approximately minus 100 percent, Farmers Edge minus 97.9, Indigo Ag minus 94, sector venture funding minus 69 percent."></svg></div>
+    <p class="readout">
+      Farmers Edge floated in 2021 at C$17.00 a share and was taken private three years later at
+      <b>C$0.35</b>. Indigo Ag fell from a $3.5bn valuation to $200m. Benson Hill filed for bankruptcy in
+      March 2025. Across the sector, more than <b>21 farm-technology businesses went bankrupt or were
+      liquidated in 2025</b> alone.
+    </p>
+    <p class="readout">
+      <b>Seen this way, the picture changes.</b> Monsanto bought The Climate Corporation in October 2013 —
+      before the funding boom — and still owns it. It didn't make money on the deal. But it avoided the
+      losses the market handed to everyone who backed the same idea as an investment rather than as
+      insurance.
+    </p>
+  </div>
+</section>
+
+<section id="roic">
+  <div class="shead"><span class="snum">07</span><h2>The number that explains the whole thirty years</h2></div>
+
+  <div class="plain">
+    <span class="t">One more measure, explained</span>
+    <p>
+      <b>Return on invested capital</b> answers a simple question: for every $100 tied up in this business,
+      how much profit does it produce in a year? If that number is lower than what the money costs to
+      borrow and raise — usually 8–9% for a company like this — then the business is running to stand
+      still.
+    </p>
+  </div>
+
+  <div class="fig">
+    <div class="fig-t">Corteva's return on the money invested in it</div>
+    <div class="fig-s">
+      The dashed line marks roughly what Corteva's money costs. The second bar shows the same operations
+      with the accumulated cost of past acquisitions stripped out.
+    </div>
+    <div class="chartbox"><svg id="roicChart" viewBox="0 0 780 175" width="780" height="175" role="img" aria-label="Bar chart. Corteva return on invested capital 9.2 percent versus approximately 56 percent excluding acquisition costs, against a cost of capital of 8 to 9 percent."></svg></div>
+    <p class="readout">
+      Corteva's actual seed and chemicals operations are outstanding — they earn roughly <b>56 cents a
+      year for every dollar of real, physical capital</b> in them. But $18.8bn of Corteva's balance sheet
+      isn't factories or inventory. It is the recorded cost of the mergers that created the company.
+    </p>
+    <p class="readout">
+      Carrying that cost drags the return down to about <b>9%</b> — roughly the same as what the money
+      costs. In plain terms: <b>the businesses are excellent. The prices paid for them were not.</b>
+      That single sentence is the honest summary of thirty years of consolidation.
+    </p>
+  </div>
+</section>
+
+<section id="scorecard">
+  <div class="shead"><span class="snum">08</span><h2>Overall verdict</h2></div>
+  <div class="tw">
+    <table>
+      <caption class="sr">Verdict on each category of acquisition</caption>
+      <thead><tr><th>What they bought</th><th class="num">Roughly</th><th>Did it work?</th></tr></thead>
+      <tbody>
+        <tr class="hi">
+          <td><b>Other seed companies</b><br><span style="color:var(--ink-2);font-size:.92rem">Plant varieties, engineered traits, brands</span></td>
+          <td class="num">$200bn+</td>
+          <td>The underlying assets are excellent and still driving growth — Bayer's corn seed grew 13.2% in 2025. But the final round of mega-mergers in 2015–18 mostly transferred value between shareholders rather than creating it.</td>
+        </tr>
+        <tr>
+          <td><b>Software and data companies</b><br><span style="color:var(--ink-2);font-size:.92rem">Farm platforms, weather models, field imagery</span></td>
+          <td class="num">~$1.5bn</td>
+          <td>No reported revenue anywhere. Two of the three biggest purchases were later sold or shut down. It did achieve its real goal — stopping an outside company from getting between the seed seller and the farmer — but that benefit can never be measured.</td>
+        </tr>
+        <tr>
+          <td><b>Biology companies</b><br><span style="color:var(--ink-2);font-size:.92rem">Microbes and natural crop products</span></td>
+          <td class="num">~$1.6bn</td>
+          <td>Too early to judge, and currently behind plan. Corteva's biological product sales have gone from $491m to $519m in two years on $1.59bn of spending.</td>
+        </tr>
+        <tr>
+          <td><b>Vegetable seed companies</b><br><span style="color:var(--ink-2);font-size:.92rem">Tomatoes, spinach, broccoli and the rest</span></td>
+          <td class="num">~$2.2bn</td>
+          <td>The clearest failure. Bayer has written the value down; KWS is losing money building its own. The business needs patient owners who can wait decades — which listed companies with quarterly targets are not.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="watch">
+  <div class="shead"><span class="snum">09</span><h2>What to watch next</h2></div>
+  <ul class="watch">
+    <li><b>How Corteva splits its technology when it breaks in two at the end of 2026.</b> Its computer model of the seed business, its AI research assistant and its data systems were built across both halves of the company. Nobody has said which side gets them. That is a real, unpriced risk for both new companies.</li>
+    <li><b>Whether Bayer sells its vegetable seed business.</b> Syngenta has already done the equivalent — in May 2026 it handed its flower seed business to a specialist partner while keeping a financial stake. It is the sensible template, and Bayer's vegetable business fits the same description.</li>
+    <li><b>Whether anyone ever publishes how long their breeding actually takes.</b> If a company starts disclosing it, that will be because the number finally improved.</li>
+    <li><b>Whether Bayer restores its research spending.</b> It cut crop research by 22.9% in 2025, to €2.0bn, at exactly the moment rivals are accelerating. That is not sustainable for long.</li>
+    <li><b>Whether Corteva's unpaid customer bills come back down without cash flow falling.</b> That would show the record 2025 cash generation was real earnings quality rather than timing.</li>
+  </ul>
+</section>
+
+<footer>
+  Built from company annual reports and stock-exchange filings: Corteva 10-K filings for 2021, 2023 and 2025;
+  Bayer Annual Report 2025 and first-quarter 2026 reporting; BASF Report 2025; Syngenta Group 2025 results;
+  KWS SAAT Annual Report 2024/25; Sakata Seed quarterly disclosure; Monsanto, Deere and AGCO acquisition
+  filings. Share prices and valuation multiples as at 4 August 2026. Where a figure is an estimate or rests
+  on an assumption the companies do not publish, the underlying written reports say so explicitly.
+</footer>
+
+</div>
+
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+  var NS="http://www.w3.org/2000/svg";
+  var tip=document.getElementById("tip");
+  function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+  function cv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+  function kv(k,v){return "<div class='kv'><span>"+k+"</span><span>"+v+"</span></div>";}
+  function place(ev){
+    var x,y;
+    if(ev&&ev.clientX!=null){x=ev.clientX+16;y=ev.clientY+16;}else{x=window.innerWidth/2;y=window.innerHeight/2;}
+    var w=tip.offsetWidth,h=tip.offsetHeight;
+    if(x+w>window.innerWidth-12)x=window.innerWidth-w-12;
+    if(y+h>window.innerHeight-12)y=y-h-32;
+    tip.style.left=Math.max(12,x)+"px";tip.style.top=Math.max(12,y)+"px";
+  }
+  function show(html,ev){tip.innerHTML=html;tip.style.opacity="1";place(ev);}
+  function hide(){tip.style.opacity="0";}
+  function wire(g,html){
+    g.addEventListener("mouseenter",function(e){show(html,e);});
+    g.addEventListener("mousemove",place);
+    g.addEventListener("mouseleave",hide);
+    g.addEventListener("focus",function(e){show(html,e);});
+    g.addEventListener("blur",hide);
+  }
+
+  /* ---------- 1. goodwill stacked bars ---------- */
+  (function(){
+    var svg=document.getElementById("gwChart");
+    var W=780,H=330,ml=232,mr=78,mt=26,mb=30;
+    var iw=W-ml-mr, ih=H-mt-mb, MAX=118;
+    var D=[
+      {n:"The Climate Corporation",b:"bought by Monsanto, 2013",gw:84.0,idn:15.2,cons:"$932m",
+       note:"Farm weather and data. Identifiable assets were $138m of technology and $4m of customer relationships."},
+      {n:"Blue River Technology",b:"bought by John Deere, 2017",gw:68.0,idn:44.0,cons:"$284m",
+       note:"Camera-guided weed spraying. Most of the identifiable value was unfinished research."},
+      {n:"Monsanto",b:"bought by Bayer, 2018",gw:51.0,idn:null,cons:"€48,029m",
+       note:"The largest deal in the industry's history. Bayer listed digital platforms as an asset class but never published the amount."},
+      {n:"Symborg",b:"bought by Corteva, 2023",gw:34.9,idn:81.1,cons:"$370m",
+       note:"Soil microbes. Mostly identifiable technology on a 12-year life."},
+      {n:"Precision Planting",b:"bought by AGCO, 2017",gw:33.9,idn:32.5,cons:"$198m",
+       note:"Planting equipment. Real machinery and inventory, so less goodwill."},
+      {n:"Stoller",b:"bought by Corteva, 2023",gw:31.4,idn:52.9,cons:"$1,220m",
+       note:"Biological crop products. $495m of it was customer relationships."},
+      {n:"Seed and software assets",b:"bought by BASF, 2018",gw:16.9,idn:57.7,cons:"€7,421m",
+       note:"A sale forced by competition regulators — no bidding war, so almost no premium."}
+    ];
+    function X(p){return ml+iw*(p/MAX);}
+    var rowH=ih/D.length, barH=Math.min(24,rowH-11);
+
+    D.forEach(function(d,i){
+      var cy=mt+rowH*i+rowH/2;
+      var g=el("g",{tabindex:"0"});
+      g.appendChild(el("rect",{x:ml,y:cy-barH/2,width:Math.max(2,X(d.gw)-ml),height:barH,fill:cv("--gw"),rx:d.idn==null?3:0}));
+      if(d.idn==null){
+        // single segment, rounded both ends
+        g.lastChild.setAttribute("rx",3);
+      }else{
+        g.appendChild(el("rect",{x:X(d.gw)+2,y:cy-barH/2,width:Math.max(2,X(d.idn)-ml),height:barH,fill:cv("--idn"),rx:3}));
+      }
+      // in-bar labels
+      var t1=el("text",{x:X(d.gw)-8,y:cy+4,class:"dl",fill:cv("--on-gw"),"text-anchor":"end"});
+      t1.textContent=Math.round(d.gw)+"%";g.appendChild(t1);
+      if(d.idn!=null){
+        var t2=el("text",{x:X(d.gw)+X(d.idn)-ml-6,y:cy+4,class:"dl",fill:cv("--on-idn"),"text-anchor":"end"});
+        t2.textContent=Math.round(d.idn)+"%";g.appendChild(t2);
+      }
+      var l1=el("text",{x:ml-14,y:cy-1,"text-anchor":"end",fill:cv("--ink")});
+      l1.setAttribute("font-size","12");l1.setAttribute("font-weight","600");l1.textContent=d.n;
+      var l2=el("text",{x:ml-14,y:cy+13,class:"ax","text-anchor":"end"});
+      l2.setAttribute("font-size","10");l2.textContent=d.b;
+      svg.appendChild(l1);svg.appendChild(l2);
+      wire(g,"<b>"+d.n+"</b>"+kv("Price paid",d.cons)+kv("Goodwill",Math.round(d.gw)+"% of price")+
+        kv("Identifiable assets",d.idn==null?"not published":Math.round(d.idn)+"% of price")+
+        "<div style='margin-top:8px;color:var(--ink-2);white-space:normal'>"+d.note+"</div>");
+      svg.appendChild(g);
+    });
+    var refx=X(100);
+    svg.appendChild(el("line",{x1:refx,x2:refx,y1:mt-8,y2:mt+ih+2,stroke:cv("--ink-3"),"stroke-width":1,"stroke-dasharray":"3 3"}));
+    var rl=el("text",{x:refx,y:mt-14,class:"ax","text-anchor":"middle"});
+    rl.textContent="the full price paid";svg.appendChild(rl);
+  })();
+
+  /* ---------- 2. margin line chart ---------- */
+  (function(){
+    var svg=document.getElementById("marginChart");
+    var W=780,H=330,ml=56,mr=168,mt=24,mb=44;
+    var iw=W-ml-mr, ih=H-mt-mb;
+    var yrs=[2020,2021,2022,2023,2024,2025];
+    var seed=[15.6,18.0,18.4,22.3,23.3,26.6], cp=[15.5,16.6,19.9,17.7,17.3,18.0];
+    var sSales=[7756,8402,8979,9472,9545,9898], cSales=[6461,7253,8476,7754,7363,7503];
+    var sProf=[1208,1512,1656,2117,2219,2636], cProf=[1004,1202,1684,1374,1272,1350];
+    var y0=12,y1=28;
+    function X(i){return ml+iw*(i/(yrs.length-1));}
+    function Y(v){return mt+ih*(1-(v-y0)/(y1-y0));}
+    for(var g=y0;g<=y1;g+=4){
+      svg.appendChild(el("line",{x1:ml,x2:ml+iw,y1:Y(g),y2:Y(g),class:"grid-line"}));
+      var t=el("text",{x:ml-10,y:Y(g)+3.5,class:"ax","text-anchor":"end"});t.textContent="$"+g;svg.appendChild(t);
+    }
+    svg.appendChild(el("line",{x1:ml,x2:ml+iw,y1:Y(y0),y2:Y(y0),class:"axis-line"}));
+    yrs.forEach(function(yr,i){var t=el("text",{x:X(i),y:mt+ih+22,class:"ax","text-anchor":"middle"});t.textContent=yr;svg.appendChild(t);});
+    var yl=el("text",{x:ml,y:mt-9,class:"ax","text-anchor":"start"});yl.textContent="kept from every $100 of sales";svg.appendChild(yl);
+
+    function line(d,c){
+      svg.appendChild(el("path",{d:d.map(function(v,i){return (i?"L":"M")+X(i)+" "+Y(v);}).join(" "),
+        fill:"none",stroke:c,"stroke-width":2,"stroke-linejoin":"round","stroke-linecap":"round"}));
+      d.forEach(function(v,i){svg.appendChild(el("circle",{cx:X(i),cy:Y(v),r:4.5,fill:c,stroke:cv("--paper"),"stroke-width":2}));});
+    }
+    line(cp,cv("--s2")); line(seed,cv("--s1"));
+    function endLab(d,c,txt){
+      var i=d.length-1;
+      var t=el("text",{x:X(i)+13,y:Y(d[i])+4,class:"dl",fill:c});t.textContent=txt+" $"+d[i].toFixed(2);svg.appendChild(t);
+    }
+    endLab(seed,cv("--s1"),"Seed");
+    endLab(cp,cv("--s2"),"Chemicals");
+
+    var cross=el("line",{x1:0,x2:0,y1:mt,y2:mt+ih,stroke:cv("--ink-3"),"stroke-width":1,"stroke-dasharray":"3 3",opacity:0});
+    svg.appendChild(cross);
+    var hit=el("rect",{x:ml,y:mt,width:iw,height:ih,fill:"transparent"});svg.appendChild(hit);
+    hit.addEventListener("mousemove",function(ev){
+      var r=svg.getBoundingClientRect(), px=(ev.clientX-r.left)*(W/r.width);
+      var i=Math.round((px-ml)/iw*(yrs.length-1)); if(i<0)i=0; if(i>5)i=5;
+      cross.setAttribute("x1",X(i));cross.setAttribute("x2",X(i));cross.setAttribute("opacity","1");
+      show("<b>"+yrs[i]+"</b>"+
+        kv("Seed sales","$"+sSales[i].toLocaleString()+"m")+
+        kv("Seed profit","$"+sProf[i].toLocaleString()+"m")+
+        kv("Kept per $100","$"+seed[i].toFixed(2))+
+        "<div style='height:7px'></div>"+
+        kv("Chemical sales","$"+cSales[i].toLocaleString()+"m")+
+        kv("Chemical profit","$"+cProf[i].toLocaleString()+"m")+
+        kv("Kept per $100","$"+cp[i].toFixed(2)),ev);
+    });
+    hit.addEventListener("mouseleave",function(){cross.setAttribute("opacity","0");hide();});
+  })();
+
+  /* ---------- generic diverging ---------- */
+  function diverging(id,data,opt){
+    var svg=document.getElementById(id);
+    var vb=svg.getAttribute("viewBox").split(" "), W=+vb[2], H=+vb[3];
+    var ml=opt.labelW, mr=62, mt=14, mb=28;
+    var iw=W-ml-mr, ih=H-mt-mb;
+    var vals=data.map(function(d){return d.v;});
+    var lo=Math.min.apply(null,vals.concat([0])), hi=Math.max.apply(null,vals.concat([0]));
+    var pad=(hi-lo)*0.08; lo-=pad; hi+=pad;
+    function X(v){return ml+iw*(v-lo)/(hi-lo);}
+    var zero=X(0), rowH=ih/data.length, barH=Math.min(opt.barH,rowH-9);
+    svg.appendChild(el("line",{x1:zero,x2:zero,y1:mt-4,y2:mt+ih+4,class:"axis-line"}));
+    var zl=el("text",{x:zero,y:mt+ih+20,class:"ax","text-anchor":"middle"});zl.textContent=opt.zeroLabel||"break even";svg.appendChild(zl);
+    data.forEach(function(d,i){
+      var cy=mt+rowH*i+rowH/2, pos=d.v>=0, c=pos?cv("--pos"):cv("--neg");
+      var x=pos?zero:X(d.v), w=Math.max(1.5,Math.abs(X(d.v)-zero));
+      var g=el("g",{tabindex:"0"});
+      g.appendChild(el("rect",{x:x,y:cy-barH/2,width:w,height:barH,fill:c,rx:3}));
+      var lab=el("text",{x:ml-14,y:cy+4,"text-anchor":"end",fill:cv("--ink")});
+      lab.setAttribute("font-size","12");lab.textContent=d.n;svg.appendChild(lab);
+      var ox=pos?(x+w+9):(x-9), anc=pos?"start":"end";
+      if(!pos && ox-56<ml){ox=zero+9;anc="start";}
+      var val=el("text",{x:ox,y:cy+4,class:"dl",fill:c,"text-anchor":anc});
+      val.textContent=opt.fmt(d.v);svg.appendChild(val);
+      wire(g,"<b>"+d.n+"</b>"+d.tip);
+      svg.appendChild(g);
+    });
+  }
+
+  diverging("kwsChart",[
+    {n:"Sugarbeet",v:42.1,tip:kv("Sales","€871.8m")+kv("Profit","€367.2m")+"<div style='margin-top:7px;color:var(--ink-2);white-space:normal'>One crop, only two or three serious breeders in the world, and buyers who contract the acreage in advance. This is what a genuinely protected position looks like.</div>"},
+    {n:"Cereals",v:12.2,tip:kv("Sales","€263.3m")+kv("Profit","€32.1m")+"<div style='margin-top:7px;color:var(--ink-2);white-space:normal'>Wheat and rye. Farmers can save and replant their own seed, which caps what breeders can charge.</div>"},
+    {n:"Corn",v:-0.6,tip:kv("Sales","€682.8m")+kv("Loss","−€4.2m")+"<div style='margin-top:7px;color:var(--ink-2);white-space:normal'>Corn seed is only a good business if you are number one or two. KWS is neither. Corteva's corn sits inside a business keeping $26.60 per $100.</div>"},
+    {n:"Vegetables",v:-63.5,tip:kv("Sales","€72.1m")+kv("Loss","−€45.8m")+"<div style='margin-top:7px;color:var(--ink-2);white-space:normal'>Built from scratch after KWS lost a 2018 auction for Bayer's vegetable business to BASF.</div>"}
+  ],{labelW:160,barH:26,fmt:function(v){return (v>0?"+€":"−€")+Math.abs(v).toFixed(1);},zeroLabel:"break even"});
+
+  diverging("impChart",[
+    {n:"Corn seed",v:647,tip:kv("Decision","Value written UP")+kv("Amount","+€647m")+"<div style='margin-top:7px;color:var(--ink-2);white-space:normal'>An ordinary field crop. Sales grew 13.2% in 2025.</div>"},
+    {n:"Cotton seed",v:389,tip:kv("Decision","Value written UP")+kv("Amount","+€389m")+"<div style='margin-top:7px;color:var(--ink-2);white-space:normal'>Also an ordinary field crop — written up even though sales fell.</div>"},
+    {n:"Vegetable seed",v:-196,tip:kv("Decision","Value written DOWN")+kv("Amount","−€196m")+"<div style='margin-top:7px;color:var(--ink-2);white-space:normal'>The Seminis and De Ruiter brands — €788m of sales, just 3.6% of Bayer's crop division.</div>"}
+  ],{labelW:160,barH:24,fmt:function(v){return (v>0?"+€":"−€")+Math.abs(v)+"m";},zeroLabel:"no change"});
+
+  /* ---------- loss chart ---------- */
+  (function(){
+    var svg=document.getElementById("lossChart");
+    var W=780,H=240,ml=250,mr=70,mt=22,mb=34;
+    var iw=W-ml-mr, ih=H-mt-mb, MAX=100;
+    var D=[
+      {n:"Benson Hill",v:100,lab:"~−100%",tip:kv("Peak","~$2.0bn")+kv("Outcome","Bankruptcy, March 2025")+"<div style='margin-top:7px;color:var(--ink-2);white-space:normal'>Seed genetics and data. Assets sold in bankruptcy; shareholders wiped out.</div>"},
+      {n:"Farmers Edge",v:97.9,lab:"−97.9%",tip:kv("Float price, 2021","C$17.00")+kv("Taken private, 2024","C$0.35")+"<div style='margin-top:7px;color:var(--ink-2);white-space:normal'>Farm data and analytics. Bought out by its largest backer at 2% of the float price.</div>"},
+      {n:"Indigo Ag",v:94,lab:"−94%",tip:kv("Peak valuation","$3.5bn")+kv("Latest round","$200m")+"<div style='margin-top:7px;color:var(--ink-2);white-space:normal'>Microbial seed treatments and carbon programmes. Still operating.</div>"},
+      {n:"Whole sector's funding",v:69,lab:"−69%",tip:kv("2021","$51bn")+kv("2024","~$16bn")+"<div style='margin-top:7px;color:var(--ink-2);white-space:normal'>Money invested into farm-technology start-ups worldwide, per year.</div>"}
+    ];
+    for(var g=0;g<=100;g+=25){
+      svg.appendChild(el("line",{x1:ml+iw*(g/MAX),x2:ml+iw*(g/MAX),y1:mt,y2:mt+ih,class:"grid-line"}));
+      var t=el("text",{x:ml+iw*(g/MAX),y:mt+ih+20,class:"ax","text-anchor":"middle"});t.textContent="−"+g+"%";svg.appendChild(t);
+    }
+    var rowH=ih/D.length, barH=26;
+    D.forEach(function(d,i){
+      var cy=mt+rowH*i+rowH/2, w=iw*(d.v/MAX);
+      var g=el("g",{tabindex:"0"});
+      g.appendChild(el("rect",{x:ml,y:cy-barH/2,width:Math.max(2,w),height:barH,fill:cv("--neg"),rx:3}));
+      var lab=el("text",{x:ml-14,y:cy+4,"text-anchor":"end",fill:cv("--ink")});
+      lab.setAttribute("font-size","12");lab.textContent=d.n;svg.appendChild(lab);
+      var val=el("text",{x:ml+w+10,y:cy+4,class:"dl",fill:cv("--neg")});val.textContent=d.lab;svg.appendChild(val);
+      wire(g,"<b>"+d.n+"</b>"+d.tip);
+      svg.appendChild(g);
+    });
+  })();
+
+  /* ---------- roic ---------- */
+  (function(){
+    var svg=document.getElementById("roicChart");
+    var W=780,H=175,ml=300,mr=76,mt=24,mb=24;
+    var iw=W-ml-mr, ih=H-mt-mb, MAX=62;
+    var D=[
+      {n:"As the company actually is",v:9.2,c:"--neg",
+       tip:kv("Money tied up","$22,436m")+kv("Annual profit on it","~$2,063m")+"<div style='margin-top:7px;color:var(--ink-2);white-space:normal'>About the same as what the money costs to raise. The business runs to stand still.</div>"},
+      {n:"Ignoring what it paid to acquire itself",v:56.0,c:"--pos",
+       tip:kv("Money tied up","$3,670m")+kv("Acquisition cost removed","$18,766m")+"<div style='margin-top:7px;color:var(--ink-2);white-space:normal'>The underlying seed and chemicals operations are exceptional businesses.</div>"}
+    ];
+    var rowH=ih/D.length, barH=30;
+    D.forEach(function(d,i){
+      var cy=mt+rowH*i+rowH/2, w=iw*(d.v/MAX);
+      var g=el("g",{tabindex:"0"});
+      g.appendChild(el("rect",{x:ml,y:cy-barH/2,width:Math.max(2,w),height:barH,fill:cv(d.c),rx:3}));
+      var lab=el("text",{x:ml-14,y:cy+4,"text-anchor":"end",fill:cv("--ink")});
+      lab.setAttribute("font-size","12");lab.textContent=d.n;svg.appendChild(lab);
+      var val=el("text",{x:ml+w+10,y:cy+4,class:"dl",fill:cv(d.c)});
+      val.textContent=(d.v>50?"~":"")+d.v.toFixed(1)+"%";svg.appendChild(val);
+      wire(g,"<b>"+d.n+"</b>"+d.tip);
+      svg.appendChild(g);
+    });
+    var wx=ml+iw*(8.5/MAX);
+    svg.appendChild(el("line",{x1:wx,x2:wx,y1:mt-8,y2:mt+ih+2,stroke:cv("--ink-3"),"stroke-width":1,"stroke-dasharray":"3 3"}));
+    var wl=el("text",{x:wx+8,y:mt-12,class:"ax"});wl.textContent="what the money costs (8–9%)";svg.appendChild(wl);
+  })();
+})();
+</script>
